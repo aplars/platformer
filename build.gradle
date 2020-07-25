@@ -51,7 +51,7 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
-        
+
     }
 }
 
@@ -77,7 +77,8 @@ project(":android") {
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers-android:$gdxVersion"
         api "com.badlogicgames.ashley:ashley:$ashleyVersion"
-        
+        api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
+
     }
 }
 
@@ -98,7 +99,8 @@ project(":html") {
         api "com.badlogicgames.gdx:gdx-controllers-gwt:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers-gwt:$gdxVersion:sources"
         api "com.badlogicgames.ashley:ashley:$ashleyVersion:sources"
-        
+        api "com.badlogicgames.gdx:gdx-ai:$aiVersion:sources"
+
     }
 }
 
@@ -111,6 +113,6 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         api "com.badlogicgames.ashley:ashley:$ashleyVersion"
-        
+        api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
     }
 }

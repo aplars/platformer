@@ -30,47 +30,53 @@ public class StaticEnvironment {
 
         TiledMapTileLayer floorLayer = new TiledMapTileLayer(mapWidth, mapHeight, tileSizeInPixels, tileSizeInPixels);
         map.getLayers().add(floorLayer);
-        for(int x = 0; x < mapWidth; x++) {
-            for(int y = 0; y < mapHeight; y++) {
-                //TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                //cell.setTile(tileSet.getTile(0));
-                //floorLayer.setCell(x, y, cell);
-            }
-        }
         TiledMapTileLayer wallLayer = new TiledMapTileLayer(mapWidth, mapHeight, tileSizeInPixels, tileSizeInPixels);
         map.getLayers().add(wallLayer);
-        for(int x = 0; x < mapWidth; x++) {
-            for(int y = 0; y < mapHeight; y++) {
-                //TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                //cell.setTile(tileSet.getTile(0));
-                //wallLayer.setCell(x, y, cell);
-            }
-        }
+        TiledMapTileLayer visibleLayer = new TiledMapTileLayer(mapWidth, mapHeight, tileSizeInPixels, tileSizeInPixels);
+        map.getLayers().add(visibleLayer);
     }
 
-    void setLevel(String levelData[]) {
+    public void setLevel(String levelDataInverted[]) {
+        String levelData[] = new String[levelDataInverted.length];
+        for(int i = 0; i < levelDataInverted.length; i++) {
+            levelData[levelDataInverted.length - 1- i] = levelDataInverted[i];
+        }
+
         TiledMapTileLayer floorLayer = (TiledMapTileLayer)map.getLayers().get(0);
         TiledMapTileLayer wallLayer = (TiledMapTileLayer)map.getLayers().get(1);
+        TiledMapTileLayer visibleLayer = (TiledMapTileLayer)map.getLayers().get(2);
+
         for(int y = 0; y < levelData.length; y++) {
             for(int x = 0; x < levelData[y].length(); x++) {
                 int tileId = Character.getNumericValue(levelData[y].charAt(x));
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
                 cell.setTile(tileSet.getTile(tileId));
                 cell.getTile().setId(tileId);
-                if(y > 0 && Character.getNumericValue(levelData[y].charAt(x)) != 0 && Character.getNumericValue(levelData[y-1].charAt(x)) == 0)
+                if(y < levelData.length-1 && Character.getNumericValue(levelData[y].charAt(x)) != 0 && Character.getNumericValue(levelData[y+1].charAt(x)) == 0)
                     floorLayer.setCell(x, y, cell);
-                int numSorounding = 0;
+                int numEmptySorounding = 0;
                 if(x > 0 && Character.getNumericValue(levelData[y].charAt(x-1)) == 0)
-                    numSorounding++;
+                    numEmptySorounding++;
                 if(x < levelData[y].length()-1 && Character.getNumericValue(levelData[y].charAt(x+1)) == 0)
-                    numSorounding++;
-                if(numSorounding > 0 && Character.getNumericValue(levelData[y].charAt(x)) != 0)
+                    numEmptySorounding++;
+                int numSolidSorounding = 0;
+                if(y > 0 && Character.getNumericValue(levelData[y-1].charAt(x)) != 0)
+                    numSolidSorounding++;
+                if(y < levelData.length-1 && Character.getNumericValue(levelData[y+1].charAt(x)) != 0)
+                    numSolidSorounding++;
+                if(numEmptySorounding > 0  && numSolidSorounding > 0 && Character.getNumericValue(levelData[y].charAt(x)) != 0) {
                     wallLayer.setCell(x, y, cell);
+                    System.out.print(x);
+                    System.out.print(", ");
+                    System.out.println(y);
+                }
+
+                visibleLayer.setCell(x, y, cell);
             }
         }
     }
 
-    int getTileId(int layer, int x, int y) {
+    public int getTileId(int layer, int x, int y) {
         TiledMapTileLayer mapLayer = (TiledMapTileLayer)map.getLayers().get(layer);
         TiledMapTileLayer.Cell cell = mapLayer.getCell(x, y);
         int id = 0;
@@ -79,14 +85,14 @@ public class StaticEnvironment {
         return id;
     }
 
-    int getMapWidth() {
+    public int getMapWidth() {
         if(map.getLayers() == null || map.getLayers().getCount() <= 0)
             return 0;
         TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(0);
         return layer.getWidth();
     }
 
-    int getMapHeight() {
+    public int getMapHeight() {
         if(map.getLayers() == null || map.getLayers().getCount() <= 0) return 0;
         TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(0);
         return layer.getHeight();
