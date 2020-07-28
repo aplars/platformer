@@ -15,7 +15,14 @@ import com.badlogic.gdx.math.Vector2;
 
 import com.sa.game.collision.WallCollisionData;
 import com.sa.game.collision.FloorCollisionData;
+import com.sa.game.collision.RectangleCollisionData;
 import com.sa.game.collision.CollissionDetection;
+import com.sa.game.entities.Enemy;
+import com.sa.game.entities.Player;
+import com.sa.game.entities.PlayerProjectile;
+import com.sa.game.entities.PlayerProjectiles;
+
+import java.util.ArrayList;
 
 public class MyGdxGame implements ApplicationListener {
 	SpriteBatch batch;
@@ -26,6 +33,8 @@ public class MyGdxGame implements ApplicationListener {
 	StaticEnvironment staticEnvironment;
 	Player player;
 	Enemy enemy;
+	PlayerProjectiles playerProjectiles = new PlayerProjectiles();
+
 	ShapeRenderer shapeRenderer;
 	float dt = 1/60f;
 	Controller controller;
@@ -68,7 +77,8 @@ public class MyGdxGame implements ApplicationListener {
 		img = new Texture("badlogic.jpg");
 		font = new BitmapFont();
 		com.badlogic.gdx.utils.Array<Controller> theControllers = Controllers.getControllers();
-		for (Controller c:
+
+    for (Controller c:
 				theControllers) {
 			System.out.println(c.getName());
 		}
@@ -136,10 +146,28 @@ public class MyGdxGame implements ApplicationListener {
 	@Override
 	public void render () {
 		player.handleInput(dt, controller);
+		if(player.fire) {
+			playerProjectiles.add(new PlayerProjectile(player.position, new Vector2(0f, 8)));
+		}
 		player.preUpdate(dt);
-		FloorCollisionData groundCollisionData = CollissionDetection.collidesWithGround(player.collisionRectangle, player.velocity, staticEnvironment);
-		WallCollisionData wallsCollisionData = CollissionDetection.colidesWithWalls(player.collisionRectangle, player.velocity, staticEnvironment);
-		player.update(dt, groundCollisionData, wallsCollisionData);
+		enemy.preUpdate(dt);
+
+		FloorCollisionData groundCollisionData = CollissionDetection.rectangleCollidesWithGround(player.collisionRectangle, player.velocity, staticEnvironment);
+		WallCollisionData wallsCollisionData = CollissionDetection.rectangleColidesWithWalls(player.collisionRectangle, player.velocity, staticEnvironment);
+
+    for(PlayerProjectile projectile : playerProjectiles) {
+        RectangleCollisionData projectileCllision = CollissionDetection.rectangleCollidesWithRectangle(projectile.collisionRectangle, projectile.velocity, enemy.collisionRectangle);
+        if(projectileCllision.didCollide) {
+            System.out.println("DIE!!!");
+        }
+    }
+    player.update(dt, groundCollisionData, wallsCollisionData);
+		playerProjectiles.update(dt, staticEnvironment.getWorldBoundY());
+
+		FloorCollisionData enemyGroundCollisionData = CollissionDetection.rectangleCollidesWithGround(enemy.collisionRectangle, enemy.velocity, staticEnvironment);
+		WallCollisionData enemyWallsCollisionData = CollissionDetection.rectangleColidesWithWalls(enemy.collisionRectangle, enemy.velocity, staticEnvironment);
+		enemy.update(dt, enemyGroundCollisionData, enemyWallsCollisionData, staticEnvironment);
+
 		camera.update();
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -153,7 +181,7 @@ public class MyGdxGame implements ApplicationListener {
 
 		enemy.render(dt, camera);
 		player.render(dt, camera);
-
+		playerProjectiles.render(dt, camera);
 		batch.begin();
 		font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
 		batch.end();	}

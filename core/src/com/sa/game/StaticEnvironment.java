@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.math.Vector2;
 
 public class StaticEnvironment {
     public TiledMap map = new TiledMap();
@@ -85,6 +86,13 @@ public class StaticEnvironment {
         return id;
     }
 
+    public int getTileIdFromWorldCoordinate(int layer, Vector2 pos) {
+        TiledMapTileLayer mapLayer = (TiledMapTileLayer)map.getLayers().get(layer);
+        int x = (int)(pos.x/mapLayer.getTileWidth());
+        int y = (int)(pos.y/mapLayer.getTileHeight());
+        return getTileId(layer, x, y);
+    }
+
     public int getMapWidth() {
         if(map.getLayers() == null || map.getLayers().getCount() <= 0)
             return 0;
@@ -96,5 +104,16 @@ public class StaticEnvironment {
         if(map.getLayers() == null || map.getLayers().getCount() <= 0) return 0;
         TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(0);
         return layer.getHeight();
+    }
+
+    /**
+     *
+     * @return Where the world ends in world coordinates.
+     */
+    public float getWorldBoundY() {
+        if(map.getLayers() == null || map.getLayers().getCount() <= 0) return 0;
+        TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(0);
+
+        return getMapHeight()*layer.getTileHeight();
     }
 }

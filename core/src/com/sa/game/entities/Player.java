@@ -1,4 +1,4 @@
-package com.sa.game;
+package com.sa.game.entities;
 
 
 import com.badlogic.gdx.Gdx;
@@ -15,35 +15,40 @@ import com.sa.game.collision.FloorCollisionData;
 import com.sa.game.collision.WallCollisionData;
 
 public class Player {
+    public Vector2 position = new Vector2();
+    public Vector2 velocity = new Vector2();
+    public  Vector2 size = new Vector2();
+    public Rectangle collisionRectangle;
+    public boolean fire = false;
+
+    private final float timeToWaitUntilNextFire = 0.2f;
+    private float fireTimer = 0f;
+
     private boolean isOnGround = false;
     private boolean isJumpButtonPressed = false;
     private float jumpTime;
     private float maxJumpTime = 0.3f; //one second
     private float friction = 0.1f;
     private float airResistance = 0.2f;
-    public Vector2 position = new Vector2();
     private Vector2 moveAcceleration = new Vector2();
     private Vector2 jumpAcceleration = new Vector2();
     private Vector2 acceleration = new Vector2();
 
-    float maxSpeed = 400;
-    Vector2 velocity = new Vector2();
+    private float maxSpeed = 400;
 
-    public  Vector2 size;
-    float gravity = 26f*32;
-    float _jumpVelocity = 8*32;
-    float _maxJumpVelocity = 13*32;
-    float _moveAcceleration = 30*32;
-    public Rectangle collisionRectangle;
+    private float gravity = 26f*32;
+    private float _jumpVelocity = 8*32;
+    private float _maxJumpVelocity = 13*32;
+    private float _moveAcceleration = 30*32;
 
     ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     ArrayList<Vector2> jumpPoints = new ArrayList<>();
 
-    Player(Vector2 pos, Vector2 vel, Vector2 siz) {
-        position = pos;
-        velocity = vel;
-        size = siz;
+    public Player(Vector2 pos, Vector2 vel, Vector2 siz) {
+        position.set(pos);
+        velocity.set(vel);
+        size.set(siz);
         collisionRectangle = new Rectangle(0, 0, size.x, size.y);
         collisionRectangle.setCenter(position.x, position.y);
 
@@ -53,13 +58,14 @@ public class Player {
         _maxJumpVelocity = _jumpVelocity;
     }
 
-    void handleInput(float dt, Controller controller) {
+    public void handleInput(float dt, Controller controller) {
         moveAcceleration.y = 0;
         moveAcceleration.x = 0;
         jumpAcceleration.x = 0;
         jumpAcceleration.y = 0;
         acceleration.x = 0;
         acceleration.y = 0;
+        fire = false;
         boolean didPressKey = false;
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             moveAcceleration.x = -_moveAcceleration;
@@ -69,7 +75,9 @@ public class Player {
             moveAcceleration.x = _moveAcceleration;
             didPressKey = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && fireTimer == 0) {
+            fire = true;
+            fireTimer = timeToWaitUntilNextFire;
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && isOnGround) {
@@ -106,23 +114,23 @@ public class Player {
             if (!controller.getButton(1)) {
                 isJumpButtonPressed = false;
             }
+
+            if(controller.getButton(2) && fireTimer <= 0) {
+                fire = true;
+                fireTimer = timeToWaitUntilNextFire;
+            }
+
         }
         if(isJumpButtonPressed && !isOnGround && jumpTime < maxJumpTime) {
             //velocity.y = -MathUtils.lerp(_jumpVelocity, _maxJumpVelocity, jumpTime/maxJumpTime);
             jumpTime+=dt;
         }
 
-        //if (!didPressKey)
-        {
-            if(isOnGround)
-                velocity.x /= (1+friction);
-            else
-                velocity.x /= (1+airResistance);
-            velocity.y /= (1+0.0);
-        }
+        fireTimer-=dt;
+        fireTimer = Math.max(0, fireTimer);
     }
 
-    void preUpdate(float dt) {
+    public void preUpdate(float dt) {
         acceleration = moveAcceleration;
         acceleration.add(jumpAcceleration);
         acceleration.add(0, gravity);
@@ -130,7 +138,7 @@ public class Player {
         velocity.mulAdd(acceleration, dt);
     }
 
-    void update(float dt, FloorCollisionData groundCollissionData, WallCollisionData wallCollissionData) {
+    public void update(float dt, FloorCollisionData groundCollissionData, WallCollisionData wallCollissionData) {
         isOnGround = false;
         if(groundCollissionData.didCollide)  {
             if(velocity.y < 0) {
@@ -153,16 +161,22 @@ public class Player {
 
         position.mulAdd(velocity, dt);
         collisionRectangle.setCenter(position);
+
+        if(isOnGround)
+            velocity.x /= (1+friction);
+        else
+            velocity.x /= (1+airResistance);
+        velocity.y /= (1+0.0);
+
     }
 
-    void render(float t, OrthographicCamera camera) {
+    public void render(float t, OrthographicCamera camera) {
         shapeRenderer.setProjectionMatrix(camera.projection);
         shapeRenderer.setTransformMatrix(camera.view);
         shapeRenderer.setColor(com.badlogic.gdx.graphics.Color.BLACK);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.rect(collisionRectangle.x, collisionRectangle.y, collisionRectangle.width, collisionRectangle.height);
         shapeRenderer.end();
-
     }
 
 }

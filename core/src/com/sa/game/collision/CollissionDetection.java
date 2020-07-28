@@ -1,12 +1,14 @@
 package com.sa.game.collision;
 
 
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sa.game.StaticEnvironment;
 
 public class CollissionDetection {
-    public static FloorCollisionData collidesWithGround(Rectangle rectangle, Vector2 velocity, StaticEnvironment staticEnvironment) {
+    public static FloorCollisionData rectangleCollidesWithGround(Rectangle rectangle, Vector2 velocity, StaticEnvironment staticEnvironment) {
         Rectangle destRectangle = new Rectangle();
         destRectangle.set(rectangle);
         Vector2 center = new Vector2();
@@ -63,7 +65,7 @@ public class CollissionDetection {
         return new FloorCollisionData(didCollide, new Vector2(0f, move));
     }
 
-    public static WallCollisionData colidesWithWalls(Rectangle rectangle, Vector2 velocity, StaticEnvironment staticEnvironment) {
+    public static WallCollisionData rectangleColidesWithWalls(Rectangle rectangle, Vector2 velocity, StaticEnvironment staticEnvironment) {
         Rectangle destRectangle = new Rectangle();
         destRectangle.set(rectangle);
         Vector2 center = new Vector2();
@@ -119,5 +121,30 @@ public class CollissionDetection {
             }
         }
         return new WallCollisionData(didCollide, new Vector2(move, 0f));
+    }
+
+    public static RectangleCollisionData rectangleCollidesWithRectangle(Rectangle recta, Vector2 va, Rectangle rectb) {
+        RectangleCollisionData rectangleCollisionData = new RectangleCollisionData();
+
+        //Extend the static rectangle with the extends of the moving one.
+        Rectangle rect = new Rectangle();
+        rect.set(recta);
+        rect.width += rectb.width/2f;
+        rect.height += rectb.height/2f;
+
+        //Do a line segment vs rectangle test.
+        Vector2 center = new Vector2();
+        center = recta.getCenter(center);
+
+        rectangleCollisionData.didCollide = Intersector.intersectSegmentRectangle(center, center.add(va), rectb);
+
+        return rectangleCollisionData;
+    }
+
+    public static RectangleCollisionData rectangleCollidesWithRectangle(Rectangle ra, Vector2 va, Rectangle rb, Vector2 vb) {
+        Vector2 v = new Vector2();
+        v.set(va);
+        v = v.sub(vb);
+        return rectangleCollidesWithRectangle(ra, v, rb);
     }
 }
