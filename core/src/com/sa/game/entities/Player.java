@@ -5,20 +5,44 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
+import javax.lang.model.type.NullType;
+
+import com.sa.game.StaticEnvironment;
+import com.sa.game.collision.CollisionDetection;
+import com.sa.game.collision.CollisionEntity;
 import com.sa.game.collision.FloorCollisionData;
 import com.sa.game.collision.WallCollisionData;
 
 public class Player {
+    enum State {
+        Alive,
+        Dying,
+        Dead
+    }
+
+    enum AliveState {
+        Idle,
+        WalkLeft,
+        WalkRight,
+        PickupWeapon
+    }
+
     public Vector2 position = new Vector2();
     public Vector2 velocity = new Vector2();
     public  Vector2 size = new Vector2();
     public Rectangle collisionRectangle;
+    public CollisionEntity collisionEntity;
     public boolean fire = false;
 
     private final float timeToWaitUntilNextFire = 0.2f;
@@ -45,17 +69,42 @@ public class Player {
 
     ArrayList<Vector2> jumpPoints = new ArrayList<>();
 
-    public Player(Vector2 pos, Vector2 vel, Vector2 siz) {
+    State state = State.Alive;
+    AliveState aliveState = AliveState.Idle;
+    float dyingTimer = 4f;
+
+    TextureAtlas textureAtlas;
+    Animation<TextureRegion> walkAnimation;
+    SpriteBatch spriteBatch;
+    TextureRegion currentFrame;
+    boolean flipSprite = false;
+    float currentTime = 0f;
+
+    Weapon weapon = null;
+
+    public Player(Vector2 pos, Vector2 vel, Vector2 siz, CollisionDetection collisionDetection) {
         position.set(pos);
         velocity.set(vel);
         size.set(siz);
+
         collisionRectangle = new Rectangle(0, 0, size.x, size.y);
         collisionRectangle.setCenter(position.x, position.y);
+
+        collisionEntity = new CollisionEntity();
+        collisionEntity.box = collisionRectangle;
+        collisionEntity.velocity = velocity;
+        collisionEntity.userData = this;
+        collisionDetection.add(collisionEntity);
 
         float jumpTime = 0.5f;
         gravity = -2*(32f*5f+6)/(float)Math.pow(jumpTime, 2f);
         _jumpVelocity = 2f*(32f*5f+6)/jumpTime;
         _maxJumpVelocity = _jumpVelocity;
+
+        textureAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
+        walkAnimation = new Animation<TextureRegion>(1 / 60f * 6f, textureAtlas.findRegions("player"), PlayMode.LOOP);
+        spriteBatch = new SpriteBatch();
+        currentFrame = walkAnimation.getKeyFrame(currentTime, true);
     }
 
     public void handleInput(float dt, Controller controller) {
@@ -67,14 +116,22 @@ public class Player {
         acceleration.y = 0;
         fire = false;
         boolean didPressKey = false;
+        aliveState = AliveState.Idle;
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             moveAcceleration.x = -_moveAcceleration;
+            aliveState = AliveState.WalkLeft;
             didPressKey = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             moveAcceleration.x = _moveAcceleration;
+            aliveState = AliveState.WalkRight;
             didPressKey = true;
         }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && weapon != null) {
+            weapon.fire();
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.W) && fireTimer == 0) {
             fire = true;
             fireTimer = timeToWaitUntilNextFire;
@@ -136,10 +193,36 @@ public class Player {
         acceleration.add(0, gravity);
 
         velocity.mulAdd(acceleration, dt);
+
+        if(weapon != null)
+            weapon.preUpdate(dt);
     }
 
-    public void update(float dt, FloorCollisionData groundCollissionData, WallCollisionData wallCollissionData) {
+    public void update(float dt, CollisionDetection collisionDetection, FloorCollisionData groundCollissionData, WallCollisionData wallCollissionData, StaticEnvironment staticEnvironment, PlayerProjectiles projectiles, Enemies enemies) {
         isOnGround = false;
+
+        for(CollisionEntity collidee : collisionEntity.collidees) {
+            if(collidee.userData instanceof Enemy) {
+                Enemy enemy = (Enemy) collidee.userData;
+                if(enemy.stateData.isStunned) {
+                    //We shall pick up the enemy.
+
+                    //Remove it from the enemy list and add it as player weapon.
+                    enemies.remove(enemy);
+                    collisionDetection.remove(enemy.collisionEntity);
+                    weapon = new Weapon(new Vector2(position), new Vector2(velocity), enemy.size, collisionDetection);
+                    //Set the weapons velocity to zero
+                    weapon.velocity.setZero();
+                    //Run the add weapon sequence.
+                    aliveState = AliveState.PickupWeapon;
+
+                }
+                else {
+                    state = State.Dying;
+                }
+            }
+        }
+
         if(groundCollissionData.didCollide)  {
             if(velocity.y < 0) {
                 velocity.y = 0;//-collissionData.move;
@@ -168,15 +251,60 @@ public class Player {
             velocity.x /= (1+airResistance);
         velocity.y /= (1+0.0);
 
+        if(Math.abs(moveAcceleration.x) > 1f)
+            currentFrame = walkAnimation.getKeyFrame(currentTime, true);
+        if(aliveState == AliveState.WalkLeft)
+            flipSprite = true;
+        else if(aliveState == AliveState.WalkRight)
+            flipSprite = false;
+
+        if(fire && weapon == null) {
+            projectiles.add(new PlayerProjectile(new Vector2(position), new Vector2(0, dt * 600f), collisionDetection));
+        }
+        else  if(fire && weapon != null) {
+            weapon.velocity.set(600f, gravity/8f);
+            weapon.update(dt);
+        }
+        else if(fire == false && weapon != null) {
+            weapon.setPosition(position.x, position.y + 40);
+            weapon.update(dt);
+        }
+        currentTime += dt;
     }
 
     public void render(float t, OrthographicCamera camera) {
-        shapeRenderer.setProjectionMatrix(camera.projection);
-        shapeRenderer.setTransformMatrix(camera.view);
+        /*shapeRenderer.setProjectionMatrix(camera.projection);
+        Matrix4 translate = new Matrix4();
+        Matrix4 matrix = new Matrix4();
+
+        matrix.set(camera.view);
+        translate.setToTranslation(collisionRectangle.x, collisionRectangle.y, 0f);
+
+        matrix.mulLeft(translate);
+
+        shapeRenderer.setTransformMatrix(matrix );
         shapeRenderer.setColor(com.badlogic.gdx.graphics.Color.BLACK);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.rect(collisionRectangle.x, collisionRectangle.y, collisionRectangle.width, collisionRectangle.height);
+        //shapeRenderer.rect(collisionRectangle.x, collisionRectangle.y, collisionRectangle.width, collisionRectangle.height);
+        shapeRenderer.rect(0, 0, collisionRectangle.width, collisionRectangle.height);
         shapeRenderer.end();
+        */
+        if(aliveState == AliveState.PickupWeapon) {
+            
+        }
+
+        if(weapon != null) {
+            weapon.render(t, camera);
+        }
+
+        spriteBatch.setProjectionMatrix(camera.projection);
+        spriteBatch.setTransformMatrix(camera.view);
+        spriteBatch.begin();
+        spriteBatch.draw(currentFrame,
+                flipSprite ? collisionRectangle.x + collisionRectangle.width : collisionRectangle.x, collisionRectangle.y,
+                flipSprite ? -collisionRectangle.width : collisionRectangle.width, collisionRectangle.height); // Draw current frame at (50, 50)
+        spriteBatch.end();
+
     }
 
 }

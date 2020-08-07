@@ -2,13 +2,12 @@ package com.sa.game.collision;
 
 
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sa.game.StaticEnvironment;
 
-public class CollissionDetection {
-    public static FloorCollisionData rectangleCollidesWithGround(Rectangle rectangle, Vector2 velocity, StaticEnvironment staticEnvironment) {
+public class IntersectionTests {
+    public static FloorCollisionData rectangleGround(final Rectangle rectangle, final Vector2 velocity, final StaticEnvironment staticEnvironment) {
         Rectangle destRectangle = new Rectangle();
         destRectangle.set(rectangle);
         Vector2 center = new Vector2();
@@ -65,7 +64,7 @@ public class CollissionDetection {
         return new FloorCollisionData(didCollide, new Vector2(0f, move));
     }
 
-    public static WallCollisionData rectangleColidesWithWalls(Rectangle rectangle, Vector2 velocity, StaticEnvironment staticEnvironment) {
+    public static WallCollisionData rectangleWalls(final Rectangle rectangle, final Vector2 velocity, final StaticEnvironment staticEnvironment) {
         Rectangle destRectangle = new Rectangle();
         destRectangle.set(rectangle);
         Vector2 center = new Vector2();
@@ -123,7 +122,7 @@ public class CollissionDetection {
         return new WallCollisionData(didCollide, new Vector2(move, 0f));
     }
 
-    public static RectangleCollisionData rectangleCollidesWithRectangle(Rectangle recta, Vector2 va, Rectangle rectb) {
+    public static RectangleCollisionData rectangleRectangle(Rectangle recta, Vector2 va, Rectangle rectb) {
         RectangleCollisionData rectangleCollisionData = new RectangleCollisionData();
 
         //Extend the static rectangle with the extends of the moving one.
@@ -131,20 +130,22 @@ public class CollissionDetection {
         rect.set(recta);
         rect.width += rectb.width/2f;
         rect.height += rectb.height/2f;
+        Vector2 centerb = new Vector2();
+        rect.setCenter(rectb.getCenter(centerb));
 
         //Do a line segment vs rectangle test.
         Vector2 center = new Vector2();
         center = recta.getCenter(center);
 
-        rectangleCollisionData.didCollide = Intersector.intersectSegmentRectangle(center, center.add(va), rectb);
+        rectangleCollisionData.didCollide = Intersector.intersectSegmentRectangle(center, center.add(va), rect);
 
         return rectangleCollisionData;
     }
 
-    public static RectangleCollisionData rectangleCollidesWithRectangle(Rectangle ra, Vector2 va, Rectangle rb, Vector2 vb) {
+    public static RectangleCollisionData rectangleRectangle(Rectangle ra, Vector2 va, Rectangle rb, Vector2 vb) {
         Vector2 v = new Vector2();
         v.set(va);
         v = v.sub(vb);
-        return rectangleCollidesWithRectangle(ra, v, rb);
+        return rectangleRectangle(ra, v, rb);
     }
 }

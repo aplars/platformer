@@ -4,55 +4,96 @@ import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.math.MathUtils;
 import com.sa.game.StaticEnvironment;
+import com.sa.game.collision.CollisionEntity;
 import com.sa.game.entities.Enemy;
+import com.sa.game.entities.Player;
+import com.sa.game.entities.PlayerProjectile;
 
-public enum EnemyState implements State<Enemy>, GameStateCommon {
+public enum EnemyState implements State<Enemy> {
+    IS_WEAPON() {
+        @Override
+        public void update(Enemy enemy) {
+        }
+    },
+    IS_SHOOT() {
+        @Override
+        public void update(Enemy enemy) {
+            enemy.stateData.isStunned = true;
+            enemy.idle(enemy.stateData.dt);
+            for(CollisionEntity collisionEntity : enemy.collisionEntity.collidees) {
+                if(collisionEntity.userData instanceof Player) {
+                    enemy.stateMachine.changeState(IS_WEAPON);
+                }
+            }
 
+            enemy.stateData.stunnedTime-=enemy.stateData.dt;
+            if(enemy.stateData.stunnedTime <= 0f) {
+                enemy.stateData.stunnedTime = 5f;
+                enemy.stateMachine.revertToPreviousState();
+            }
+        }
+
+        @Override
+        public void exit(Enemy enemy) {
+            enemy.stateData.isStunned = false;
+        }
+    },
     RESTING() {
         @Override
         public void update(Enemy enemy) {
-            restTime -= dt;
-            restTime = Math.max(restTime, 0f);
-            if(restTime <= 0f) {
-                enemy.stateMachine.defaultStateMachine.changeState(WANDERS_ON_PLATFORM);
-                restTime = MathUtils.random(3f, 5f);
+            for(CollisionEntity collisionEntity : enemy.collisionEntity.collidees) {
+                if(collisionEntity.userData instanceof PlayerProjectile) {
+                    enemy.stateMachine.changeState(IS_SHOOT);
+                }
+            }
+
+            enemy.stateData.restTime -= enemy.stateData.dt;
+            enemy.stateData.restTime = Math.max(enemy.stateData.restTime, 0f);
+            if(enemy.stateData.restTime <= 0f) {
+                enemy.stateData.restTime = MathUtils.random(3f, 5f);
+                enemy.stateMachine.changeState(WANDERS_ON_PLATFORM);
             }
         }
     },
     WANDERS_ON_PLATFORM {
         @Override
         public void update(Enemy enemy) {
-            if(wallCollision) {
-                if(currentDirection == XDirection.Left)
-                    currentDirection = XDirection.Right;
+            for(CollisionEntity collisionEntity : enemy.collisionEntity.collidees) {
+                if(collisionEntity.userData instanceof PlayerProjectile) {
+                    enemy.stateMachine.changeState(IS_SHOOT);
+                }
+            }
+            if(enemy.stateData.wallCollision) {
+                if(enemy.stateData.currentDirection == Enemy.XDirection.Left)
+                    enemy.stateData.currentDirection = Enemy.XDirection.Right;
                 else
-                    currentDirection = XDirection.Left;
+                    enemy.stateData.currentDirection = Enemy.XDirection.Left;
+            }
+            int tilex = (int) (enemy.collisionRectangle.x + enemy.collisionRectangle.width)
+                    / enemy.stateData.staticEnvironment.tileSizeInPixels;
+
+            int tiley = (int) enemy.collisionRectangle.y / enemy.stateData.staticEnvironment.tileSizeInPixels - 1;
+
+            int id = 0;
+            if(tilex > 0 && tiley > 0)
+                id = enemy.stateData.staticEnvironment.getTileId(0, tilex, tiley);
+            if(id == 0) {
+                enemy.stateData.currentDirection = Enemy.XDirection.Left;
             }
 
-            int id = staticEnvironment.getTileId(0, (int)(enemy.collisionRectangle.x+enemy.collisionRectangle.width)/staticEnvironment.tileSizeInPixels, (int)enemy.collisionRectangle.y/staticEnvironment.tileSizeInPixels - 1);
+            id = enemy.stateData.staticEnvironment.getTileId(0, (int)(enemy.collisionRectangle.x)/enemy.stateData.staticEnvironment.tileSizeInPixels, (int)enemy.collisionRectangle.y/enemy.stateData.staticEnvironment.tileSizeInPixels - 1);
             if(id == 0) {
-                currentDirection = XDirection.Left;
+                enemy.stateData.currentDirection = Enemy.XDirection.Right;
             }
-            if(currentDirection == XDirection.Left)
-                enemy.moveLeft(dt);
-            if(currentDirection == XDirection.Right)
-                enemy.moveRight(dt);
+
+            if(enemy.stateData.currentDirection == Enemy.XDirection.Left)
+                enemy.moveLeft(enemy.stateData.dt);
+            if(enemy.stateData.currentDirection == Enemy.XDirection.Right)
+                enemy.moveRight(enemy.stateData.dt);
         }
     };
-    enum XDirection{
-        Left,
-        Right;
-    };
-
-    float dt;
-    float restTime = 0f;
-    XDirection currentDirection = XDirection.Left;
-    boolean groundCollision = false;
-    boolean wallCollision = false;
-    StaticEnvironment staticEnvironment;
 
     EnemyState() {
-        restTime = MathUtils.random(3f, 5f);
     }
     @Override
     public void enter(Enemy enemy) {
@@ -66,23 +107,4 @@ public enum EnemyState implements State<Enemy>, GameStateCommon {
     public boolean onMessage(Enemy troll, Telegram telegram) {
         return false;
     }
-
-    @Override
-    public void setDt(float dt) { this.dt = dt; }
-
-    @Override
-    public void setGroundCollision(boolean groundCollision) {
-        this.groundCollision = groundCollision;
-    }
-
-    @Override
-    public void setWallCollision(boolean wallCollision) {
-        this.wallCollision = wallCollision;
-    }
-
-    @Override
-    public void setStaticEnvironment(StaticEnvironment staticEnvironment) {
-        this.staticEnvironment = staticEnvironment;
-    }
-
 }

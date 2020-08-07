@@ -6,7 +6,7 @@
 	<inherits name='com.badlogic.gdx.controllers.controllers-gwt' />
 	<inherits name='com.badlogic.ashley_gwt' />
 
-    <inherits name='com.mygdx.game.GdxDefinition' />
+    <inherits name='com.sa.game.GdxDefinition' />
     
     <collapse-all-properties />
     

@@ -8,6 +8,6 @@ public class WallCollisionData {
 
     public WallCollisionData(boolean didCol, Vector2 move) {
         didCollide = didCol;
-        this.move= move;
+        this.move.set(move);
     }
 }

@@ -1,6 +1,7 @@
 package com.sa.game.entities;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.sa.game.collision.CollisionDetection;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +18,7 @@ public class PlayerProjectiles implements Iterable<PlayerProjectile> {
     }
 
 
-    public void update(float dt, float worldBound) {
+    public void update(float dt, CollisionDetection collisionDetection, float worldBound) {
         for (PlayerProjectile projectile : projectiles) {
             projectile.update(dt);
         }
@@ -26,6 +27,7 @@ public class PlayerProjectiles implements Iterable<PlayerProjectile> {
         while (iterator.hasNext()) {
             PlayerProjectile projectile = iterator.next();
             if(projectile.position.y > worldBound) {
+                collisionDetection.remove(projectile.collisionEntity);
                 iterator.remove();
             }
         }
