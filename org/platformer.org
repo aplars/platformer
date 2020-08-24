@@ -1,0 +1,7 @@
+* platformer
+** tasks
+*** TODO hadle screen resize and multiple resolution
+*** TODO implement touch input for mobile
+*** TODO implement tiled loader
+
+

@@ -1,12 +1,9 @@
 package com.sa.game.entities;
 
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
-import com.sa.game.collision.FloorCollisionData;
-import com.sa.game.collision.IntersectionTests;
-import com.sa.game.collision.WallCollisionData;
+import com.sa.game.gfx.Sprites;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,6 +22,10 @@ public class Players implements Iterable<Player> {
         collisionDetection.remove(player.collisionEntity);
     }
 
+    public void clear() {
+        players.clear();
+    }
+
     public void handleInput(float dt, Controller controller) {
         for (Player player : players) {
             player.handleInput(dt, controller);
@@ -37,18 +38,22 @@ public class Players implements Iterable<Player> {
         }
     }
 
-    public void update(float dt, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection, PlayerProjectiles playerProjectiles, Enemies enemies) {
+    public void update(float dt, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection, PlayerProjectiles playerProjectiles, PlayerWeapons weapons, Enemies enemies) {
+        //Move the player to the top if it falls under zero
         for (Player player : players) {
-            FloorCollisionData groundCollisionData = IntersectionTests.rectangleGround(player.collisionRectangle, player.velocity, staticEnvironment);
-            WallCollisionData wallsCollisionData = IntersectionTests.rectangleWalls(player.collisionRectangle, player.velocity, staticEnvironment);
+            if(player.position.y < 0) {
+                player.warpToTop(staticEnvironment);
+            }
+        }
 
-            player.update(dt, collisionDetection, groundCollisionData, wallsCollisionData, staticEnvironment, playerProjectiles, enemies);
+        for (Player player : players) {
+            player.update(dt, collisionDetection, staticEnvironment, playerProjectiles, weapons, enemies);
         }
     }
 
-    public void render(float dt, OrthographicCamera camera) {
+    public void render(float dt, Sprites sprites) {
         for (Player player : players) {
-            player.render(dt, camera);
+            player.render(dt, sprites);
         }
     }
 }

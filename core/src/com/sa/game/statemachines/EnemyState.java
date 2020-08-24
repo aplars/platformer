@@ -8,13 +8,9 @@ import com.sa.game.collision.CollisionEntity;
 import com.sa.game.entities.Enemy;
 import com.sa.game.entities.Player;
 import com.sa.game.entities.PlayerProjectile;
+import com.sa.game.entities.Enemy.XDirection;
 
 public enum EnemyState implements State<Enemy> {
-    IS_WEAPON() {
-        @Override
-        public void update(Enemy enemy) {
-        }
-    },
     IS_SHOOT() {
         @Override
         public void update(Enemy enemy) {
@@ -22,7 +18,7 @@ public enum EnemyState implements State<Enemy> {
             enemy.idle(enemy.stateData.dt);
             for(CollisionEntity collisionEntity : enemy.collisionEntity.collidees) {
                 if(collisionEntity.userData instanceof Player) {
-                    enemy.stateMachine.changeState(IS_WEAPON);
+                    //enemy.stateMachine.changeState(IS_WEAPON);
                 }
             }
 
@@ -46,11 +42,12 @@ public enum EnemyState implements State<Enemy> {
                     enemy.stateMachine.changeState(IS_SHOOT);
                 }
             }
-
+            enemy.stateData.currentDirection = XDirection.Idle;
             enemy.stateData.restTime -= enemy.stateData.dt;
             enemy.stateData.restTime = Math.max(enemy.stateData.restTime, 0f);
             if(enemy.stateData.restTime <= 0f) {
                 enemy.stateData.restTime = MathUtils.random(3f, 5f);
+                enemy.stateData.currentDirection = XDirection.Left;
                 enemy.stateMachine.changeState(WANDERS_ON_PLATFORM);
             }
         }
@@ -69,19 +66,21 @@ public enum EnemyState implements State<Enemy> {
                 else
                     enemy.stateData.currentDirection = Enemy.XDirection.Left;
             }
-            int tilex = (int) (enemy.collisionRectangle.x + enemy.collisionRectangle.width)
+            int tilex = (int) (enemy.collisionEntity.box.x + enemy.collisionEntity.box.width)
                     / enemy.stateData.staticEnvironment.tileSizeInPixels;
 
-            int tiley = (int) enemy.collisionRectangle.y / enemy.stateData.staticEnvironment.tileSizeInPixels - 1;
+            int tiley = (int) enemy.collisionEntity.box.y / enemy.stateData.staticEnvironment.tileSizeInPixels - 1;
 
             int id = 0;
-            if(tilex > 0 && tiley > 0)
-                id = enemy.stateData.staticEnvironment.getTileId(0, tilex, tiley);
+            if(tilex >= 0 && tiley >= 0)
+                id = enemy.stateData.staticEnvironment.getTileId(StaticEnvironment.TileId.Floor, tilex, tiley);
             if(id == 0) {
                 enemy.stateData.currentDirection = Enemy.XDirection.Left;
             }
 
-            id = enemy.stateData.staticEnvironment.getTileId(0, (int)(enemy.collisionRectangle.x)/enemy.stateData.staticEnvironment.tileSizeInPixels, (int)enemy.collisionRectangle.y/enemy.stateData.staticEnvironment.tileSizeInPixels - 1);
+            id = enemy.stateData.staticEnvironment.getTileId(StaticEnvironment.TileId.Floor,
+                                                             (int)(enemy.collisionEntity.box.x)/enemy.stateData.staticEnvironment.tileSizeInPixels,
+                                                             (int)enemy.collisionEntity.box.y/enemy.stateData.staticEnvironment.tileSizeInPixels - 1);
             if(id == 0) {
                 enemy.stateData.currentDirection = Enemy.XDirection.Right;
             }

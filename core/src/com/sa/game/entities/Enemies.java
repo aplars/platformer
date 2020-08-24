@@ -3,11 +3,8 @@ package com.sa.game.entities;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.sa.game.StaticEnvironment;
-import com.sa.game.collision.FloorCollisionData;
-import com.sa.game.collision.IntersectionTests;
-import com.sa.game.collision.WallCollisionData;
+import com.sa.game.gfx.Sprites;
 
 public class Enemies {
     ArrayList<Enemy> enemies = new ArrayList<>();
@@ -18,6 +15,10 @@ public class Enemies {
 
     public void remove(Enemy enemy) {
         enemies.remove(enemy);
+    }
+
+    public void clear() {
+        enemies.clear();
     }
 
     public Iterator<Enemy> iterator() {
@@ -31,16 +32,29 @@ public class Enemies {
     }
 
     public void update(float dt, StaticEnvironment staticEnvironment) {
+        //Move the player to the top if it falls under zero
+        for (Enemy enemy : enemies) {
+            if(enemy.position.y < 0) {
+                enemy.position.y = staticEnvironment.getWorldBoundY();
+            }
+        }
+
+        Iterator<Enemy> enemyIterator = enemies.iterator();
+        while(enemyIterator.hasNext()) {
+            Enemy enemy = enemyIterator.next();
+            if(enemy.isShoot) {
+                enemyIterator.remove();
+            }
+        }
+
         for(Enemy enemy : enemies) {
-            FloorCollisionData enemyGroundCollisionData = IntersectionTests.rectangleGround(enemy.collisionRectangle, enemy.velocity, staticEnvironment);
-            WallCollisionData enemyWallsCollisionData = IntersectionTests.rectangleWalls(enemy.collisionRectangle, enemy.velocity, staticEnvironment);
-            enemy.update(dt, enemyGroundCollisionData, enemyWallsCollisionData, staticEnvironment);
+            enemy.update(dt, staticEnvironment);
         }
     }
 
-    public void render(float dt, OrthographicCamera camera) {
+    public void render(float dt, Sprites sprites) {
         for(Enemy enemy : enemies) {
-            enemy.render(dt, camera);
+            enemy.render(dt, sprites);
         }
     }
 }

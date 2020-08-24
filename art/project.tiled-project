@@ -1,0 +1,21 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+        {
+            "arguments": "--export-map --detach-templates level_1.tmx test1.tmx",
+            "command": "/home/tobias/devtools/Tiled-1.4.2-x86_64.AppImage",
+            "enabled": true,
+            "name": "Export",
+            "saveBeforeExecute": true,
+            "shortcut": null,
+            "showOutput": true,
+            "workingDirectory": "/home/tobias/source/platformer/android/assets"
+        }
+    ],
+    "extensionsPath": "extensions",
+    "folders": [
+        "../android/assets",
+        "."
+    ],
+    "objectTypesFile": ""
+}

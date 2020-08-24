@@ -1,10 +1,17 @@
 
-player.png
+clown.png
 size: 256,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-walk
+idle
+  rotate: false
+  xy: 36, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+stunned
   rotate: false
   xy: 2, 2
   size: 32, 32
@@ -13,36 +20,36 @@ walk
   index: 1
 walk
   rotate: false
-  xy: 36, 2
+  xy: 70, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 2
+  index: 1
 walk
   rotate: false
   xy: 70, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 3
+  index: 5
 walk
   rotate: false
   xy: 104, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 4
+  index: 2
 walk
   rotate: false
   xy: 138, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 5
+  index: 3
 walk
   rotate: false
   xy: 172, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 6
+  index: 4

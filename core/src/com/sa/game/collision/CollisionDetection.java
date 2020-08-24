@@ -6,7 +6,7 @@ import com.sa.game.entities.PlayerProjectile;
 import java.util.ArrayList;
 
 public class CollisionDetection {
-    ArrayList<CollisionEntity> entities = new ArrayList<>();
+    final ArrayList<CollisionEntity> entities = new ArrayList<>();
 
     public void add(final CollisionEntity entity) {
         entities.add(entity);
