@@ -263,7 +263,8 @@ public class Player {
             currentFrame = walkAnimation.getKeyFrame(currentTime, true);
 
         if(fire && weapon == null) {
-            projectiles.add(new PlayerProjectile(new Vector2(position), new Vector2(0, 300f), staticEnvironment, collisionDetection));
+            float projDir = (walkDirection == WalkDirection.Left) ? -300f : 300f;
+            projectiles.add(new PlayerProjectile(new Vector2(position), new Vector2(projDir, 0f), staticEnvironment, collisionDetection));
         }
         else  if(fire && weapon != null) {
             weapons.add(weapon);

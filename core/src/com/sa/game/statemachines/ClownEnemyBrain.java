@@ -10,7 +10,7 @@ import com.sa.game.entities.Player;
 import com.sa.game.entities.PlayerProjectile;
 import com.sa.game.entities.Enemy.XDirection;
 
-public enum EnemyState implements State<Enemy> {
+public enum ClownEnemyBrain implements State<Enemy> {
     IS_SHOOT() {
         @Override
         public void update(Enemy enemy) {
@@ -92,7 +92,7 @@ public enum EnemyState implements State<Enemy> {
         }
     };
 
-    EnemyState() {
+    ClownEnemyBrain() {
     }
     @Override
     public void enter(Enemy enemy) {

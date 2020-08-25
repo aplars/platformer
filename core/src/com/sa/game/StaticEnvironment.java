@@ -1,6 +1,8 @@
 package com.sa.game;
 
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -9,9 +11,8 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.sa.game.collision.CollisionDetection;
+import com.sa.game.entities.CreateEnemies;
 import com.sa.game.entities.Enemies;
-import com.sa.game.entities.Enemy;
-import com.sa.game.gfx.EnemyAnimations;
 
 public class StaticEnvironment {
     public enum TileId {
@@ -81,14 +82,11 @@ public class StaticEnvironment {
             if(mapObject.getProperties().get("type", String.class).equals("clown")) {
                 RectangleMapObject rectangleMapObject = (RectangleMapObject)mapObject;
                 Vector2 center = new Vector2();
-                enemies.add(new Enemy(
-                        "clown",
-                        rectangleMapObject.getRectangle().getCenter(center),
-                        rectangleMapObject.getRectangle().height,
-                        new EnemyAnimations("clown.atlas"),
-                        this,
-                        collisionDetection
-                ));
+                FileHandle clownAtlasFileHandle = Gdx.files.internal("clown.atlas");
+
+
+
+                enemies.add(CreateEnemies.clown(rectangleMapObject.getRectangle().getCenter(center), rectangleMapObject.getRectangle().height, clownAtlasFileHandle,this, collisionDetection));
             }
         }
 

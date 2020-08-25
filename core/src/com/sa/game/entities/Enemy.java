@@ -1,8 +1,6 @@
 package com.sa.game.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,7 +12,7 @@ import com.sa.game.collision.CollisionEntity;
 import com.sa.game.collision.FloorCollisionData;
 import com.sa.game.collision.IntersectionTests;
 import com.sa.game.collision.WallCollisionData;
-import com.sa.game.statemachines.EnemyState;
+import com.sa.game.statemachines.ClownEnemyBrain;
 import com.sa.game.gfx.EnemyAnimations;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.gfx.Sprites;
@@ -51,16 +49,15 @@ public class Enemy {
     //private float airResistance = 0.2f;
 
     public boolean isShoot = false;
-    public DefaultStateMachine<Enemy, EnemyState>  stateMachine;
+    public DefaultStateMachine<Enemy, ClownEnemyBrain>  stateMachine;
     public  String name;
 
     EnemyAnimations animation;
 
-    SpriteBatch spriteBatch;
     TextureRegion currentFrame;
     WalkDirection walkDirection = WalkDirection.Right;
 
-    public Enemy(String name, Vector2 position, float size, EnemyAnimations enemyAnimation, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public Enemy(String name, Vector2 position, float size, EnemyAnimations enemyAnimations, ClownEnemyBrain enemyState, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         this.name = name;
         this.position.set(position);
         this.size = size;
@@ -75,11 +72,10 @@ public class Enemy {
         collisionEntity.velocity = velocity;
         collisionEntity.userData = this;
         collisionDetection.add(collisionEntity);
-        stateMachine = new DefaultStateMachine<>(this, EnemyState.RESTING);
 
-        animation = enemyAnimation;
+        this.stateMachine = new DefaultStateMachine<>(this, enemyState);
+        animation = enemyAnimations;
         currentFrame = animation.getKeyFrame();
-        spriteBatch = new SpriteBatch();
     }
 
     public void moveLeft(float dt) {
@@ -150,7 +146,7 @@ public class Enemy {
         else {
             animation.setCurrentAnimation(EnemyAnimations.AnimationType.Walk);
         }
-
+        
         animation.update(dt);
         //currentTime += dt;
     }

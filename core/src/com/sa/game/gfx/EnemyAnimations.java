@@ -19,12 +19,11 @@ public class EnemyAnimations {
     Animation<TextureRegion> currentAnimation;
     float currentTime = 0f;
 
-    public EnemyAnimations(final String atlasFile) {
-        final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(atlasFile));
-        Animation<TextureRegion> idleAnimation = new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("idle"), PlayMode.LOOP);
-        Animation<TextureRegion> walkAnimation = new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), PlayMode.LOOP);
-        Animation<TextureRegion> stunnedAnimation = new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("stunned"),
-                PlayMode.NORMAL);
+    public EnemyAnimations(Animation<TextureRegion> idleAnimation, Animation<TextureRegion> walkAnimation, Animation<TextureRegion> stunnedAnimation) {
+        //final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(atlasFile));
+        //Animation<TextureRegion> idleAnimation = new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("idle"), PlayMode.LOOP);
+        //Animation<TextureRegion> walkAnimation = new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), PlayMode.LOOP);
+        //Animation<TextureRegion> stunnedAnimation = new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("stunned"), PlayMode.NORMAL);
 
         animations.put(AnimationType.Idle, idleAnimation);
         animations.put(AnimationType.Walk, walkAnimation);
