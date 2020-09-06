@@ -7,12 +7,19 @@ import java.util.Timer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 
@@ -22,14 +29,16 @@ import com.sa.game.entities.*;
 import com.sa.game.gfx.Sprites;
 
 public class MyGdxGame implements ApplicationListener {
-    public AtomicBoolean reloadLevel = new AtomicBoolean(false);
+    AssetManager assetManager = new AssetManager();
+
+    public AtomicBoolean reloadLevel = new AtomicBoolean(true);
     SpriteBatch batch;
     private BitmapFont font;
     OrthographicCamera camera;
     OrthogonalTiledMapRenderer mapRenderer;
-    StaticEnvironment staticEnvironment;
 
     //game entities
+    StaticEnvironment staticEnvironment = new StaticEnvironment();
     Players players = new Players();
     Enemies enemies = new Enemies();
     PlayerProjectiles playerProjectiles = new PlayerProjectiles();
@@ -86,7 +95,7 @@ public class MyGdxGame implements ApplicationListener {
         */
         sprites = new Sprites();
         camera = new OrthographicCamera();
-        loadLevel();
+        //loadLevel();
     }
 
 
@@ -95,8 +104,18 @@ public class MyGdxGame implements ApplicationListener {
         if(reloadLevel.get()) {
             loadLevel();
             reloadLevel.set(false);
+            resize(0,0);
         }
+
+        if(!assetManager.isFinished()) {
+            return;
+        }
+
         players.handleInput(dt, controller);
+
+        if (Gdx.input.isKeyPressed(Input.Keys.F1)) {
+            reloadLevel.set(true);
+        }
 
         players.preUpdate(dt);
         weapons.preUpdate(dt);
@@ -107,21 +126,15 @@ public class MyGdxGame implements ApplicationListener {
         players.update(dt, staticEnvironment, collisionDetection, playerProjectiles, weapons, enemies);
         playerProjectiles.update(dt, collisionDetection, staticEnvironment.getWorldBoundY());
         weapons.update(dt, staticEnvironment, collisionDetection);
-        enemies.update(dt, staticEnvironment);
+        enemies.update(dt, staticEnvironment, collisionDetection);
         camera.update();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //batch.begin();
-        //batch.draw(img, 0, 0);
-        //batch.end();
         mapRenderer.setView(camera);
         int l[] = {staticEnvironment.getLayerIndex(StaticEnvironment.TileId.Visible)};
         mapRenderer.render(l);
-
-        //mapRenderer2.setView(camera);
-        //mapRenderer2.render();
 
         enemies.render(dt, sprites);
         weapons.render(dt, sprites);
@@ -133,7 +146,8 @@ public class MyGdxGame implements ApplicationListener {
 
         batch.begin();
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
-        batch.end();	}
+        batch.end();
+    }
 
     @Override
     public void pause() {
@@ -147,6 +161,7 @@ public class MyGdxGame implements ApplicationListener {
 
     @Override
     public void resize(int width, int height) {
+        if(staticEnvironment == null) return;
         float w = 0f;
         if(Gdx.graphics.getHeight() > Gdx.graphics.getWidth()) {
             camera.setToOrtho(false,
@@ -189,10 +204,30 @@ public class MyGdxGame implements ApplicationListener {
     void loadLevel() {
         players.clear();
         enemies.clear();
-        staticEnvironment = new StaticEnvironment();
-        staticEnvironment.setTiledLevel("level_1.tmx", enemies, collisionDetection);
+        collisionDetection.clear();
+
+        staticEnvironment.dispose();
+        assetManager.dispose();
+        assetManager = new AssetManager();
+        assetManager.setLoader(TiledMap.class, new TmxMapLoader());
+
+        assetManager.load("level_1.tmx", TiledMap.class);
+
+        assetManager.finishLoading();
+        TiledMap tiledMap = assetManager.get("level_1.tmx", TiledMap.class);
+
+        staticEnvironment = new StaticEnvironment(tiledMap, collisionDetection);
+        assetManager.finishLoading();
+        for(StaticEnvironment.Entity entity : staticEnvironment.entities) {
+            if (entity.name.equals("clown")) {
+                enemies.add(CreateEnemies.clown(assetManager, entity.position, entity.size.y, staticEnvironment, collisionDetection));
+
+            }
+        }
         players.add(new Player(new Vector2(staticEnvironment.tileSizeInPixels * 4, staticEnvironment.tileSizeInPixels*8), new Vector2(), new Vector2(staticEnvironment.tileSizeInPixels*2, staticEnvironment.tileSizeInPixels*2), staticEnvironment, collisionDetection));
         mapRenderer = new OrthogonalTiledMapRenderer(staticEnvironment.getMap());
+
+        assetManager.finishLoading();
     }
 
     float getAspectRatio() {

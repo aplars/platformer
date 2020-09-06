@@ -1,6 +1,8 @@
 package com.sa.game;
 
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.MapObject;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.IntFloatMap.Entry;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.entities.CreateEnemies;
 import com.sa.game.entities.Enemies;
@@ -21,20 +24,42 @@ public class StaticEnvironment {
         Wall
     }
 
+    public class Entity {
+        public String name;
+        public Vector2 position = new Vector2();
+        public Vector2 size = new Vector2();
+
+        public Entity(String name, Vector2 position, Vector2 size) {
+            this.name = name;
+            this.position.set(position);
+            this.size.set(size);
+        }
+    }
+
+    public ArrayList<Entity> entities = new ArrayList<>();
+
     public TiledMap tiledMap;
 
     public int tileSizeInPixels;
 
-    public StaticEnvironment() {
+    public StaticEnvironment() {}
+
+    public StaticEnvironment(TiledMap tiledMap, CollisionDetection collisionDetection) {
+        setTiledLevel(tiledMap, collisionDetection);
+    }
+
+    public void dispose() {
+        if(tiledMap != null)
+            tiledMap.dispose();
+        tiledMap = null;
     }
 
      public  TiledMap getMap() {
         return tiledMap;
     }
 
-    public void setTiledLevel(String file, Enemies enemies, CollisionDetection collisionDetection) {
-        tiledMap = new TmxMapLoader().load(file);
-
+    private void     setTiledLevel(TiledMap tiledMap, CollisionDetection collisionDetection) {
+        this.tiledMap = tiledMap;
         TiledMapTileLayer inLayer =  (TiledMapTileLayer)tiledMap.getLayers().get("base");
         tileSizeInPixels = (int)inLayer.getTileWidth();
 
@@ -82,11 +107,8 @@ public class StaticEnvironment {
             if(mapObject.getProperties().get("type", String.class).equals("clown")) {
                 RectangleMapObject rectangleMapObject = (RectangleMapObject)mapObject;
                 Vector2 center = new Vector2();
-                FileHandle clownAtlasFileHandle = Gdx.files.internal("clown.atlas");
-
-
-
-                enemies.add(CreateEnemies.clown(rectangleMapObject.getRectangle().getCenter(center), rectangleMapObject.getRectangle().height, clownAtlasFileHandle,this, collisionDetection));
+                Vector2 size = new Vector2();
+                entities.add(new Entity(mapObject.getProperties().get("type", String.class), rectangleMapObject.getRectangle().getCenter(center), rectangleMapObject.getRectangle().getSize(size)));
             }
         }
 
@@ -121,6 +143,7 @@ public class StaticEnvironment {
     }
 
     public int getNumTilesX() {
+        if(getMap() == null) return 0;
         if(getMap().getLayers() == null || getMap().getLayers().getCount() <= 0)
             return 0;
         TiledMapTileLayer layer = (TiledMapTileLayer)getMap().getLayers().get("base");
@@ -128,6 +151,7 @@ public class StaticEnvironment {
     }
 
     public int getNumTilesY() {
+        if(getMap() == null) return 0;
         if(getMap().getLayers() == null || getMap().getLayers().getCount() <= 0) return 0;
         TiledMapTileLayer layer = (TiledMapTileLayer)getMap().getLayers().get("base");
         return layer.getHeight();

@@ -30,6 +30,10 @@ public class PlayerProjectiles implements Iterable<PlayerProjectile> {
                 collisionDetection.remove(projectile.collisionEntity);
                 iterator.remove();
             }
+            if(projectile.collisionEntity.collidees.size() > 0) {
+                collisionDetection.remove(projectile.collisionEntity);
+                iterator.remove();
+            }
         }
     }
 

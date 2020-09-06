@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.sa.game.StaticEnvironment;
+import com.sa.game.collision.CollisionDetection;
 import com.sa.game.gfx.Sprites;
 
 public class Enemies {
@@ -18,6 +19,7 @@ public class Enemies {
     }
 
     public void clear() {
+
         enemies.clear();
     }
 
@@ -31,7 +33,7 @@ public class Enemies {
         }
     }
 
-    public void update(float dt, StaticEnvironment staticEnvironment) {
+    public void update(float dt, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         //Move the player to the top if it falls under zero
         for (Enemy enemy : enemies) {
             if(enemy.position.y < 0) {
@@ -44,6 +46,7 @@ public class Enemies {
             Enemy enemy = enemyIterator.next();
             if(enemy.isShoot) {
                 enemyIterator.remove();
+                collisionDetection.remove(enemy.collisionEntity);
             }
         }
 

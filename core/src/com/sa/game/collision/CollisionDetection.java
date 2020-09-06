@@ -16,6 +16,10 @@ public class CollisionDetection {
         entities.remove(entity);
     }
 
+    public  void clear() {
+        entities.clear();
+    }
+
     public void update(float dt) {
         //Clear all collisions. New ones get populated below.
         for(final CollisionEntity a : entities) {

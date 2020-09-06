@@ -15,16 +15,21 @@ public class EnemyAnimations {
         Stunned
     }
 
+    public static class Data {
+        public float duration;
+        public PlayMode playMode;
+
+        public Data(float duration, PlayMode playMode) {
+            this.duration = duration;
+            this.playMode = playMode;
+        }
+    }
+
     HashMap<AnimationType, Animation<TextureRegion>> animations = new HashMap<>();
     Animation<TextureRegion> currentAnimation;
     float currentTime = 0f;
 
-    public EnemyAnimations(Animation<TextureRegion> idleAnimation, Animation<TextureRegion> walkAnimation, Animation<TextureRegion> stunnedAnimation) {
-        //final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(atlasFile));
-        //Animation<TextureRegion> idleAnimation = new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("idle"), PlayMode.LOOP);
-        //Animation<TextureRegion> walkAnimation = new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), PlayMode.LOOP);
-        //Animation<TextureRegion> stunnedAnimation = new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("stunned"), PlayMode.NORMAL);
-
+    public EnemyAnimations(TextureAtlas atlas, Animation<TextureRegion> idleAnimation, Animation<TextureRegion> walkAnimation, Animation<TextureRegion> stunnedAnimation) {
         animations.put(AnimationType.Idle, idleAnimation);
         animations.put(AnimationType.Walk, walkAnimation);
         animations.put(AnimationType.Stunned, stunnedAnimation);
