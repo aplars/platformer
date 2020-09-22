@@ -39,6 +39,7 @@ public class Enemies {
             if(enemy.position.y < 0) {
                 enemy.position.y = staticEnvironment.getWorldBoundY();
             }
+
         }
 
         Iterator<Enemy> enemyIterator = enemies.iterator();

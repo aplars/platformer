@@ -18,6 +18,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -26,6 +28,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.sa.game.collision.*;
 import com.sa.game.dirwatcher.DirWatcher;
 import com.sa.game.entities.*;
+import com.sa.game.gfx.PlayerAnimations;
 import com.sa.game.gfx.Sprites;
 
 public class MyGdxGame implements ApplicationListener {
@@ -198,6 +201,7 @@ public class MyGdxGame implements ApplicationListener {
 
         Timer timer = new Timer();
         timer.schedule( dirWatcher , new Date(), 1000 );
+      
         return game;
     }
 
@@ -205,12 +209,12 @@ public class MyGdxGame implements ApplicationListener {
         players.clear();
         enemies.clear();
         collisionDetection.clear();
-
+        
         staticEnvironment.dispose();
         assetManager.dispose();
         assetManager = new AssetManager();
         assetManager.setLoader(TiledMap.class, new TmxMapLoader());
-
+        
         assetManager.load("level_1.tmx", TiledMap.class);
 
         assetManager.finishLoading();
@@ -220,11 +224,33 @@ public class MyGdxGame implements ApplicationListener {
         assetManager.finishLoading();
         for(StaticEnvironment.Entity entity : staticEnvironment.entities) {
             if (entity.name.equals("clown")) {
-                enemies.add(CreateEnemies.clown(assetManager, entity.position, entity.size.y, staticEnvironment, collisionDetection));
+                enemies.add(CreateEnteties.clown(assetManager, entity.position, entity.size.y, staticEnvironment, collisionDetection));
 
             }
         }
-        players.add(new Player(new Vector2(staticEnvironment.tileSizeInPixels * 4, staticEnvironment.tileSizeInPixels*8), new Vector2(), new Vector2(staticEnvironment.tileSizeInPixels*2, staticEnvironment.tileSizeInPixels*2), staticEnvironment, collisionDetection));
+
+        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
+        PlayerAnimations playerAnimations = new PlayerAnimations(
+                                                                 new Animation<TextureRegion>(1 / 60f * 6f, textureAtlas.findRegions("walk"), PlayMode.LOOP),
+                                                                 new Animation<TextureRegion>(1 / 60f * 6f, textureAtlas.findRegions("walk"), PlayMode.LOOP));
+
+        /*
+        players.add(new Player(
+                               new Vector2(staticEnvironment.tileSizeInPixels * 4, staticEnvironment.tileSizeInPixels*8),
+                               new Vector2(),
+                               new Vector2(staticEnvironment.tileSizeInPixels*2, staticEnvironment.tileSizeInPixels*2),
+                               playerAnimations,
+                               staticEnvironment,
+                               collisionDetection));
+        */
+        players.add(
+                    CreateEnteties.player(assetManager,
+                                          new Vector2(staticEnvironment.tileSizeInPixels * 4, staticEnvironment.tileSizeInPixels*8),
+                                          new Vector2(staticEnvironment.tileSizeInPixels*2, staticEnvironment.tileSizeInPixels*2),
+                                          staticEnvironment,
+                                          collisionDetection)
+                    );
+
         mapRenderer = new OrthogonalTiledMapRenderer(staticEnvironment.getMap());
 
         assetManager.finishLoading();

@@ -52,7 +52,7 @@ public class Enemy {
     public DefaultStateMachine<Enemy, ClownEnemyBrain>  stateMachine;
     public  String name;
 
-    EnemyAnimations animation;
+    EnemyAnimations animations;
 
     TextureRegion currentFrame;
     WalkDirection walkDirection = WalkDirection.Right;
@@ -65,17 +65,17 @@ public class Enemy {
         gravity = -2*(staticEnvironment.tileSizeInPixels*5f+2)/(float)Math.pow(jumpTime, 2f);
         _moveAcceleration = 30*staticEnvironment.tileSizeInPixels;
 
-        Rectangle collisionRectangle = new Rectangle(0, 0, size, size);
+        Rectangle collisionRectangle = new Rectangle();
+        collisionRectangle.setSize(size, size);
         collisionRectangle.setCenter(position.x, position.y);
-
         collisionEntity.box.set(collisionRectangle);
         collisionEntity.velocity = velocity;
         collisionEntity.userData = this;
         collisionDetection.add(collisionEntity);
 
         this.stateMachine = new DefaultStateMachine<>(this, enemyState);
-        animation = enemyAnimations;
-        currentFrame = animation.getKeyFrame();
+        animations = enemyAnimations;
+        currentFrame = animations.getKeyFrame();
     }
 
     public void moveLeft(float dt) {
@@ -102,7 +102,6 @@ public class Enemy {
     public void update(float dt, StaticEnvironment staticEnvironment) {
         isOnGround = false;
 
-
         FloorCollisionData groundCollisionData = IntersectionTests.rectangleGround(dt, collisionEntity.box, velocity, staticEnvironment);
         WallCollisionData wallsCollisionData = IntersectionTests.rectangleWalls(dt, collisionEntity.box, velocity, staticEnvironment);
 
@@ -128,6 +127,8 @@ public class Enemy {
 
         position.mulAdd(velocity, dt);
         collisionEntity.box.setCenter(position);
+        collisionEntity.box.setSize(size, size);
+
         stateData.dt = dt;
         stateData.floorCollision = groundCollisionData.didCollide;
         stateData.wallCollision = wallsCollisionData.didCollide;
@@ -138,23 +139,23 @@ public class Enemy {
             velocity.x /= (1+friction);
 
         if(stateData.isStunned) {
-            animation.setCurrentAnimation(EnemyAnimations.AnimationType.Stunned);
+            animations.setCurrentAnimation(EnemyAnimations.AnimationType.Stunned);
         }
         else if(stateData.currentDirection == XDirection.Idle) {
-            animation.setCurrentAnimation(EnemyAnimations.AnimationType.Idle);
+            animations.setCurrentAnimation(EnemyAnimations.AnimationType.Idle);
         }
         else {
-            animation.setCurrentAnimation(EnemyAnimations.AnimationType.Walk);
+            animations.setCurrentAnimation(EnemyAnimations.AnimationType.Walk);
         }
-        
-        animation.update(dt);
+
+        animations.update(dt);
         //currentTime += dt;
     }
 
     Sprite sprite = new Sprite();
 
     public void render(float t, Sprites sprites) {
-        sprite.textureRegion.setRegion(animation.getKeyFrame());
+        sprite.textureRegion.setRegion(animations.getKeyFrame());
         sprite.position.set(collisionEntity.box.x, collisionEntity.box.y);
         sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
         sprite.mirrorX = (walkDirection == WalkDirection.Left);

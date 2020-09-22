@@ -18,8 +18,10 @@ import com.sa.game.collision.CollisionEntity;
 import com.sa.game.collision.FloorCollisionData;
 import com.sa.game.collision.IntersectionTests;
 import com.sa.game.collision.WallCollisionData;
+import com.sa.game.gfx.PlayerAnimations;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.gfx.Sprites;
+import com.sa.game.gfx.PlayerAnimations.AnimationType;
 
 public class Player {
     enum State {
@@ -61,23 +63,27 @@ public class Player {
     State state = State.Alive;
     AliveState aliveState = AliveState.Idle;
 
-    TextureAtlas textureAtlas;
-    Animation<TextureRegion> walkAnimation;
+    //TextureAtlas textureAtlas;
+    //Animation<TextureRegion> walkAnimation;
+
+    PlayerAnimations animations;
+
     SpriteBatch spriteBatch;
     TextureRegion currentFrame;
-    float currentTime = 0f;
 
     PlayerWeapon weapon = null;
 
     WalkDirection walkDirection = WalkDirection.Right;
 
-    public Player(Vector2 pos, Vector2 vel, Vector2 siz, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public Player(Vector2 pos, Vector2 vel, Vector2 siz, PlayerAnimations playerAnimations, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         position.set(pos);
         velocity.set(vel);
         size.set(siz);
 
         Rectangle box = new Rectangle(0, 0, size.x, size.y);
         box.setCenter(position.x, position.y);
+
+        animations = playerAnimations;
 
         collisionEntity = new CollisionEntity();
         collisionEntity.box.set(box);
@@ -90,10 +96,13 @@ public class Player {
         _jumpVelocity = 2f*(staticEnvironment.tileSizeInPixels*5f+2)/jumpTime;
         _moveAcceleration = 30*staticEnvironment.tileSizeInPixels;
 
-        textureAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
-        walkAnimation = new Animation<TextureRegion>(1 / 60f * 6f, textureAtlas.findRegions("walk"), PlayMode.LOOP);
+        //textureAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
+        //walkAnimation = new Animation<TextureRegion>(1 / 60f * 6f, textureAtlas.findRegions("walk"), PlayMode.LOOP);
         spriteBatch = new SpriteBatch();
-        currentFrame = walkAnimation.getKeyFrame(currentTime, true);
+        //currentFrame = walkAnimation.getKeyFrame(currentTime, true);
+
+        animations.setCurrentAnimation(AnimationType.Walk);
+        currentFrame = animations.getKeyFrame();
     }
 
     public void warpToTop(StaticEnvironment staticEnvironment) {
@@ -135,7 +144,6 @@ public class Player {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && isOnGround) {
             velocity.y = _jumpVelocity;
             isJumpButtonPressed = true;
-            jumpTime = 0f;
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.P) && isOnGround) {
@@ -173,7 +181,6 @@ public class Player {
             if (controller.getButton(1) && isOnGround) {
                 velocity.y = _jumpVelocity;
                 isJumpButtonPressed = true;
-                jumpTime = 0f;
             }
 
             if (!controller.getButton(1)) {
@@ -185,9 +192,6 @@ public class Player {
                 fireTimer = timeToWaitUntilNextFire;
             }
 
-        }
-        if(isJumpButtonPressed && !isOnGround && jumpTime < maxJumpTime) {
-            jumpTime+=dt;
         }
 
         fireTimer-=dt;
@@ -259,9 +263,9 @@ public class Player {
             velocity.x /= (1+airResistance);
         velocity.y /= (1+0.0);
 
-        if(Math.abs(moveAcceleration.x) > 1f)
-            currentFrame = walkAnimation.getKeyFrame(currentTime, true);
-
+        if(Math.abs(moveAcceleration.x) > 1f) {
+            currentFrame = animations.getKeyFrame();
+        }
         if(fire && weapon == null) {
             float projDir = (walkDirection == WalkDirection.Left) ? -300f : 300f;
             projectiles.add(new PlayerProjectile(new Vector2(position), new Vector2(projDir, 0f), staticEnvironment, collisionDetection));
@@ -274,7 +278,7 @@ public class Player {
             weapon.setPosition(position.x, position.y +  this.collisionEntity.box.height*0.8f);
             weapon.update(dt, staticEnvironment);
         }
-        currentTime += dt;
+        animations.update(dt);
     }
     Sprite sprite = new Sprite();
 

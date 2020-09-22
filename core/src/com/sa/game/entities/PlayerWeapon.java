@@ -25,6 +25,7 @@ public class PlayerWeapon {
     Vector2 velocity = new Vector2();
     public Vector2 dstPosition = new Vector2();
     float gravity = 0f;
+
     private Vector2 acceleration = new Vector2();
     boolean fire = false;
 
@@ -63,6 +64,7 @@ public class PlayerWeapon {
         currentFrame = animation.getKeyFrame(currentTime, true);
 
     }
+
 
     void fire(WalkDirection direction) {
         fire = true;

@@ -14,7 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntFloatMap.Entry;
 import com.sa.game.collision.CollisionDetection;
-import com.sa.game.entities.CreateEnemies;
+import com.sa.game.entities.CreateEnteties;
 import com.sa.game.entities.Enemies;
 
 public class StaticEnvironment {
@@ -104,7 +104,8 @@ public class StaticEnvironment {
         }
 
         for(MapObject mapObject : tiledMap.getLayers().get("enemies").getObjects()) {
-            if(mapObject.getProperties().get("type", String.class).equals("clown")) {
+            if(mapObject
+               .getProperties().get("type", String.class).equals("clown")) {
                 RectangleMapObject rectangleMapObject = (RectangleMapObject)mapObject;
                 Vector2 center = new Vector2();
                 Vector2 size = new Vector2();
