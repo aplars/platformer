@@ -11,6 +11,7 @@ import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.gfx.EnemyAnimations;
 import com.sa.game.gfx.PlayerAnimations;
+import com.sa.game.gfx.PlayerWeaponAnimations;
 import com.sa.game.statemachines.ClownEnemyBrain;
 
 public class CreateEnteties {
@@ -30,7 +31,6 @@ public class CreateEnteties {
                 staticEnvironment,
                 collisionDetection
         );
-        
         return enemy;
     }
 
@@ -39,11 +39,6 @@ public class CreateEnteties {
         assetManager.load("enteties/player/player.atlas", TextureAtlas.class);
         assetManager.finishLoadingAsset("enteties/player/player.atlas");
         TextureAtlas atlas = assetManager.get("enteties/player/player.atlas", TextureAtlas.class);
-
-
-
-
-
         PlayerAnimations playerAnimations = new PlayerAnimations(
                                                                  new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), PlayMode.LOOP),
                                                                  new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), PlayMode.LOOP));
@@ -56,4 +51,8 @@ public class CreateEnteties {
                    collisionDetection);
     }
 
+    public static PlayerWeapon playerWeapon(PlayerWeaponAnimations playerWeaponAnimations, Vector2 position, Vector2 velocity, float size, CollisionDetection collisionDetection) {
+
+        return new PlayerWeapon(position, velocity, size, playerWeaponAnimations, collisionDetection);
+    }
 }

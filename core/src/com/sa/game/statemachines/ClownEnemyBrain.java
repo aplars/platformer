@@ -8,102 +8,103 @@ import com.sa.game.collision.CollisionEntity;
 import com.sa.game.entities.Enemy;
 import com.sa.game.entities.Player;
 import com.sa.game.entities.PlayerProjectile;
+import com.sa.game.entities.Enemy.EnemyStateData;
 import com.sa.game.entities.Enemy.XDirection;
 
-public enum ClownEnemyBrain implements State<Enemy> {
+public enum ClownEnemyBrain implements State<Enemy.EnemyStateData> {
     IS_SHOOT() {
         @Override
-        public void update(Enemy enemy) {
-            enemy.stateData.isStunned = true;
-            enemy.idle(enemy.stateData.dt);
+        public void update(Enemy.EnemyStateData enemy) {
+            enemy.isStunned = true;
+            enemy.idle();
             for(CollisionEntity collisionEntity : enemy.collisionEntity.collidees) {
                 if(collisionEntity.userData instanceof Player) {
                     //enemy.stateMachine.changeState(IS_WEAPON);
                 }
             }
 
-            enemy.stateData.stunnedTime-=enemy.stateData.dt;
-            if(enemy.stateData.stunnedTime <= 0f) {
-                enemy.stateData.stunnedTime = 5f;
+            enemy.stunnedTime-=enemy.dt;
+            if(enemy.stunnedTime <= 0f) {
+                enemy.stunnedTime = 5f;
                 enemy.stateMachine.revertToPreviousState();
             }
         }
 
         @Override
-        public void exit(Enemy enemy) {
-            enemy.stateData.isStunned = false;
+         public void exit(Enemy.EnemyStateData enemy) {
+            enemy.isStunned = false;
         }
     },
     RESTING() {
         @Override
-        public void update(Enemy enemy) {
+        public void update(Enemy.EnemyStateData enemy) {
             for(CollisionEntity collisionEntity : enemy.collisionEntity.collidees) {
                 if(collisionEntity.userData instanceof PlayerProjectile) {
                     enemy.stateMachine.changeState(IS_SHOOT);
                 }
             }
-            enemy.stateData.currentDirection = XDirection.Idle;
-            enemy.stateData.restTime -= enemy.stateData.dt;
-            enemy.stateData.restTime = Math.max(enemy.stateData.restTime, 0f);
-            if(enemy.stateData.restTime <= 0f) {
-                enemy.stateData.restTime = MathUtils.random(3f, 5f);
-                enemy.stateData.currentDirection = XDirection.Left;
+            enemy.currentDirection = XDirection.Idle;
+            enemy.restTime -= enemy.dt;
+            enemy.restTime = Math.max(enemy.restTime, 0f);
+            if(enemy.restTime <= 0f) {
+                enemy.restTime = MathUtils.random(3f, 5f);
+                enemy.currentDirection = XDirection.Left;
                 enemy.stateMachine.changeState(WANDERS_ON_PLATFORM);
             }
         }
     },
     WANDERS_ON_PLATFORM {
         @Override
-        public void update(Enemy enemy) {
+        public void update(Enemy.EnemyStateData enemy) {
             for(CollisionEntity collisionEntity : enemy.collisionEntity.collidees) {
                 if(collisionEntity.userData instanceof PlayerProjectile) {
                     enemy.stateMachine.changeState(IS_SHOOT);
                 }
             }
-            if(enemy.stateData.wallCollision) {
-                if(enemy.stateData.currentDirection == Enemy.XDirection.Left)
-                    enemy.stateData.currentDirection = Enemy.XDirection.Right;
+            if(enemy.wallCollision) {
+                if(enemy.currentDirection == Enemy.XDirection.Left)
+                    enemy.currentDirection = Enemy.XDirection.Right;
                 else
-                    enemy.stateData.currentDirection = Enemy.XDirection.Left;
+                    enemy.currentDirection = Enemy.XDirection.Left;
             }
             int tilex = (int) (enemy.collisionEntity.box.x + enemy.collisionEntity.box.width)
-                    / enemy.stateData.staticEnvironment.tileSizeInPixels;
+                    / enemy.staticEnvironment.tileSizeInPixels;
 
-            int tiley = (int) enemy.collisionEntity.box.y / enemy.stateData.staticEnvironment.tileSizeInPixels - 1;
+            int tiley = (int) enemy.collisionEntity.box.y / enemy.staticEnvironment.tileSizeInPixels - 1;
 
             int id = 0;
             if(tilex >= 0 && tiley >= 0)
-                id = enemy.stateData.staticEnvironment.getTileId(StaticEnvironment.TileId.Floor, tilex, tiley);
+                id = enemy.staticEnvironment.getTileId(StaticEnvironment.TileId.Floor, tilex, tiley);
             if(id == 0) {
-                enemy.stateData.currentDirection = Enemy.XDirection.Left;
+                enemy.currentDirection = Enemy.XDirection.Left;
             }
 
-            id = enemy.stateData.staticEnvironment.getTileId(StaticEnvironment.TileId.Floor,
-                                                             (int)(enemy.collisionEntity.box.x)/enemy.stateData.staticEnvironment.tileSizeInPixels,
-                                                             (int)enemy.collisionEntity.box.y/enemy.stateData.staticEnvironment.tileSizeInPixels - 1);
+            id = enemy.staticEnvironment.getTileId(StaticEnvironment.TileId.Floor,
+                                                             (int)(enemy.collisionEntity.box.x)/enemy.staticEnvironment.tileSizeInPixels,
+                                                             (int)enemy.collisionEntity.box.y/enemy.staticEnvironment.tileSizeInPixels - 1);
             if(id == 0) {
-                enemy.stateData.currentDirection = Enemy.XDirection.Right;
+                enemy.currentDirection = Enemy.XDirection.Right;
             }
 
-            if(enemy.stateData.currentDirection == Enemy.XDirection.Left)
-                enemy.moveLeft(enemy.stateData.dt);
-            if(enemy.stateData.currentDirection == Enemy.XDirection.Right)
-                enemy.moveRight(enemy.stateData.dt);
+            if(enemy.currentDirection == Enemy.XDirection.Left)
+                enemy.moveLeft();
+            if(enemy.currentDirection == Enemy.XDirection.Right)
+                enemy.moveRight();
         }
     };
 
     ClownEnemyBrain() {
     }
     @Override
-    public void enter(Enemy enemy) {
+    public void enter(Enemy.EnemyStateData enemy) {
     }
 
     @Override
-    public void exit(Enemy enemy) {
+    public void exit(Enemy.EnemyStateData enemy) {
     }
 
     @Override
-    public boolean onMessage(Enemy troll, Telegram telegram) {
+    public boolean onMessage(Enemy.EnemyStateData troll, Telegram telegram) {
         return false;
     }
 }

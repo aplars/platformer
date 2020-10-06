@@ -47,7 +47,7 @@ public class Enemies {
             Enemy enemy = enemyIterator.next();
             if(enemy.isShoot) {
                 enemyIterator.remove();
-                collisionDetection.remove(enemy.collisionEntity);
+                collisionDetection.remove(enemy.stateData.collisionEntity);
             }
         }
 

@@ -1,6 +1,7 @@
 package com.sa.game.entities;
 
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
+import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -33,6 +34,25 @@ public class Enemy {
         public XDirection currentDirection = XDirection.Left;
         public float stunnedTime = 5f;
         public boolean isStunned = false;
+        private float _moveAcceleration = 0f;
+        private Vector2 moveAcceleration = new Vector2();
+        public WalkDirection walkDirection = WalkDirection.Right;
+
+        public CollisionEntity collisionEntity = new CollisionEntity();
+        public void moveLeft() {
+            moveAcceleration.set(-_moveAcceleration, 0f);
+            walkDirection = WalkDirection.Left;
+        }
+
+        public void moveRight() {
+            moveAcceleration.set(_moveAcceleration, 0f);
+            walkDirection = WalkDirection.Right;
+        }
+
+        public void idle() {
+            moveAcceleration.set(0f, 0f);
+        }
+        public DefaultStateMachine<EnemyStateData, State<EnemyStateData>>  stateMachine;
     }
     public EnemyStateData stateData = new EnemyStateData();
     public Vector2 position = new Vector2();
@@ -40,71 +60,51 @@ public class Enemy {
     float size = 0f;
     float gravity = 26f*32;
     private final Vector2 acceleration = new Vector2();
-    private float _moveAcceleration = 0f;
-    private Vector2 moveAcceleration = new Vector2();
     boolean isOnGround = false;
-    public CollisionEntity collisionEntity = new CollisionEntity();
 
     private float friction = 0.1f;
     //private float airResistance = 0.2f;
 
     public boolean isShoot = false;
-    public DefaultStateMachine<Enemy, ClownEnemyBrain>  stateMachine;
     public  String name;
 
-    EnemyAnimations animations;
+    public  EnemyAnimations animations;
 
     TextureRegion currentFrame;
-    WalkDirection walkDirection = WalkDirection.Right;
 
-    public Enemy(String name, Vector2 position, float size, EnemyAnimations enemyAnimations, ClownEnemyBrain enemyState, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public Enemy(String name, Vector2 position, float size, EnemyAnimations enemyAnimations, State<EnemyStateData> enemyState, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         this.name = name;
         this.position.set(position);
         this.size = size;
         float jumpTime = 0.5f;
         gravity = -2*(staticEnvironment.tileSizeInPixels*5f+2)/(float)Math.pow(jumpTime, 2f);
-        _moveAcceleration = 30*staticEnvironment.tileSizeInPixels;
+        stateData._moveAcceleration = 30*staticEnvironment.tileSizeInPixels;
 
         Rectangle collisionRectangle = new Rectangle();
         collisionRectangle.setSize(size, size);
         collisionRectangle.setCenter(position.x, position.y);
-        collisionEntity.box.set(collisionRectangle);
-        collisionEntity.velocity = velocity;
-        collisionEntity.userData = this;
-        collisionDetection.add(collisionEntity);
+        stateData.collisionEntity.box.set(collisionRectangle);
+        stateData.collisionEntity.velocity = velocity;
+        stateData.collisionEntity.userData = this;
+        collisionDetection.add(stateData.collisionEntity);
 
-        this.stateMachine = new DefaultStateMachine<>(this, enemyState);
+        this.stateData.stateMachine = new DefaultStateMachine<>(this.stateData, enemyState);
         animations = enemyAnimations;
         currentFrame = animations.getKeyFrame();
     }
 
-    public void moveLeft(float dt) {
-        moveAcceleration.set(-_moveAcceleration, 0f);
-        walkDirection = WalkDirection.Left;
-    }
-
-    public void moveRight(float dt) {
-        moveAcceleration.set(_moveAcceleration, 0f);
-        walkDirection = WalkDirection.Right;
-    }
-
-    public void idle(float dt) {
-        moveAcceleration.set(0f, 0f);
-    }
-
     public void preUpdate(float dt) {
 
-        acceleration.x = moveAcceleration.x;
-        acceleration.y = moveAcceleration.y + gravity;
+        acceleration.x = stateData.moveAcceleration.x;
+        acceleration.y = stateData.moveAcceleration.y + gravity;
 
         velocity.mulAdd(acceleration, dt);
     }
     public void update(float dt, StaticEnvironment staticEnvironment) {
         isOnGround = false;
 
-        FloorCollisionData groundCollisionData = IntersectionTests.rectangleGround(dt, collisionEntity.box, velocity, staticEnvironment);
-        WallCollisionData wallsCollisionData = IntersectionTests.rectangleWalls(dt, collisionEntity.box, velocity, staticEnvironment);
-
+        FloorCollisionData groundCollisionData = IntersectionTests.rectangleGround(dt, stateData.collisionEntity.box, velocity, staticEnvironment);
+        WallCollisionData wallsCollisionData = IntersectionTests.rectangleWalls(dt, stateData.collisionEntity.box, velocity, staticEnvironment);
 
         if(groundCollisionData.didCollide)  {
             if(velocity.y < 0) {
@@ -119,21 +119,21 @@ public class Enemy {
         }
 
         //Handle collision vs weapons
-        for(CollisionEntity collidee : collisionEntity.collidees) {
+        for(CollisionEntity collidee : stateData.collisionEntity.collidees) {
             if(collidee.userData instanceof PlayerWeapon) {
                 isShoot = true;
             }
         }
 
         position.mulAdd(velocity, dt);
-        collisionEntity.box.setCenter(position);
-        collisionEntity.box.setSize(size, size);
+        stateData.collisionEntity.box.setCenter(position);
+        stateData.collisionEntity.box.setSize(size, size);
 
         stateData.dt = dt;
         stateData.floorCollision = groundCollisionData.didCollide;
         stateData.wallCollision = wallsCollisionData.didCollide;
         stateData.staticEnvironment = staticEnvironment;
-        stateMachine.update();
+        stateData.stateMachine.update();
 
         if(isOnGround)
             velocity.x /= (1+friction);
@@ -156,9 +156,9 @@ public class Enemy {
 
     public void render(float t, Sprites sprites) {
         sprite.textureRegion.setRegion(animations.getKeyFrame());
-        sprite.position.set(collisionEntity.box.x, collisionEntity.box.y);
-        sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
-        sprite.mirrorX = (walkDirection == WalkDirection.Left);
+        sprite.position.set(stateData.collisionEntity.box.x, stateData.collisionEntity.box.y);
+        sprite.size.set(stateData.collisionEntity.box.width, stateData.collisionEntity.box.height);
+        sprite.mirrorX = (stateData.walkDirection == WalkDirection.Left);
         sprites.add(sprite);
     }
 }

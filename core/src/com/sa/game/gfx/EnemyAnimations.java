@@ -26,6 +26,7 @@ public class EnemyAnimations {
         currentAnimation = animations.get(animation);
     }
 
+    public Animation<TextureRegion> getCurrentAnimation() { return currentAnimation; }
     public TextureRegion getKeyFrame() {
         return currentAnimation.getKeyFrame(currentTime);
     }

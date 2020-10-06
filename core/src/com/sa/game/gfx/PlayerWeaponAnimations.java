@@ -4,24 +4,26 @@ import java.util.HashMap;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class PlayerAnimations {
+public class PlayerWeaponAnimations {
     public enum AnimationType {
-        Idle,
-        Walk,
+        Stunned
     }
 
     HashMap<AnimationType, Animation<TextureRegion>> animations = new HashMap<>();
     Animation<TextureRegion> currentAnimation;
     float currentTime = 0f;
 
-    public PlayerAnimations(final Animation<TextureRegion> idleAnimation, final Animation<TextureRegion> walkAnimation) {
-        animations.put(AnimationType.Idle, idleAnimation);
-        animations.put(AnimationType.Walk, walkAnimation);
-        currentAnimation = idleAnimation;
+    public PlayerWeaponAnimations(final Animation<TextureRegion> stunnedAnimation) {
+        animations.put(AnimationType.Stunned, stunnedAnimation);
+        currentAnimation = stunnedAnimation;
     }
 
     public void setCurrentAnimation(final AnimationType animation) {
         currentAnimation = animations.get(animation);
+    }
+
+    public Animation<TextureRegion> getCurrentAnimation() {
+        return currentAnimation;
     }
 
     public TextureRegion getKeyFrame() {

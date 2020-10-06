@@ -1,4 +1,6 @@
 * platformer
+  ./gradlew desktop:run -Dorg.gradle.java.home=/usr/lib/jvm/java-8-openjdk-amd64/ --debug-jvm
+  
 ** tasks
 *** TODO hadle screen resize and multiple resolution
 *** TODO implement touch input for mobile

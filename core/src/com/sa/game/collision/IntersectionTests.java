@@ -44,7 +44,7 @@ public class IntersectionTests {
 
         //If the src rect is in a tile then we do not collide
         breakLoop = false;
-        if(didCollide) {
+        if(didCollide) { 
             minx = Math.max(0, (int) Math.floor(rectangle.x / staticEnvironment.tileSizeInPixels));
             miny = Math.max(0, (int) Math.floor(rectangle.y / staticEnvironment.tileSizeInPixels));
             maxx = Math.min(staticEnvironment.getNumTilesX(), (int) Math.ceil((rectangle.x + rectangle.width) / staticEnvironment.tileSizeInPixels));
@@ -54,7 +54,7 @@ public class IntersectionTests {
                     break;
                 for (int x = minx; x < maxx; x++) {
                     if(staticEnvironment.getTileId(StaticEnvironment.TileId.Wall, x, y) != 0) {
-                        didCollide = false;
+                         didCollide = false;
                         breakLoop = true;
                         break;
                     }

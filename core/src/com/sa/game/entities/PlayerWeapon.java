@@ -15,6 +15,7 @@ import com.sa.game.collision.CollisionEntity;
 import com.sa.game.collision.FloorCollisionData;
 import com.sa.game.collision.IntersectionTests;
 import com.sa.game.collision.WallCollisionData;
+import com.sa.game.gfx.PlayerWeaponAnimations;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.gfx.Sprites;
 
@@ -30,16 +31,15 @@ public class PlayerWeapon {
     boolean fire = false;
 
     SpriteBatch spriteBatch;
-    Animation<TextureRegion> animation;
-    TextureAtlas textureAtlas;
     float currentTime = 0f;
     TextureRegion currentFrame;
     WalkDirection walkDirection = WalkDirection.Left;
     int numCollisionsBeforeBreakage = 2;
     int numCollisions = 0;
     public boolean isDead = false;
+    PlayerWeaponAnimations playerWeaponAnimations;
 
-    public PlayerWeapon(Vector2 position, Vector2 velocity, float size, CollisionDetection collisionDetection) {
+    public PlayerWeapon(Vector2 position, Vector2 velocity, float size, PlayerWeaponAnimations playerWeaponAnimations, CollisionDetection collisionDetection) {
         shapeRenderer = new ShapeRenderer();
 
         this.position.set(position);
@@ -58,10 +58,9 @@ public class PlayerWeapon {
         collisionEntity.userData = this;
         collisionDetection.add(collisionEntity);
 
-        textureAtlas = new TextureAtlas(Gdx.files.internal("clown.atlas"));
-        animation = new Animation<TextureRegion>(1 / 60f * 6f, textureAtlas.findRegions("stunned"), PlayMode.LOOP);
         spriteBatch = new SpriteBatch();
-        currentFrame = animation.getKeyFrame(currentTime, true);
+        playerWeaponAnimations.setCurrentAnimation(PlayerWeaponAnimations.AnimationType.Stunned);
+        currentFrame = playerWeaponAnimations.getKeyFrame();;
 
     }
 

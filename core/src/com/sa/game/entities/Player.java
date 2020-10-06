@@ -3,6 +3,7 @@ package com.sa.game.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,6 +20,7 @@ import com.sa.game.collision.FloorCollisionData;
 import com.sa.game.collision.IntersectionTests;
 import com.sa.game.collision.WallCollisionData;
 import com.sa.game.gfx.PlayerAnimations;
+import com.sa.game.gfx.PlayerWeaponAnimations;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.gfx.Sprites;
 import com.sa.game.gfx.PlayerAnimations.AnimationType;
@@ -209,7 +211,7 @@ public class Player {
             weapon.preUpdate(dt);
     }
 
-    public void update(float dt, CollisionDetection collisionDetection, StaticEnvironment staticEnvironment, PlayerProjectiles projectiles, PlayerWeapons weapons, Enemies enemies) {
+    public void update(float dt, AssetManager assetManager, CollisionDetection collisionDetection, StaticEnvironment staticEnvironment, PlayerProjectiles projectiles, PlayerWeapons weapons, Enemies enemies) {
         isOnGround = false;
 
         FloorCollisionData groundCollisionData = IntersectionTests.rectangleGround(dt, collisionEntity.box, velocity, staticEnvironment);
@@ -223,8 +225,11 @@ public class Player {
 
                     //Remove it from the enemy list and add it as player weapon.
                     enemies.remove(enemy);
-                    collisionDetection.remove(enemy.collisionEntity);
-                    weapon = new PlayerWeapon(new Vector2(position), new Vector2(0f, 0f), enemy.size, collisionDetection);
+                    collisionDetection.remove(enemy.stateData.collisionEntity);
+                    if(weapon == null) {
+                        PlayerWeaponAnimations playerWeaponAnimations = new PlayerWeaponAnimations(enemy.animations.getCurrentAnimation());
+                        weapon = CreateEnteties.playerWeapon(playerWeaponAnimations, position, velocity, enemy.size, collisionDetection);
+                    }
                     //Run the add weapon sequence.
                     aliveState = AliveState.PickupWeapon;
 

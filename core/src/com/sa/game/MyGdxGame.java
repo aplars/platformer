@@ -111,6 +111,7 @@ public class MyGdxGame implements ApplicationListener {
         }
 
         if(!assetManager.isFinished()) {
+            assetManager.update();
             return;
         }
 
@@ -126,7 +127,7 @@ public class MyGdxGame implements ApplicationListener {
 
         collisionDetection.update(dt);
 
-        players.update(dt, staticEnvironment, collisionDetection, playerProjectiles, weapons, enemies);
+        players.update(dt, assetManager, staticEnvironment, collisionDetection, playerProjectiles, weapons, enemies);
         playerProjectiles.update(dt, collisionDetection, staticEnvironment.getWorldBoundY());
         weapons.update(dt, staticEnvironment, collisionDetection);
         enemies.update(dt, staticEnvironment, collisionDetection);
@@ -150,6 +151,7 @@ public class MyGdxGame implements ApplicationListener {
         batch.begin();
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
         batch.end();
+        assetManager.update();
     }
 
     @Override
@@ -230,10 +232,12 @@ public class MyGdxGame implements ApplicationListener {
         }
 
         TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
+
+        /*
         PlayerAnimations playerAnimations = new PlayerAnimations(
                                                                  new Animation<TextureRegion>(1 / 60f * 6f, textureAtlas.findRegions("walk"), PlayMode.LOOP),
                                                                  new Animation<TextureRegion>(1 / 60f * 6f, textureAtlas.findRegions("walk"), PlayMode.LOOP));
-
+        */
         /*
         players.add(new Player(
                                new Vector2(staticEnvironment.tileSizeInPixels * 4, staticEnvironment.tileSizeInPixels*8),

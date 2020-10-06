@@ -1,5 +1,6 @@
 package com.sa.game.entities;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
 import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
@@ -38,7 +39,7 @@ public class Players implements Iterable<Player> {
         }
     }
 
-    public void update(float dt, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection, PlayerProjectiles playerProjectiles, PlayerWeapons weapons, Enemies enemies) {
+    public void update(float dt, AssetManager assetManager, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection, PlayerProjectiles playerProjectiles, PlayerWeapons weapons, Enemies enemies) {
         //Move the player to the top if it falls under zero
         for (Player player : players) {
             if(player.position.y < 0) {
@@ -47,7 +48,7 @@ public class Players implements Iterable<Player> {
         }
 
         for (Player player : players) {
-            player.update(dt, collisionDetection, staticEnvironment, playerProjectiles, weapons, enemies);
+            player.update(dt, assetManager, collisionDetection, staticEnvironment, playerProjectiles, weapons, enemies);
         }
     }
 
