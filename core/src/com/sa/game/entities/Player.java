@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -211,7 +212,7 @@ public class Player {
             weapon.preUpdate(dt);
     }
 
-    public void update(float dt, AssetManager assetManager, CollisionDetection collisionDetection, StaticEnvironment staticEnvironment, PlayerProjectiles projectiles, PlayerWeapons weapons, Enemies enemies) {
+    public void update(float dt, AssetManager assetManager, CollisionDetection collisionDetection, StaticEnvironment staticEnvironment, PlayerStunProjectiles playerStunProjectiles, PlayerWeapons weapons, Enemies enemies) {
         isOnGround = false;
 
         FloorCollisionData groundCollisionData = IntersectionTests.rectangleGround(dt, collisionEntity.box, velocity, staticEnvironment);
@@ -224,8 +225,7 @@ public class Player {
                     //We shall pick up the enemy.
 
                     //Remove it from the enemy list and add it as player weapon.
-                    enemies.remove(enemy);
-                    collisionDetection.remove(enemy.stateData.collisionEntity);
+                    enemy.isShoot = true;
                     if(weapon == null) {
                         PlayerWeaponAnimations playerWeaponAnimations = new PlayerWeaponAnimations(enemy.animations.getCurrentAnimation());
                         weapon = CreateEnteties.playerWeapon(playerWeaponAnimations, position, velocity, enemy.size, collisionDetection);
@@ -243,7 +243,7 @@ public class Player {
         if(groundCollisionData.didCollide)  {
             if(velocity.y < 0) {
                 velocity.y = 0;
-                position.add(groundCollisionData.move);
+                position.add(0f, groundCollisionData.move.y);
             }
             isOnGround = true;
         }
@@ -273,7 +273,7 @@ public class Player {
         }
         if(fire && weapon == null) {
             float projDir = (walkDirection == WalkDirection.Left) ? -300f : 300f;
-            projectiles.add(new PlayerProjectile(new Vector2(position), new Vector2(projDir, 0f), staticEnvironment, collisionDetection));
+            playerStunProjectiles.add(new PlayerStunProjectile(new Vector2(position), new Vector2(projDir, 0f), staticEnvironment, collisionDetection));
         }
         else  if(fire && weapon != null) {
             weapons.add(weapon);

@@ -8,27 +8,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
 
 import com.sa.game.collision.*;
 import com.sa.game.dirwatcher.DirWatcher;
 import com.sa.game.entities.*;
-import com.sa.game.gfx.PlayerAnimations;
 import com.sa.game.gfx.Sprites;
 
 public class MyGdxGame implements ApplicationListener {
@@ -44,7 +36,7 @@ public class MyGdxGame implements ApplicationListener {
     StaticEnvironment staticEnvironment = new StaticEnvironment();
     Players players = new Players();
     Enemies enemies = new Enemies();
-    PlayerProjectiles playerProjectiles = new PlayerProjectiles();
+    PlayerStunProjectiles playerStunProjectiles = new PlayerStunProjectiles();
     PlayerWeapons weapons = new PlayerWeapons();
     //////////////////////////////////////////////////////////////
 
@@ -120,6 +112,9 @@ public class MyGdxGame implements ApplicationListener {
         if (Gdx.input.isKeyPressed(Input.Keys.F1)) {
             reloadLevel.set(true);
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.F2)) {
+            //enable/disable 
+        }
 
         players.preUpdate(dt);
         weapons.preUpdate(dt);
@@ -127,8 +122,8 @@ public class MyGdxGame implements ApplicationListener {
 
         collisionDetection.update(dt);
 
-        players.update(dt, assetManager, staticEnvironment, collisionDetection, playerProjectiles, weapons, enemies);
-        playerProjectiles.update(dt, collisionDetection, staticEnvironment.getWorldBoundY());
+        players.update(dt, assetManager, staticEnvironment, collisionDetection, playerStunProjectiles, weapons, enemies);
+        playerStunProjectiles.update(dt, collisionDetection, staticEnvironment.getWorldBoundY());
         weapons.update(dt, staticEnvironment, collisionDetection);
         enemies.update(dt, staticEnvironment, collisionDetection);
         camera.update();
@@ -137,13 +132,16 @@ public class MyGdxGame implements ApplicationListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         mapRenderer.setView(camera);
-        int l[] = {staticEnvironment.getLayerIndex(StaticEnvironment.TileId.Visible)};
+        int l[] = {
+                staticEnvironment.getLayerIndex(StaticEnvironment.TileId.Visible),
+                /*staticEnvironment.getLayerIndex(StaticEnvironment.TileId.LeftWall)*/};
+
         mapRenderer.render(l);
 
         enemies.render(dt, sprites);
         weapons.render(dt, sprites);
         players.render(dt, sprites);
-        playerProjectiles.render(dt, camera);
+        playerStunProjectiles.render(dt, camera);
 
         sprites.render(camera);
 
@@ -226,12 +224,26 @@ public class MyGdxGame implements ApplicationListener {
         assetManager.finishLoading();
         for(StaticEnvironment.Entity entity : staticEnvironment.entities) {
             if (entity.name.equals("clown")) {
-                enemies.add(CreateEnteties.clown(assetManager, entity.position, entity.size.y, staticEnvironment, collisionDetection));
-
+                enemies.add(
+                            CreateEnteties.clown(
+                                                 assetManager,
+                                                 entity.position,
+                                                 entity.size.y,
+                                                 staticEnvironment,
+                                                 collisionDetection));
+            }
+            if(entity.name.equals("player")) {
+                players.add(
+                            CreateEnteties.player(assetManager,
+                                                  entity.position,
+                                                  entity.size,
+                                                  staticEnvironment,
+                                                  collisionDetection)
+                );
             }
         }
 
-        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
+        //TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
 
         /*
         PlayerAnimations playerAnimations = new PlayerAnimations(
@@ -247,14 +259,15 @@ public class MyGdxGame implements ApplicationListener {
                                staticEnvironment,
                                collisionDetection));
         */
+        /*
         players.add(
                     CreateEnteties.player(assetManager,
                                           new Vector2(staticEnvironment.tileSizeInPixels * 4, staticEnvironment.tileSizeInPixels*8),
-                                          new Vector2(staticEnvironment.tileSizeInPixels*2, staticEnvironment.tileSizeInPixels*2),
+                                          new Vector2(staticEnvironment.tileSizeInPixels*1.8f, staticEnvironment.tileSizeInPixels*1.8f),
                                           staticEnvironment,
                                           collisionDetection)
                     );
-
+*/
         mapRenderer = new OrthogonalTiledMapRenderer(staticEnvironment.getMap());
 
         assetManager.finishLoading();

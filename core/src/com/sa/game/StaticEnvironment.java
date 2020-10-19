@@ -2,26 +2,23 @@ package com.sa.game;
 
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.IntFloatMap.Entry;
 import com.sa.game.collision.CollisionDetection;
-import com.sa.game.entities.CreateEnteties;
-import com.sa.game.entities.Enemies;
 
 public class StaticEnvironment {
     public enum TileId {
         Visible,
         Floor,
-        Wall
+        Wall,
+        LeftWall,
+        RightWall
     }
 
     public class Entity {
@@ -58,7 +55,7 @@ public class StaticEnvironment {
         return tiledMap;
     }
 
-    private void     setTiledLevel(TiledMap tiledMap, CollisionDetection collisionDetection) {
+    private void setTiledLevel(TiledMap tiledMap, CollisionDetection collisionDetection) {
         this.tiledMap = tiledMap;
         TiledMapTileLayer inLayer =  (TiledMapTileLayer)tiledMap.getLayers().get("base");
         tileSizeInPixels = (int)inLayer.getTileWidth();
@@ -69,6 +66,12 @@ public class StaticEnvironment {
         TiledMapTileLayer wallLayer = new TiledMapTileLayer(inLayer.getWidth(), inLayer.getHeight(), tileSizeInPixels, tileSizeInPixels);
         wallLayer.setName("wall");
         tiledMap.getLayers().add(wallLayer);
+        TiledMapTileLayer leftWallLayer = new TiledMapTileLayer(inLayer.getWidth(), inLayer.getHeight(), tileSizeInPixels, tileSizeInPixels);
+        leftWallLayer.setName("leftwall");
+        tiledMap.getLayers().add(leftWallLayer);
+        TiledMapTileLayer rightWallLayer = new TiledMapTileLayer(inLayer.getWidth(), inLayer.getHeight(), tileSizeInPixels, tileSizeInPixels);
+        rightWallLayer.setName("rightwall");
+        tiledMap.getLayers().add(rightWallLayer);
 
         for(int y = 0; y < inLayer.getHeight(); y++) {
             for(int x = 0; x < inLayer.getWidth(); x++) {
@@ -78,34 +81,34 @@ public class StaticEnvironment {
                 int tileId = incell.getTile().getId();
 
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-
+                
                 cell.setTile(tiledMap.getTileSets().getTileSet(0).getTile(tileId));
 
                 cell.getTile().setId(tileId);
                 if(y < inLayer.getHeight()-1 && inLayer.getCell(x, y+1) == null)
                     floorLayer.setCell(x, y, cell);
-                int gumEmptySurrounding = 0;
+
+                boolean emptyLeft = false;
                 if(x > 0 && inLayer.getCell(x-1, y) == null)
-                    gumEmptySurrounding++;
+                    emptyLeft = true;
+                boolean emptyRight = false;
                 if(x < inLayer.getWidth()-1 && inLayer.getCell(x+1, y) == null)
-                    gumEmptySurrounding++;
-                int numSolidSorounding = 0;
-                if(y > 0 && inLayer.getCell(x, y-1) != null)
-                    numSolidSorounding++;
-                if(y < inLayer.getHeight()-1 && inLayer.getCell(x, y+1) != null)
-                    numSolidSorounding++;
-                if(gumEmptySurrounding > 0  && numSolidSorounding > 0 && inLayer.getCell(x, y) != null) {
+                    emptyRight = true;
+                if(emptyLeft && emptyRight && inLayer.getCell(x, y) != null) {
                     wallLayer.setCell(x, y, cell);
-                    System.out.print(x);
-                    System.out.print(", ");
-                    System.out.println(y);
+                }
+                else if(emptyLeft) {
+                    rightWallLayer.setCell(x, y, cell);
+                }
+                else if(emptyRight) {
+                    leftWallLayer.setCell(x, y, cell);
                 }
             }
         }
 
         for(MapObject mapObject : tiledMap.getLayers().get("enemies").getObjects()) {
             if(mapObject
-               .getProperties().get("type", String.class).equals("clown")) {
+               .getProperties().get("type", String.class).equals("clown") && mapObject.isVisible()) {
                 RectangleMapObject rectangleMapObject = (RectangleMapObject)mapObject;
                 Vector2 center = new Vector2();
                 Vector2 size = new Vector2();
@@ -113,12 +116,23 @@ public class StaticEnvironment {
             }
         }
 
+        for(MapObject mapObject : tiledMap.getLayers().get("players").getObjects()) {
+            if(mapObject
+                    .getProperties().get("type", String.class).equals("player") && mapObject.isVisible()) {
+                RectangleMapObject rectangleMapObject = (RectangleMapObject)mapObject;
+                Vector2 center = new Vector2();
+                Vector2 size = new Vector2();
+                entities.add(new Entity(mapObject.getProperties().get("type", String.class), rectangleMapObject.getRectangle().getCenter(center), rectangleMapObject.getRectangle().getSize(size)));
+            }
+        }
     }
 
     public String getLayerName(TileId t) {
         if(t == TileId.Visible) return "base";
         if(t == TileId.Floor) return "floor";
         else if(t == TileId.Wall) return "wall";
+        else if(t == TileId.LeftWall) return "leftwall";
+        else if(t == TileId.RightWall) return "rightwall";
         else return "";
     }
 

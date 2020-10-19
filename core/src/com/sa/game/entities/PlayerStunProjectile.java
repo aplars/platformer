@@ -10,14 +10,14 @@ import com.sa.game.collision.CollisionDetection;
 import com.sa.game.collision.CollisionEntity;
 import com.sa.game.gfx.Sprite;
 
-public class PlayerProjectile {
+public class PlayerStunProjectile {
     public Vector2 position = new Vector2();
     public Vector2 velocity = new Vector2();
     public CollisionEntity collisionEntity = new CollisionEntity();
     private final ShapeRenderer shapeRenderer;
     private Sprite sprite = new Sprite();
 
-    public PlayerProjectile(Vector2 position, Vector2 velocity, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public PlayerStunProjectile(Vector2 position, Vector2 velocity, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
 
         this.position.set(position);
         this.velocity.set(velocity);

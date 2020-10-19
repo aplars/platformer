@@ -12,7 +12,7 @@ public class IntersectionTests {
         destRectangle.set(rectangle);
         Vector2 center = new Vector2();
         rectangle.getCenter(center);
-        center.add(velocity.x*dt, velocity.y*dt);
+        center.add(0f, velocity.y*dt);
         destRectangle.setCenter(center);
 
         int minx = Math.max(0, (int)Math.floor(destRectangle.x/staticEnvironment.tileSizeInPixels));
@@ -21,7 +21,8 @@ public class IntersectionTests {
         int maxy = Math.min(staticEnvironment.getNumTilesY(), (int)Math.ceil((destRectangle.y+destRectangle.height)/staticEnvironment.tileSizeInPixels));
 
         boolean didCollide = false;
-        float move = 0.0f;
+        float moveY = 0.0f;
+        float moveX = 0.0f;
         boolean breakLoop = false;
         for(int y = miny; y < maxy; y++) {
             if(breakLoop)
@@ -31,10 +32,10 @@ public class IntersectionTests {
                     //We did collide with the tile.
                     //Narrow to just the upper part of the tile.
                     if(destRectangle.y <= ((y+1) * staticEnvironment.tileSizeInPixels) &&
-                            rectangle.y >= ((y+1) * staticEnvironment.tileSizeInPixels))
+                       rectangle.y >= ((y+1) * staticEnvironment.tileSizeInPixels))
                     {
                         didCollide = true;
-                        move = ((y+1) * staticEnvironment.tileSizeInPixels)-(rectangle.y);
+                        moveY = ((y+1) * staticEnvironment.tileSizeInPixels+0.001f)-(rectangle.y);
                         breakLoop = true;
                         break;
                     }
@@ -42,13 +43,17 @@ public class IntersectionTests {
             }
         }
 
-        //If the src rect is in a tile then we do not collide
+        //If the rect at the collision point is in a tile then we do not collide
         breakLoop = false;
-        if(didCollide) { 
-            minx = Math.max(0, (int) Math.floor(rectangle.x / staticEnvironment.tileSizeInPixels));
-            miny = Math.max(0, (int) Math.floor(rectangle.y / staticEnvironment.tileSizeInPixels));
-            maxx = Math.min(staticEnvironment.getNumTilesX(), (int) Math.ceil((rectangle.x + rectangle.width) / staticEnvironment.tileSizeInPixels));
-            maxy = Math.min(staticEnvironment.getNumTilesY(), (int) Math.ceil((rectangle.y + rectangle.height) / staticEnvironment.tileSizeInPixels));
+        if(didCollide) {
+            Rectangle dst = new Rectangle();
+            dst.set(rectangle);
+            dst.setY(dst.getY() + moveY);
+
+            minx = Math.max(0, (int) Math.floor(dst.x / staticEnvironment.tileSizeInPixels));
+            miny = Math.max(0, (int) Math.floor(dst.y / staticEnvironment.tileSizeInPixels));
+            maxx = Math.min(staticEnvironment.getNumTilesX(), (int) Math.ceil((dst.x + dst.width) / staticEnvironment.tileSizeInPixels));
+            maxy = Math.min(staticEnvironment.getNumTilesY(), (int) Math.ceil((dst.y + dst.height) / staticEnvironment.tileSizeInPixels));
             for (int y = miny; y < maxy; y++) {
                 if (breakLoop)
                     break;
@@ -61,7 +66,7 @@ public class IntersectionTests {
                 }
             }
         }
-        return new FloorCollisionData(didCollide, new Vector2(0f, move));
+        return new FloorCollisionData(didCollide, new Vector2(moveX, moveY));
     }
 
     public static WallCollisionData rectangleWalls(final float dt, final Rectangle rectangle, final Vector2 velocity, final StaticEnvironment staticEnvironment) {
@@ -69,48 +74,46 @@ public class IntersectionTests {
         destRectangle.set(rectangle);
         Vector2 center = new Vector2();
         rectangle.getCenter(center);
-        center.add(velocity.x*dt, velocity.y*dt);
+        //center.add(velocity.x*dt, velocity.y*dt);
+        center.add(velocity.x*dt, 0f);
         destRectangle.setCenter(center);
 
         int minx = Math.max(0, (int)Math.floor(destRectangle.x/(float) staticEnvironment.tileSizeInPixels));
         int miny = Math.max(0, (int)Math.floor(destRectangle.y/(float)staticEnvironment.tileSizeInPixels));
         int maxx = Math.min(staticEnvironment.getNumTilesX(), (int)Math.ceil((destRectangle.x+destRectangle.width)/(float)staticEnvironment.tileSizeInPixels));
         int maxy = Math.min(staticEnvironment.getNumTilesY(), (int)Math.ceil((destRectangle.y+destRectangle.height)/(float)staticEnvironment.tileSizeInPixels));
-        boolean didCollide = false;
-        float move = 0.0f;
+        WallCollisionData wallCollisionData = new WallCollisionData();
+        wallCollision(rectangle, staticEnvironment, StaticEnvironment.TileId.Wall, true, true, minx, miny, maxx, maxy, wallCollisionData);
+        if(!wallCollisionData.didCollide)
+            wallCollision(rectangle, staticEnvironment, StaticEnvironment.TileId.LeftWall, true, false, minx, miny, maxx, maxy, wallCollisionData);
+        if(!wallCollisionData.didCollide)
+            wallCollision(rectangle, staticEnvironment, StaticEnvironment.TileId.RightWall, false, true, minx, miny, maxx, maxy, wallCollisionData);
 
+        return wallCollisionData;
+    }
+
+    private static void wallCollision(Rectangle rectangle, StaticEnvironment staticEnvironment, StaticEnvironment.TileId tileId, boolean left, boolean right, int minx, int miny, int maxx, int maxy, WallCollisionData wallCollisionData) {
+        boolean didCollide = false;
         for(int y = miny; y < maxy; y++) {
             if(didCollide)
                 break;
             for(int x = minx; x < maxx; x++) {
-                if(staticEnvironment.getTileId(StaticEnvironment.TileId.Wall, x, y) != 0) {
+                if(staticEnvironment.getTileId(tileId, x, y) != 0) {
                     //We did collide with the tile.
                     //Narrow down the test to only collide if source is on the left or on the right side of the tile.
-                    if (rectangle.x <= x * staticEnvironment.tileSizeInPixels && (rectangle.x + rectangle.width) <= x * staticEnvironment.tileSizeInPixels) {
+                    if (right && rectangle.x <= x * staticEnvironment.tileSizeInPixels && (rectangle.x + rectangle.width) <= x * staticEnvironment.tileSizeInPixels) {
                         //src is on the left side
-                        //Only collide if there is no floor to the left.
-                        boolean floorToTheLeft = false;
-                        if(x > 0 && staticEnvironment.getTileId(StaticEnvironment.TileId.Floor, x-1, y) != 0) {
-                            floorToTheLeft = true;
-                        }
-                        if(!floorToTheLeft) {
-                            didCollide = true;
-                            move = (rectangle.x + rectangle.width) - x * staticEnvironment.tileSizeInPixels;
-                            break;
-                        }
+                        didCollide = true;
+                        //wallCollisionData.set(didCollide, new Vector2((rectangle.x + rectangle.width) - x * staticEnvironment.tileSizeInPixels, 0f));
+                        wallCollisionData.set(didCollide, new Vector2(0f, 0f));
+                        break;
                     }
-                    else if (rectangle.x >= (staticEnvironment.tileSizeInPixels + x * staticEnvironment.tileSizeInPixels) && (rectangle.x + rectangle.width) >= (staticEnvironment.tileSizeInPixels + x * staticEnvironment.tileSizeInPixels)) {
+                    else if (left && rectangle.x >= (staticEnvironment.tileSizeInPixels + x * staticEnvironment.tileSizeInPixels) && (rectangle.x + rectangle.width) >= (staticEnvironment.tileSizeInPixels + x * staticEnvironment.tileSizeInPixels)) {
                         //src is on the right side
-                        //Only collide if there is no floor to the left.
-                        boolean floorToTheRight = false;
-                        if(staticEnvironment.getTileId(StaticEnvironment.TileId.Floor, x+1, y) != 0) {
-                            floorToTheRight = true;
-                        }
-                        if(!floorToTheRight) {
-                            didCollide = true;
-                            move = rectangle.x - (staticEnvironment.tileSizeInPixels + x * staticEnvironment.tileSizeInPixels);
-                            break;
-                        }
+                        didCollide = true;
+                        //wallCollisionData.set(didCollide, new Vector2(rectangle.x - (staticEnvironment.tileSizeInPixels + x * staticEnvironment.tileSizeInPixels), 0f));
+                        wallCollisionData.set(didCollide, new Vector2(0f, 0f));
+                        break;
                     }
                     else {
 
@@ -118,7 +121,6 @@ public class IntersectionTests {
                 }
             }
         }
-        return new WallCollisionData(didCollide, new Vector2(move, 0f));
     }
 
     public static RectangleCollisionData rectangleRectangle(Rectangle recta, Vector2 va, Rectangle rectb) {

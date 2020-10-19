@@ -7,7 +7,7 @@ import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionEntity;
 import com.sa.game.entities.Enemy;
 import com.sa.game.entities.Player;
-import com.sa.game.entities.PlayerProjectile;
+import com.sa.game.entities.PlayerStunProjectile;
 import com.sa.game.entities.Enemy.EnemyStateData;
 import com.sa.game.entities.Enemy.XDirection;
 
@@ -39,7 +39,7 @@ public enum ClownEnemyBrain implements State<Enemy.EnemyStateData> {
         @Override
         public void update(Enemy.EnemyStateData enemy) {
             for(CollisionEntity collisionEntity : enemy.collisionEntity.collidees) {
-                if(collisionEntity.userData instanceof PlayerProjectile) {
+                if(collisionEntity.userData instanceof PlayerStunProjectile) {
                     enemy.stateMachine.changeState(IS_SHOOT);
                 }
             }
@@ -57,7 +57,7 @@ public enum ClownEnemyBrain implements State<Enemy.EnemyStateData> {
         @Override
         public void update(Enemy.EnemyStateData enemy) {
             for(CollisionEntity collisionEntity : enemy.collisionEntity.collidees) {
-                if(collisionEntity.userData instanceof PlayerProjectile) {
+                if(collisionEntity.userData instanceof PlayerStunProjectile) {
                     enemy.stateMachine.changeState(IS_SHOOT);
                 }
             }
