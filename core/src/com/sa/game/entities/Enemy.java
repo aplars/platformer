@@ -2,7 +2,6 @@ package com.sa.game.entities;
 
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.State;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -13,7 +12,6 @@ import com.sa.game.collision.CollisionEntity;
 import com.sa.game.collision.FloorCollisionData;
 import com.sa.game.collision.IntersectionTests;
 import com.sa.game.collision.WallCollisionData;
-import com.sa.game.statemachines.ClownEnemyBrain;
 import com.sa.game.gfx.EnemyAnimations;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.gfx.Sprites;
@@ -103,24 +101,21 @@ public class Enemy {
     public void update(float dt, StaticEnvironment staticEnvironment) {
         isOnGround = false;
 
-        FloorCollisionData groundCollisionData = IntersectionTests.rectangleGround(dt, stateData.collisionEntity.box, velocity, staticEnvironment);
-        WallCollisionData wallsCollisionData = IntersectionTests.rectangleWalls(dt, stateData.collisionEntity.box, velocity, staticEnvironment);
-
-        if(groundCollisionData.didCollide)  {
+        if(stateData.collisionEntity.groundCollisionData.didCollide)  {
             if(velocity.y < 0) {
                 velocity.y = 0;
-                position.add(groundCollisionData.move);
+                position.add(stateData.collisionEntity.groundCollisionData.move);
                 isOnGround = true;
             }
         }
-        if(wallsCollisionData.didCollide) {
+        if(stateData.collisionEntity.wallsCollisionData.didCollide) {
             velocity.x = 0;
-            position.sub(wallsCollisionData.move);
+            position.sub(stateData.collisionEntity.wallsCollisionData.move);
         }
 
         //Handle collision vs weapons
         for(CollisionEntity collidee : stateData.collisionEntity.collidees) {
-            if(collidee.userData instanceof PlayerWeapon) {
+            if(collidee.userData instanceof PickedUpEntity) {
                 isShoot = true;
             }
         }
@@ -130,8 +125,8 @@ public class Enemy {
         stateData.collisionEntity.box.setSize(size, size);
 
         stateData.dt = dt;
-        stateData.floorCollision = groundCollisionData.didCollide;
-        stateData.wallCollision = wallsCollisionData.didCollide;
+        stateData.floorCollision = stateData.collisionEntity.groundCollisionData.didCollide;
+        stateData.wallCollision = stateData.collisionEntity.wallsCollisionData.didCollide;
         stateData.staticEnvironment = staticEnvironment;
         stateData.stateMachine.update();
 

@@ -51,8 +51,8 @@ public class CreateEnteties {
                    collisionDetection);
     }
 
-    public static PlayerWeapon playerWeapon(PlayerWeaponAnimations playerWeaponAnimations, Vector2 position, Vector2 velocity, float size, CollisionDetection collisionDetection) {
+    public static PickedUpEntity playerWeapon(PlayerWeaponAnimations playerWeaponAnimations, Vector2 position, Vector2 velocity, float size, CollisionDetection collisionDetection) {
 
-        return new PlayerWeapon(position, velocity, size, playerWeaponAnimations, collisionDetection);
+        return new PickedUpEntity(position, velocity, size, playerWeaponAnimations, collisionDetection);
     }
 }

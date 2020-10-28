@@ -34,6 +34,11 @@ public class SweepAndPrune {
         axisList.remove(entity);
     }
 
+    public void clear() {
+        axisList.clear();
+        intersections.clear();
+    }
+
     static int iii = 0;
     void update(final float dt) {
 

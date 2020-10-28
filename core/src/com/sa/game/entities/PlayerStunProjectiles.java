@@ -9,6 +9,12 @@ import java.util.Iterator;
 public class PlayerStunProjectiles implements Iterable<PlayerStunProjectile> {
     ArrayList<PlayerStunProjectile> projectiles = new ArrayList<>();
 
+    public void dispose() {
+        for(PlayerStunProjectile proj : projectiles) {
+            proj.dispose();
+        }
+    }
+
     public Iterator<PlayerStunProjectile> iterator() {
         return projectiles.iterator();
     }

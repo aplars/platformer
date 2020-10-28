@@ -6,7 +6,7 @@
   <object id="60" name="clown" type="clown" x="108.5" y="170.333" width="14.3333" height="18"/>
  </objectgroup>
  <objectgroup id="6" name="players">
-  <object id="61" name="player" type="player" x="42" y="198.333" width="12" height="12"/>
+  <object id="61" name="player" type="player" x="33.3333" y="187.666" width="12" height="12"/>
  </objectgroup>
  <layer id="4" name="base" width="32" height="32">
   <data encoding="csv">

@@ -8,6 +8,6 @@ public class FloorCollisionData {
 
     public FloorCollisionData(boolean didCol, Vector2 move) {
         didCollide = didCol;
-        this.move= move;
+        this.move.set(move);
     }
 }

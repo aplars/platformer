@@ -1,25 +1,16 @@
 package com.sa.game.entities;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.collision.CollisionEntity;
-import com.sa.game.collision.FloorCollisionData;
-import com.sa.game.collision.IntersectionTests;
-import com.sa.game.collision.WallCollisionData;
 import com.sa.game.gfx.PlayerWeaponAnimations;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.gfx.Sprites;
 
-public class PlayerWeapon {
+public class PickedUpEntity {
     ShapeRenderer shapeRenderer;
     CollisionEntity collisionEntity;
     public Vector2 position = new Vector2();
@@ -30,7 +21,6 @@ public class PlayerWeapon {
     private Vector2 acceleration = new Vector2();
     boolean fire = false;
 
-    SpriteBatch spriteBatch;
     float currentTime = 0f;
     TextureRegion currentFrame;
     WalkDirection walkDirection = WalkDirection.Left;
@@ -39,9 +29,9 @@ public class PlayerWeapon {
     public boolean isDead = false;
     PlayerWeaponAnimations playerWeaponAnimations;
 
-    public PlayerWeapon(Vector2 position, Vector2 velocity, float size, PlayerWeaponAnimations playerWeaponAnimations, CollisionDetection collisionDetection) {
+    public PickedUpEntity(Vector2 position, Vector2 velocity, float size, PlayerWeaponAnimations playerWeaponAnimations, CollisionDetection collisionDetection) {
         shapeRenderer = new ShapeRenderer();
-
+        
         this.position.set(position);
         this.dstPosition.set(position);
         this.velocity.set(velocity);
@@ -58,10 +48,8 @@ public class PlayerWeapon {
         collisionEntity.userData = this;
         collisionDetection.add(collisionEntity);
 
-        spriteBatch = new SpriteBatch();
         playerWeaponAnimations.setCurrentAnimation(PlayerWeaponAnimations.AnimationType.Stunned);
         currentFrame = playerWeaponAnimations.getKeyFrame();;
-
     }
 
 
@@ -84,7 +72,7 @@ public class PlayerWeapon {
         }
     }
 
-    public void update(float dt, StaticEnvironment staticEnvironment) {
+    public void update(float dt) {
         if(!fire) {
             Vector2 dirToTarget = new Vector2(dstPosition);
             dirToTarget.sub(position);
@@ -93,19 +81,17 @@ public class PlayerWeapon {
             position.set(position.x + dirToTarget.x, position.y + dirToTarget.y);
         }
         else {
-            FloorCollisionData groundCollisionData = IntersectionTests.rectangleGround(dt, collisionEntity.box, velocity, staticEnvironment);
-            WallCollisionData wallsCollisionData = IntersectionTests.rectangleWalls(dt, collisionEntity.box, velocity, staticEnvironment);
 
-            if (groundCollisionData !=null && groundCollisionData.didCollide) {
+            if (collisionEntity.groundCollisionData !=null && collisionEntity.groundCollisionData.didCollide) {
                 if (velocity.y < 0) {
                     velocity.y = 0;//-collissionData.move;
-                    position.add(groundCollisionData.move);
+                    position.add(collisionEntity.groundCollisionData.move);
                 }
             }
-            if (wallsCollisionData != null && wallsCollisionData.didCollide) {
+            if (collisionEntity.wallsCollisionData != null && collisionEntity.wallsCollisionData.didCollide) {
                 velocity.x = -velocity.x;
                 //velocity.x = 0;
-                position.sub(wallsCollisionData.move);
+                position.sub(collisionEntity.wallsCollisionData.move);
                 numCollisions++;
 
                 if(numCollisions >= numCollisionsBeforeBreakage) {

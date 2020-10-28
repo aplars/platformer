@@ -34,7 +34,7 @@ public abstract class DirWatcher extends TimerTask {
             Long current = (Long)dir.get(filesArray[i]);
             checkedFiles.add(filesArray[i]);
             if (current == null) {
-                // new file
+                // new filedddddad   dawdaasdasdawawdasd
                 dir.put(filesArray[i], filesArray[i].lastModified());
                 onChange(filesArray[i], "add");
             }

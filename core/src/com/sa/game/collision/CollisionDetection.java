@@ -1,6 +1,7 @@
 package com.sa.game.collision;
 
 import com.badlogic.gdx.math.Vector2;
+import com.sa.game.StaticEnvironment;
 import com.sa.game.entities.PlayerStunProjectile;
 
 import java.util.ArrayList;
@@ -21,9 +22,10 @@ public class CollisionDetection {
 
     public  void clear() {
         entities.clear();
+        sap.clear();
     }
 
-    public void update(float dt) {
+    public void update(float dt, StaticEnvironment staticEnvironment) {
         sap.update(dt);
 
         //Clear all collisions. New ones get populated below.
@@ -50,32 +52,11 @@ public class CollisionDetection {
                 b.collidees.add(a);
             }
         }
-        /*
-        int startI = 0;
-
-        for(final CollisionEntity a : entities) {
-            aVel.set(a.velocity);
-            aVel.x*=dt;
-            aVel.y*=dt;
-
-            for (int i = startI; i < entities.size(); ++i) {
-                final CollisionEntity b = entities.get(i);
-                if (a == b) {
-                    startI++;
-                    continue;
-                }
-                bVel.set(b.velocity);
-                bVel.x*=dt;
-                bVel.y*=dt;
-
-                final RectangleCollisionData data = IntersectionTests.rectangleRectangle(a.box, aVel, b.box, bVel);
-                if(data.didCollide) {
-                    a.collidees.add(b);
-                    b.collidees.add(a);
-                }
-            }
-            startI++;
-        }*/
+        //Check collision against static scene parts
+        for(final CollisionEntity collisionEntity : entities) {
+            collisionEntity.groundCollisionData = IntersectionTests.rectangleGround(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment);
+            collisionEntity.wallsCollisionData = IntersectionTests.rectangleWalls(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment);
+        }
     }
 
 

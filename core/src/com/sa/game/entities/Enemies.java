@@ -19,7 +19,7 @@ public class Enemies {
     }
 
     public void clear() {
-
+        
         enemies.clear();
     }
 

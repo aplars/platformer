@@ -1,9 +1,6 @@
 package com.sa.game;
 
-
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -81,7 +78,6 @@ public class StaticEnvironment {
                 int tileId = incell.getTile().getId();
 
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                
                 cell.setTile(tiledMap.getTileSets().getTileSet(0).getTile(tileId));
 
                 cell.getTile().setId(tileId);

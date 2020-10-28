@@ -15,22 +15,26 @@ public class PlayerStunProjectile {
     public Vector2 velocity = new Vector2();
     public CollisionEntity collisionEntity = new CollisionEntity();
     private final ShapeRenderer shapeRenderer;
-    private Sprite sprite = new Sprite();
+    //private Sprite sprite = new Sprite();
 
-    public PlayerStunProjectile(Vector2 position, Vector2 velocity, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public PlayerStunProjectile(Vector2 position, Vector2 velocity, int tileSizeInPixels, CollisionDetection collisionDetection) {
 
         this.position.set(position);
         this.velocity.set(velocity);
 
         Rectangle collisionRectangle = new Rectangle();
-        collisionRectangle.setWidth(staticEnvironment.tileSizeInPixels/4);
-        collisionRectangle.setHeight(staticEnvironment.tileSizeInPixels/2);
+        collisionRectangle.setWidth(tileSizeInPixels/4);
+        collisionRectangle.setHeight(tileSizeInPixels/2);
         collisionRectangle.setCenter(position);
         collisionEntity.box.set(collisionRectangle);
         collisionEntity.velocity = velocity;
         collisionEntity.userData = this;
         collisionDetection.add(collisionEntity);
         shapeRenderer = new ShapeRenderer();
+    }
+
+    public void dispose() {
+        shapeRenderer.dispose();
     }
 
     public void update(float dt) {

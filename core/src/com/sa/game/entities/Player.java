@@ -5,15 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
 import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.collision.CollisionEntity;
@@ -21,10 +15,10 @@ import com.sa.game.collision.FloorCollisionData;
 import com.sa.game.collision.IntersectionTests;
 import com.sa.game.collision.WallCollisionData;
 import com.sa.game.gfx.PlayerAnimations;
+import com.sa.game.gfx.PlayerAnimations.AnimationType;
 import com.sa.game.gfx.PlayerWeaponAnimations;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.gfx.Sprites;
-import com.sa.game.gfx.PlayerAnimations.AnimationType;
 
 public class Player {
     enum State {
@@ -40,7 +34,6 @@ public class Player {
 
     public final Vector2 position = new Vector2();
     public final Vector2 velocity = new Vector2();
-    public  final Vector2 size = new Vector2();
     public final CollisionEntity collisionEntity;
     public boolean fire = false;
 
@@ -48,9 +41,6 @@ public class Player {
     private float fireTimer = 0f;
 
     private boolean isOnGround = false;
-    private boolean isJumpButtonPressed = false;
-    private float jumpTime;
-    private final float maxJumpTime = 0.3f; //one second
     private final float friction = 0.1f;
     private final float airResistance = 0.2f;
     private final Vector2 moveAcceleration = new Vector2();
@@ -60,28 +50,22 @@ public class Player {
     private final float maxSpeed = 400;
 
     private float gravity = 0;
-    private float _jumpVelocity = 0;
-    private float _moveAcceleration = 0;
+    private float initialJumpVelocity = 0;
+    private float initialMoveAcceleration = 0;
 
     State state = State.Alive;
-    AliveState aliveState = AliveState.Idle;
-
-    //TextureAtlas textureAtlas;
-    //Animation<TextureRegion> walkAnimation;
 
     PlayerAnimations animations;
 
-    SpriteBatch spriteBatch;
     TextureRegion currentFrame;
 
-    PlayerWeapon weapon = null;
+    PickedUpEntity pickedUpEntity = null;
 
     WalkDirection walkDirection = WalkDirection.Right;
 
-    public Player(Vector2 pos, Vector2 vel, Vector2 siz, PlayerAnimations playerAnimations, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public Player(Vector2 pos, Vector2 vel, Vector2 size, PlayerAnimations playerAnimations, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         position.set(pos);
         velocity.set(vel);
-        size.set(siz);
 
         Rectangle box = new Rectangle(0, 0, size.x, size.y);
         box.setCenter(position.x, position.y);
@@ -96,23 +80,18 @@ public class Player {
 
         float jumpTime = 0.5f;
         gravity = -2*(staticEnvironment.tileSizeInPixels*5f+2)/(float)Math.pow(jumpTime, 2f);
-        _jumpVelocity = 2f*(staticEnvironment.tileSizeInPixels*5f+2)/jumpTime;
-        _moveAcceleration = 30*staticEnvironment.tileSizeInPixels;
-
-        //textureAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
-        //walkAnimation = new Animation<TextureRegion>(1 / 60f * 6f, textureAtlas.findRegions("walk"), PlayMode.LOOP);
-        spriteBatch = new SpriteBatch();
-        //currentFrame = walkAnimation.getKeyFrame(currentTime, true);
+        initialJumpVelocity = 2f*(staticEnvironment.tileSizeInPixels*5f+2)/jumpTime;
+        initialMoveAcceleration = 30*staticEnvironment.tileSizeInPixels;
 
         animations.setCurrentAnimation(AnimationType.Walk);
         currentFrame = animations.getKeyFrame();
     }
 
-    public void warpToTop(StaticEnvironment staticEnvironment) {
-        position.y = staticEnvironment.getWorldBoundY();
-        if(weapon != null) {
-            weapon.dstPosition.y = position.y - 40;
-            weapon.position.y = weapon.dstPosition.y;
+    public void warpToTop(float worldBoundY) {
+        position.y = worldBoundY;
+        if(pickedUpEntity != null) {
+            pickedUpEntity.dstPosition.y = position.y - 40;
+            pickedUpEntity.position.y = pickedUpEntity.dstPosition.y;
         }
     }
 
@@ -125,18 +104,17 @@ public class Player {
         acceleration.y = 0;
         fire = false;
 
-        aliveState = AliveState.Idle;
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            moveAcceleration.x = -_moveAcceleration;
+            moveAcceleration.x = -initialMoveAcceleration;
             walkDirection = WalkDirection.Left;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            moveAcceleration.x = _moveAcceleration;
+            moveAcceleration.x = initialMoveAcceleration;
             walkDirection = WalkDirection.Right;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && weapon != null) {
-            weapon.fire(walkDirection);
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && pickedUpEntity != null) {
+            pickedUpEntity.fire(walkDirection);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.W) && fireTimer == 0) {
@@ -145,8 +123,7 @@ public class Player {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && isOnGround) {
-            velocity.y = _jumpVelocity;
-            isJumpButtonPressed = true;
+            velocity.y = initialJumpVelocity;
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.P) && isOnGround) {
@@ -154,40 +131,36 @@ public class Player {
         }
 
         if (!Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-
-            isJumpButtonPressed = false;
         }
 
         if(Gdx.input.isTouched()&&Gdx.input.getDeltaX()>0) {
-            moveAcceleration.x = _moveAcceleration;
+            moveAcceleration.x = initialMoveAcceleration;
             walkDirection = WalkDirection.Right;
         }
 
         if(Gdx.input.isTouched()&&Gdx.input.getDeltaX()<0) {
-            moveAcceleration.x = -_moveAcceleration;
+            moveAcceleration.x = -initialMoveAcceleration;
             walkDirection = WalkDirection.Left;
         }
 
         if(Gdx.input.isTouched()&&Gdx.input.getDeltaX()>0) {
-            moveAcceleration.x = _moveAcceleration;
+            moveAcceleration.x = initialMoveAcceleration;
             walkDirection = WalkDirection.Right;
         }
 
 
         if(controller != null) {
             if (controller.getAxis(0) < -0.5) {
-                moveAcceleration.x = -_moveAcceleration;
+                moveAcceleration.x = -initialMoveAcceleration;
             }
             if (controller.getAxis(0) > 0.5) {
-                moveAcceleration.x = +_moveAcceleration;
+                moveAcceleration.x = +initialMoveAcceleration;
             }
             if (controller.getButton(1) && isOnGround) {
-                velocity.y = _jumpVelocity;
-                isJumpButtonPressed = true;
+                velocity.y = initialJumpVelocity;
             }
 
             if (!controller.getButton(1)) {
-                isJumpButtonPressed = false;
             }
 
             if(controller.getButton(2) && fireTimer <= 0) {
@@ -208,15 +181,12 @@ public class Player {
 
         velocity.mulAdd(acceleration, dt);
 
-        if(weapon != null)
-            weapon.preUpdate(dt);
+        if(pickedUpEntity != null)
+            pickedUpEntity.preUpdate(dt);
     }
 
-    public void update(float dt, AssetManager assetManager, CollisionDetection collisionDetection, StaticEnvironment staticEnvironment, PlayerStunProjectiles playerStunProjectiles, PlayerWeapons weapons, Enemies enemies) {
+    public void update(float dt, AssetManager assetManager, CollisionDetection collisionDetection, int tileSizeInPixels, PlayerStunProjectiles playerStunProjectiles, PickedUpEntities weapons, Enemies enemies) {
         isOnGround = false;
-
-        FloorCollisionData groundCollisionData = IntersectionTests.rectangleGround(dt, collisionEntity.box, velocity, staticEnvironment);
-        WallCollisionData wallsCollisionData = IntersectionTests.rectangleWalls(dt, collisionEntity.box, velocity, staticEnvironment);
 
         for(CollisionEntity collidee : collisionEntity.collidees) {
             if(collidee.userData instanceof Enemy) {
@@ -226,12 +196,10 @@ public class Player {
 
                     //Remove it from the enemy list and add it as player weapon.
                     enemy.isShoot = true;
-                    if(weapon == null) {
+                    if(pickedUpEntity == null) {
                         PlayerWeaponAnimations playerWeaponAnimations = new PlayerWeaponAnimations(enemy.animations.getCurrentAnimation());
-                        weapon = CreateEnteties.playerWeapon(playerWeaponAnimations, position, velocity, enemy.size, collisionDetection);
+                        pickedUpEntity = CreateEnteties.playerWeapon(playerWeaponAnimations, position, velocity, enemy.size, collisionDetection);
                     }
-                    //Run the add weapon sequence.
-                    aliveState = AliveState.PickupWeapon;
 
                 }
                 else {
@@ -240,16 +208,16 @@ public class Player {
             }
         }
 
-        if(groundCollisionData.didCollide)  {
+        if(collisionEntity.groundCollisionData.didCollide)  {
             if(velocity.y < 0) {
                 velocity.y = 0;
-                position.add(0f, groundCollisionData.move.y);
+                position.add(0f, collisionEntity.groundCollisionData.move.y);
             }
             isOnGround = true;
         }
-        if(wallsCollisionData.didCollide) {
+        if(collisionEntity.wallsCollisionData.didCollide) {
             velocity.x = 0;
-            position.sub(wallsCollisionData.move);
+            position.sub(collisionEntity.wallsCollisionData.move);
         }
 
         if(Math.abs(velocity.x) > maxSpeed) {
@@ -271,25 +239,25 @@ public class Player {
         if(Math.abs(moveAcceleration.x) > 1f) {
             currentFrame = animations.getKeyFrame();
         }
-        if(fire && weapon == null) {
+        if(fire && pickedUpEntity == null) {
             float projDir = (walkDirection == WalkDirection.Left) ? -300f : 300f;
-            playerStunProjectiles.add(new PlayerStunProjectile(new Vector2(position), new Vector2(projDir, 0f), staticEnvironment, collisionDetection));
+            playerStunProjectiles.add(new PlayerStunProjectile(new Vector2(position), new Vector2(projDir, 0f), tileSizeInPixels, collisionDetection));
         }
-        else  if(fire && weapon != null) {
-            weapons.add(weapon);
-            weapon = null;
+        else  if(fire && pickedUpEntity != null) {
+            weapons.add(pickedUpEntity);
+            pickedUpEntity = null;
         }
-        else if(weapon != null) {
-            weapon.setPosition(position.x, position.y +  this.collisionEntity.box.height*0.8f);
-            weapon.update(dt, staticEnvironment);
+        else if(pickedUpEntity != null) {
+            pickedUpEntity.setPosition(position.x, position.y +  this.collisionEntity.box.height*0.8f);
+            pickedUpEntity.update(dt);
         }
         animations.update(dt);
     }
     Sprite sprite = new Sprite();
 
     public void render(float t, Sprites sprites) {
-        if(weapon != null) {
-            weapon.render(t, sprites);
+        if(pickedUpEntity != null) {
+            pickedUpEntity.render(t, sprites);
         }
 
         sprite.textureRegion.setRegion(currentFrame);
