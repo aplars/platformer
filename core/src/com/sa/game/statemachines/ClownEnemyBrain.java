@@ -6,10 +6,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionEntity;
 import com.sa.game.entities.Enemy;
+import com.sa.game.entities.Enemy.XDirection;
 import com.sa.game.entities.Player;
 import com.sa.game.entities.PlayerStunProjectile;
-import com.sa.game.entities.Enemy.EnemyStateData;
-import com.sa.game.entities.Enemy.XDirection;
 
 public enum ClownEnemyBrain implements State<Enemy.EnemyStateData> {
     IS_SHOOT() {
