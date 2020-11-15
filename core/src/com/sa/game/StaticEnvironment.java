@@ -1,6 +1,9 @@
 package com.sa.game;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.EnumSet;
+
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -10,7 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.sa.game.collision.CollisionDetection;
 
 public class StaticEnvironment {
-    public enum TileId {
+    public enum LayerId {
         Visible,
         Floor,
         Wall,
@@ -29,6 +32,8 @@ public class StaticEnvironment {
             this.size.set(size);
         }
     }
+
+    public EnumMap<LayerId, Integer> LayerIdToIndex = new EnumMap<>(LayerId.class);
 
     public ArrayList<Entity> entities = new ArrayList<>();
 
@@ -123,20 +128,20 @@ public class StaticEnvironment {
         }
     }
 
-    public String getLayerName(TileId t) {
-        if(t == TileId.Visible) return "base";
-        if(t == TileId.Floor) return "floor";
-        else if(t == TileId.Wall) return "wall";
-        else if(t == TileId.LeftWall) return "leftwall";
-        else if(t == TileId.RightWall) return "rightwall";
+    public String getLayerName(LayerId t) {
+        if(t == LayerId.Visible) return "base";
+        if(t == LayerId.Floor) return "floor";
+        else if(t == LayerId.Wall) return "wall";
+        else if(t == LayerId.LeftWall) return "leftwall";
+        else if(t == LayerId.RightWall) return "rightwall";
         else return "";
     }
 
-    public int getLayerIndex(TileId t) {
+    public int getLayerIndex(LayerId t) {
         return getMap().getLayers().getIndex(getLayerName(t));
     }
 
-    public int getTileId(TileId layer, int x, int y) {
+    public int getTileId(LayerId layer, int x, int y) {
         TiledMapTileLayer mapLayer = (TiledMapTileLayer)getMap().getLayers().get(getLayerName(layer));
         TiledMapTileLayer.Cell cell = mapLayer.getCell(x, y);
         int id = 0;
@@ -146,7 +151,7 @@ public class StaticEnvironment {
         return id;
     }
 
-    public int getTileIdFromWorldCoordinate(TileId layer, Vector2 pos) {
+    public int getTileIdFromWorldCoordinate(LayerId layer, Vector2 pos) {
         TiledMapTileLayer mapLayer = (TiledMapTileLayer)getMap().getLayers().get(getLayerName(layer));
         int x = (int)(pos.x/mapLayer.getTileWidth());
         int y = (int)(pos.y/mapLayer.getTileHeight());

@@ -10,10 +10,10 @@ import com.sa.game.entities.Enemy.XDirection;
 import com.sa.game.entities.Player;
 import com.sa.game.entities.PlayerStunProjectile;
 
-public enum ClownEnemyBrain implements State<Enemy.EnemyStateData> {
+public enum ClownEnemyBrain implements State<Enemy> {
     IS_SHOOT() {
         @Override
-        public void update(Enemy.EnemyStateData enemy) {
+        public void update(Enemy enemy) {
             enemy.isStunned = true;
             enemy.idle();
             for(CollisionEntity collisionEntity : enemy.collisionEntity.collidees) {
@@ -30,13 +30,13 @@ public enum ClownEnemyBrain implements State<Enemy.EnemyStateData> {
         }
 
         @Override
-         public void exit(Enemy.EnemyStateData enemy) {
+         public void exit(Enemy enemy) {
             enemy.isStunned = false;
         }
     },
     RESTING() {
         @Override
-        public void update(Enemy.EnemyStateData enemy) {
+        public void update(Enemy enemy) {
             for(CollisionEntity collisionEntity : enemy.collisionEntity.collidees) {
                 if(collisionEntity.userData instanceof PlayerStunProjectile) {
                     enemy.stateMachine.changeState(IS_SHOOT);
@@ -54,7 +54,7 @@ public enum ClownEnemyBrain implements State<Enemy.EnemyStateData> {
     },
     WANDERS_ON_PLATFORM {
         @Override
-        public void update(Enemy.EnemyStateData enemy) {
+        public void update(Enemy enemy) {
             for(CollisionEntity collisionEntity : enemy.collisionEntity.collidees) {
                 if(collisionEntity.userData instanceof PlayerStunProjectile) {
                     enemy.stateMachine.changeState(IS_SHOOT);
@@ -73,12 +73,12 @@ public enum ClownEnemyBrain implements State<Enemy.EnemyStateData> {
 
             int id = 0;
             if(tilex >= 0 && tiley >= 0)
-                id = enemy.staticEnvironment.getTileId(StaticEnvironment.TileId.Floor, tilex, tiley);
+                id = enemy.staticEnvironment.getTileId(StaticEnvironment.LayerId.Floor, tilex, tiley);
             if(id == 0) {
                 enemy.currentDirection = Enemy.XDirection.Left;
             }
 
-            id = enemy.staticEnvironment.getTileId(StaticEnvironment.TileId.Floor,
+            id = enemy.staticEnvironment.getTileId(StaticEnvironment.LayerId.Floor,
                                                              (int)(enemy.collisionEntity.box.x)/enemy.staticEnvironment.tileSizeInPixels,
                                                              (int)enemy.collisionEntity.box.y/enemy.staticEnvironment.tileSizeInPixels - 1);
             if(id == 0) {
@@ -95,15 +95,15 @@ public enum ClownEnemyBrain implements State<Enemy.EnemyStateData> {
     ClownEnemyBrain() {
     }
     @Override
-    public void enter(Enemy.EnemyStateData enemy) {
+    public void enter(Enemy enemy) {
     }
 
     @Override
-    public void exit(Enemy.EnemyStateData enemy) {
+    public void exit(Enemy enemy) {
     }
 
     @Override
-    public boolean onMessage(Enemy.EnemyStateData troll, Telegram telegram) {
+    public boolean onMessage(Enemy troll, Telegram telegram) {
         return false;
     }
 }

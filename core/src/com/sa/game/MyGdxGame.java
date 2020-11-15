@@ -1,5 +1,6 @@
 package com.sa.game;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -10,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.sa.game.dirwatcher.DirWatcher;
 import com.sa.game.editor.Editor;
+import com.sa.game.models.EditorModel;
+import com.sa.game.models.LayerToRenderModel;
 
 import java.io.File;
 import java.util.Date;
@@ -28,7 +31,7 @@ public class MyGdxGame implements ApplicationListener {
     Controller controller;
 
     Editor editor;
-
+    EditorModel editorModel;
     @Override
     public void create() {
         gameWorld = new GameWorld();
@@ -36,8 +39,6 @@ public class MyGdxGame implements ApplicationListener {
         batch = new SpriteBatch();
         font = new BitmapFont();
         com.badlogic.gdx.utils.Array<Controller> theControllers = Controllers.getControllers();
-
-        editor = new Editor();
 
         for (Controller c : theControllers) {
             System.out.println(c.getName());
@@ -69,20 +70,23 @@ public class MyGdxGame implements ApplicationListener {
         if (reloadLevel.get()) {
             gameWorld.loadLevel();
             gameWorld.resize(getAspectRatio());
+
+            editorModel = new EditorModel(gameWorld.staticEnvironment);
+            editor = new Editor(editorModel);
+
             reloadLevel.set(false);
         }
-        gameWorld.handleInput(dt, controller);
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             reloadLevel.set(true);
         }
 
-        
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
             showEditor = ! showEditor;
         }
 
+        gameWorld.setVisibleLayers(editorModel.getLayersToRenderModel().getVisibleLayerIndices());
 
-        gameWorld.preUpdate(dt);
+        gameWorld.preUpdate(dt, controller);
         gameWorld.update(dt);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -106,7 +110,8 @@ public class MyGdxGame implements ApplicationListener {
     @Override
     public void resize(int width, int height) {
         gameWorld.resize(getAspectRatio());
-        editor.resize(width, height);
+        if(editor != null)
+            editor.resize(width, height);
     }
 
     @Override

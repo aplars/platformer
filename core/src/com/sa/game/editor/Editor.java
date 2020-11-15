@@ -6,36 +6,25 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.sa.game.StaticEnvironment;
+import com.sa.game.models.EditorModel;
+import com.sa.game.models.LayersToRenderModel;
 
 public class Editor {
-    public class LayerToRender {
-        boolean isRendered = false;
-        int layerId = -1;
-
-        public LayerToRender(boolean isRenderer, int layerId) {
-            this.isRendered = isRenderer;
-            this.layerId = layerId;
-        }
-    }
 
     Skin skin;
     Stage stage;
     SpriteBatch batch;
 
-    private ArrayList<LayerToRender> layersToRender = new ArrayList<>(); 
-
-    public Editor() {
+    public Editor(EditorModel editorModel) {
         batch = new SpriteBatch();
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        layersToRender.add(new LayerToRender(false, 1));
         // A skin can be loaded via JSON or defined programmatically, either is fine. Using a skin is optional but strongly
         // recommended solely for the convenience of getting a texture, region, etc as a drawable, tinted drawable, etc.
-        skin = new Skin(Gdx.files.internal("skins/metal/skin/metal-ui.json"));
+        skin = new Skin(Gdx.files.internal("skins/gdx-holo/skin/uiskin.json"));
 
         // Create a table that fills the screen. Everything else will go inside this table.
         Window window = new Window("preferences", skin) {
@@ -43,7 +32,7 @@ public class Editor {
         };
         window.setResizable(true);
         window.setResizeBorder(10);
-        Properties properties = new Properties(skin);
+        Properties properties = new Properties(skin, editorModel.getLayersToRenderModel());
 
         window.add(properties.getTree());
 
@@ -72,8 +61,10 @@ public class Editor {
         */
         // Add an image actor. Have to set the size, else it would be the size of the drawable (which is the 1x1 texture).
         //table.add(new Image(skin.newDrawable("white", Color.RED))).size(64);
-        //window.pack();
+        window.pack();
     }
+
+    
 
     public void resize (final int width, final int height) {
         stage.getViewport().update(width, height, true);

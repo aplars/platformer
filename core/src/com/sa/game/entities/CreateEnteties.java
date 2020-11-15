@@ -1,6 +1,8 @@
 package com.sa.game.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
+import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -19,6 +21,8 @@ public class CreateEnteties {
         assetManager.load("enteties/clown/clown.atlas", TextureAtlas.class);
         assetManager.finishLoadingAsset("enteties/clown/clown.atlas");
         TextureAtlas atlas = assetManager.get("enteties/clown/clown.atlas", TextureAtlas.class);
+
+
         Enemy enemy = new Enemy(
                 "clown",
                 center,
@@ -27,10 +31,11 @@ public class CreateEnteties {
                         new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("idle"), Animation.PlayMode.LOOP),
                         new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), Animation.PlayMode.LOOP),
                         new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("stunned"), Animation.PlayMode.NORMAL)),
-                ClownEnemyBrain.RESTING,
                 staticEnvironment,
                 collisionDetection
         );
+        State<Enemy> test = ClownEnemyBrain.RESTING;
+        enemy.stateMachine = new DefaultStateMachine<>(enemy, test);
         return enemy;
     }
 

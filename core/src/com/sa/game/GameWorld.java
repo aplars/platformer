@@ -14,6 +14,7 @@ import com.sa.game.entities.PickedUpEntities;
 import com.sa.game.entities.PlayerStunProjectiles;
 import com.sa.game.entities.Players;
 import com.sa.game.gfx.Sprites;
+import com.sa.game.models.EditorModel;
 
 public class GameWorld {
     //game entities
@@ -29,11 +30,13 @@ public class GameWorld {
     AssetManager assetManager = new AssetManager();
     OrthogonalTiledMapRenderer mapRenderer;
 
-    public void handleInput(float dt, Controller controller) {
-        players.handleInput(dt, controller);
+    int visiblelayers[] = {};
+    public void setVisibleLayers(int layers[]) {
+        visiblelayers = layers;
     }
 
-    public void preUpdate(float dt) {
+    public void preUpdate(float dt, Controller controller) {
+        players.handleInput(dt, controller);
         players.preUpdate(dt);
         pickedUpEntities.preUpdate(dt);
         enemies.preUpdate(dt);
@@ -52,11 +55,9 @@ public class GameWorld {
     public void render(float dt) {
         if(mapRenderer != null)
             mapRenderer.setView(camera);
-        int l[] = {
-            staticEnvironment.getLayerIndex(StaticEnvironment.TileId.Visible),
-            /*staticEnvironment.getLayerIndex(StaticEnvironment.TileId.LeftWall)*/};
+
         if(mapRenderer != null)
-            mapRenderer.render(l);
+            mapRenderer.render(visiblelayers);
         enemies.render(dt, sprites);
         pickedUpEntities.render(dt, sprites);
         players.render(dt, sprites);
@@ -85,7 +86,6 @@ public class GameWorld {
 
     public boolean loadLevel() {
         playerStunProjectiles.dispose();
-
         players.clear();
         enemies.clear();
         pickedUpEntities.clear();
@@ -120,8 +120,9 @@ public class GameWorld {
                 );
             }
         }
-        
+
         mapRenderer = new OrthogonalTiledMapRenderer(staticEnvironment.getMap());
+
         assetManager.finishLoading();
         while(!assetManager.isFinished())
             assetManager.update();

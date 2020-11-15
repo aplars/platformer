@@ -1,6 +1,7 @@
 package com.sa.game.entities;
 
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
@@ -34,6 +35,12 @@ public class Player {
 
     public final Vector2 position = new Vector2();
     public final Vector2 velocity = new Vector2();
+    private final Vector2 acceleration = new Vector2();
+    private final Vector2 force = new Vector2();
+    private final float mass = 1f;
+    private final float friction = 0.9f;
+    private final float airResistance = 0.8f;
+
     public final CollisionEntity collisionEntity;
     public boolean fire = false;
 
@@ -41,17 +48,12 @@ public class Player {
     private float fireTimer = 0f;
 
     private boolean isOnGround = false;
-    private final float friction = 0.1f;
-    private final float airResistance = 0.2f;
-    private final Vector2 moveAcceleration = new Vector2();
-    private final Vector2 jumpAcceleration = new Vector2();
-    private final Vector2 acceleration = new Vector2();
 
     private final float maxSpeed = 400;
 
-    private float gravity = 0;
-    private float initialJumpVelocity = 0;
-    private float initialMoveAcceleration = 0;
+    private final float gravity; //force of gravity
+    private final float jumpImpulse;
+    private final float moveForce;
 
     State state = State.Alive;
 
@@ -63,7 +65,11 @@ public class Player {
 
     WalkDirection walkDirection = WalkDirection.Right;
 
+    Entity preUpdateEntity;
+
     public Player(Vector2 pos, Vector2 vel, Vector2 size, PlayerAnimations playerAnimations, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+        preUpdateEntity = new Entity();
+
         position.set(pos);
         velocity.set(vel);
 
@@ -80,8 +86,8 @@ public class Player {
 
         float jumpTime = 0.5f;
         gravity = -2*(staticEnvironment.tileSizeInPixels*5f+2)/(float)Math.pow(jumpTime, 2f);
-        initialJumpVelocity = 2f*(staticEnvironment.tileSizeInPixels*5f+2)/jumpTime;
-        initialMoveAcceleration = 30*staticEnvironment.tileSizeInPixels;
+        jumpImpulse = 2f*(staticEnvironment.tileSizeInPixels*5f+2)/jumpTime;
+        moveForce = 30*staticEnvironment.tileSizeInPixels*mass;
 
         animations.setCurrentAnimation(AnimationType.Walk);
         currentFrame = animations.getKeyFrame();
@@ -96,20 +102,16 @@ public class Player {
     }
 
     public void handleInput(float dt, Controller controller) {
-        moveAcceleration.y = 0;
-        moveAcceleration.x = 0;
-        jumpAcceleration.x = 0;
-        jumpAcceleration.y = 0;
         acceleration.x = 0;
         acceleration.y = 0;
         fire = false;
 
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            moveAcceleration.x = -initialMoveAcceleration;
+            force.x -= moveForce;
             walkDirection = WalkDirection.Left;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            moveAcceleration.x = initialMoveAcceleration;
+            force.x += moveForce;
             walkDirection = WalkDirection.Right;
         }
 
@@ -123,7 +125,7 @@ public class Player {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && isOnGround) {
-            velocity.y = initialJumpVelocity;
+            velocity.y = jumpImpulse;
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.P) && isOnGround) {
@@ -134,30 +136,24 @@ public class Player {
         }
 
         if(Gdx.input.isTouched()&&Gdx.input.getDeltaX()>0) {
-            moveAcceleration.x = initialMoveAcceleration;
+            force.x += moveForce;
             walkDirection = WalkDirection.Right;
         }
 
         if(Gdx.input.isTouched()&&Gdx.input.getDeltaX()<0) {
-            moveAcceleration.x = -initialMoveAcceleration;
+            force.x -= moveForce;
             walkDirection = WalkDirection.Left;
         }
 
-        if(Gdx.input.isTouched()&&Gdx.input.getDeltaX()>0) {
-            moveAcceleration.x = initialMoveAcceleration;
-            walkDirection = WalkDirection.Right;
-        }
-
-
         if(controller != null) {
             if (controller.getAxis(0) < -0.5) {
-                moveAcceleration.x = -initialMoveAcceleration;
+                force.x -= moveForce;
             }
             if (controller.getAxis(0) > 0.5) {
-                moveAcceleration.x = +initialMoveAcceleration;
+                force.x += moveForce;
             }
             if (controller.getButton(1) && isOnGround) {
-                velocity.y = initialJumpVelocity;
+                velocity.y = jumpImpulse;
             }
 
             if (!controller.getButton(1)) {
@@ -175,14 +171,23 @@ public class Player {
     }
 
     public void preUpdate(float dt) {
-        acceleration.set(moveAcceleration);
-        acceleration.add(jumpAcceleration);
-        acceleration.add(0, gravity);
+        force.add(0, gravity);
+
+        acceleration.mulAdd(force, mass);
 
         velocity.mulAdd(acceleration, dt);
 
+        if(Math.abs(velocity.x) > maxSpeed) {
+            if(velocity.x > 0)
+                velocity.x = maxSpeed;
+            else
+                velocity.x = -maxSpeed;
+        }
+
         if(pickedUpEntity != null)
             pickedUpEntity.preUpdate(dt);
+
+        force.set(0f, 0f);
     }
 
     public void update(float dt, AssetManager assetManager, CollisionDetection collisionDetection, int tileSizeInPixels, PlayerStunProjectiles playerStunProjectiles, PickedUpEntities weapons, Enemies enemies) {
@@ -191,7 +196,7 @@ public class Player {
         for(CollisionEntity collidee : collisionEntity.collidees) {
             if(collidee.userData instanceof Enemy) {
                 Enemy enemy = (Enemy) collidee.userData;
-                if(enemy.stateData.isStunned) {
+                if(enemy.isStunned) {
                     //We shall pick up the enemy.
 
                     //Remove it from the enemy list and add it as player weapon.
@@ -220,23 +225,16 @@ public class Player {
             position.sub(collisionEntity.wallsCollisionData.move);
         }
 
-        if(Math.abs(velocity.x) > maxSpeed) {
-            if(velocity.x > 0)
-                velocity.x = maxSpeed;
-            else
-                velocity.x = -maxSpeed;
-        }
 
         position.mulAdd(velocity, dt);
         collisionEntity.box.setCenter(position);
 
         if(isOnGround)
-            velocity.x /= (1+friction);
+            velocity.x *= friction;
         else
-            velocity.x /= (1+airResistance);
-        velocity.y /= (1+0.0);
+            velocity.x *= airResistance;
 
-        if(Math.abs(moveAcceleration.x) > 1f) {
+        if(Math.abs(velocity.x) > 1f) {
             currentFrame = animations.getKeyFrame();
         }
         if(fire && pickedUpEntity == null) {

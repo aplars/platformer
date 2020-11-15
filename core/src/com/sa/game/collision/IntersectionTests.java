@@ -28,7 +28,7 @@ public class IntersectionTests {
             if(breakLoop)
                 break;
             for(int x = minx; x < maxx; x++) {
-                if(staticEnvironment.getTileId(StaticEnvironment.TileId.Floor, x, y) != 0) {
+                if(staticEnvironment.getTileId(StaticEnvironment.LayerId.Floor, x, y) != 0) {
                     //We did collide with the tile.
                     //Narrow to just the upper part of the tile.
                     if(destRectangle.y <= ((y+1) * staticEnvironment.tileSizeInPixels) &&
@@ -58,7 +58,7 @@ public class IntersectionTests {
                 if (breakLoop)
                     break;
                 for (int x = minx; x < maxx; x++) {
-                    if(staticEnvironment.getTileId(StaticEnvironment.TileId.Wall, x, y) != 0) {
+                    if(staticEnvironment.getTileId(StaticEnvironment.LayerId.Wall, x, y) != 0) {
                          didCollide = false;
                         breakLoop = true;
                         break;
@@ -83,16 +83,16 @@ public class IntersectionTests {
         int maxx = Math.min(staticEnvironment.getNumTilesX(), (int)Math.ceil((destRectangle.x+destRectangle.width)/(float)staticEnvironment.tileSizeInPixels));
         int maxy = Math.min(staticEnvironment.getNumTilesY(), (int)Math.ceil((destRectangle.y+destRectangle.height)/(float)staticEnvironment.tileSizeInPixels));
         WallCollisionData wallCollisionData = new WallCollisionData();
-        wallCollision(rectangle, staticEnvironment, StaticEnvironment.TileId.Wall, true, true, minx, miny, maxx, maxy, wallCollisionData);
+        wallCollision(rectangle, staticEnvironment, StaticEnvironment.LayerId.Wall, true, true, minx, miny, maxx, maxy, wallCollisionData);
         if(!wallCollisionData.didCollide)
-            wallCollision(rectangle, staticEnvironment, StaticEnvironment.TileId.LeftWall, true, false, minx, miny, maxx, maxy, wallCollisionData);
+            wallCollision(rectangle, staticEnvironment, StaticEnvironment.LayerId.LeftWall, true, false, minx, miny, maxx, maxy, wallCollisionData);
         if(!wallCollisionData.didCollide)
-            wallCollision(rectangle, staticEnvironment, StaticEnvironment.TileId.RightWall, false, true, minx, miny, maxx, maxy, wallCollisionData);
+            wallCollision(rectangle, staticEnvironment, StaticEnvironment.LayerId.RightWall, false, true, minx, miny, maxx, maxy, wallCollisionData);
 
         return wallCollisionData;
     }
 
-    private static void wallCollision(Rectangle rectangle, StaticEnvironment staticEnvironment, StaticEnvironment.TileId tileId, boolean left, boolean right, int minx, int miny, int maxx, int maxy, WallCollisionData wallCollisionData) {
+    private static void wallCollision(Rectangle rectangle, StaticEnvironment staticEnvironment, StaticEnvironment.LayerId tileId, boolean left, boolean right, int minx, int miny, int maxx, int maxy, WallCollisionData wallCollisionData) {
         boolean didCollide = false;
         for(int y = miny; y < maxy; y++) {
             if(didCollide)

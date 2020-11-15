@@ -1,39 +1,87 @@
 package com.sa.game.editor;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.badlogic.gdx.utils.Align;
+import com.sa.game.StaticEnvironment;
+import com.sa.game.models.LayerToRenderModel;
+import com.sa.game.models.LayersToRenderModel;
 
 public class Properties {
+    Skin skin = new Skin();
+
     Tree<Tree.Node, String> tree;
+
+    LayersToRenderModel layersToRenderModel;
 
     public Tree<Tree.Node, String> getTree() {
         return tree;
     }
 
-
-    class Node extends Tree.Node<Node, String, TextButton> {
-        public Node (final Skin skin, String text) {
+    class ButtonNode extends Tree.Node<Tree.Node, String, TextButton> {
+        public ButtonNode (final Skin skin, String text) {
             super(new TextButton(text, skin));
             setValue(text);
         }
     }
-    Properties(final Skin skin) {
-        tree = new Tree(skin);
-        tree.setPadding(10);
-        tree.setIndentSpacing(25);
-        tree.setIconSpacing(5, 0);
-        final Node moo1 = new Node(skin, "moo1 (add to moo2)");
-        final Node moo2 = new Node(skin, "moo2 (moo3 to bottom)");
-        final Node moo3 = new Node(skin, "moo3");
-        final Node moo4 = new Node(skin, "moo4");
-        final Node moo5 = new Node(skin, "moo5 (remove moo4)");
-        tree.add(moo1);
-        tree.add(moo2);
-        moo2.add(moo3);
-        moo3.add(moo4);
-        tree.add(moo5);
+
+    class CheckBoxNode extends Tree.Node<Tree.Node, String, CheckBox> {
+        public CheckBoxNode (final Skin skin, String text) {
+            super(new CheckBox(text, skin));
+            setValue(text);
+        }
+    }
+
+    class LabelNode extends Tree.Node<Tree.Node, String, Label> {
+        public LabelNode (final Skin skin, String text) {
+            super(new Label(text, skin));
+            setValue(text);
+            getActor().debug();
+        }
+    }
+
+    public Properties(final Skin skin, LayersToRenderModel layersToRenderModel) {
+        this.skin = skin;
+
+        this.tree = new Tree(skin);
+        this.tree.setPadding(10);
+        this.tree.setIndentSpacing(25);
+        this.tree.setIconSpacing(15, 15);
+
+        this.setModel(layersToRenderModel);
+        tree.expandAll();
+        tree.layout();
+
+        tree.pack();
+    }
+
+    public void setModel(LayersToRenderModel layersToRenderModel) {
+        this.layersToRenderModel = layersToRenderModel;
+
+        final LabelNode root = new LabelNode(skin, "layers");
+        tree.add(root);
+        for (final LayerToRenderModel layer : layersToRenderModel) {
+            final CheckBoxNode n = new CheckBoxNode(skin, layer.name());
+            n.getActor().setChecked(layer.isVisible());
+            n.getActor().addListener(new ChangeListener(){
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                    layer.setVisible(n.getActor().isChecked());
+                    }
+            });
+
+            root.add(n);
+        }
+        tree.add(root);
     }
 
 }
