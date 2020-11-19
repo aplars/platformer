@@ -1,0 +1,15 @@
+;; Eval Buffer with `M-x eval-buffer' to register the newly created template.
+
+(dap-register-debug-template
+  "Run"
+  (list :type "java"
+        :request "compile_attach"
+        :args ""
+        :cwd nil
+        :host "localhost"
+        :request "launch"
+        :modulePaths []
+        :classPaths nil
+        :name "Run"
+        :projectName nil
+        :mainClass nil))
