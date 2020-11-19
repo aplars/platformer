@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sa.game.StaticEnvironment;
+import com.sa.game.States.EnemyState;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.collision.CollisionEntity;
 import com.sa.game.collision.FloorCollisionData;
@@ -21,8 +22,8 @@ public class Enemy {
     public enum XDirection{
         Idle,
         Left,
-        Right;
-    };
+        Right
+    }
 
     Entity entity;
     //   public class EnemyStateData {
@@ -89,7 +90,6 @@ public class Enemy {
         collisionEntity.userData = this;
         collisionDetection.add(collisionEntity);
 
-        this.stateMachine = stateMachine; 
         animations = enemyAnimations;
         currentFrame = animations.getKeyFrame();
     }
@@ -137,13 +137,13 @@ public class Enemy {
             velocity.x /= (1+friction);
 
         if(isStunned) {
-            animations.setCurrentAnimation(EnemyAnimations.AnimationType.Stunned);
+            animations.setCurrentAnimation(EnemyState.Stunned);
         }
         else if(currentDirection == XDirection.Idle) {
-            animations.setCurrentAnimation(EnemyAnimations.AnimationType.Idle);
+            animations.setCurrentAnimation(EnemyState.Idle);
         }
         else {
-            animations.setCurrentAnimation(EnemyAnimations.AnimationType.Walk);
+            animations.setCurrentAnimation(EnemyState.Walk);
         }
 
         animations.update(dt);

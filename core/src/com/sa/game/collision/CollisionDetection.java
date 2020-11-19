@@ -54,8 +54,8 @@ public class CollisionDetection {
         }
         //Check collision against static scene parts
         for(final CollisionEntity collisionEntity : entities) {
-            collisionEntity.groundCollisionData = IntersectionTests.rectangleGround(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment);
-            collisionEntity.wallsCollisionData = IntersectionTests.rectangleWalls(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment);
+            IntersectionTests.rectangleGround(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment, collisionEntity.groundCollisionData);
+            IntersectionTests.rectangleWalls(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment, collisionEntity.wallsCollisionData);
         }
     }
 

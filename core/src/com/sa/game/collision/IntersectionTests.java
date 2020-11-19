@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.sa.game.StaticEnvironment;
 
 public class IntersectionTests {
-    public static FloorCollisionData rectangleGround(final float dt, final Rectangle rectangle, final Vector2 velocity, final StaticEnvironment staticEnvironment) {
+    public static void rectangleGround(final float dt, final Rectangle rectangle, final Vector2 velocity, final StaticEnvironment staticEnvironment, FloorCollisionData floorCollisionData) {
         Rectangle destRectangle = new Rectangle();
         destRectangle.set(rectangle);
         Vector2 center = new Vector2();
@@ -66,10 +66,10 @@ public class IntersectionTests {
                 }
             }
         }
-        return new FloorCollisionData(didCollide, new Vector2(moveX, moveY));
+        floorCollisionData.set(didCollide, moveX, moveY);
     }
 
-    public static WallCollisionData rectangleWalls(final float dt, final Rectangle rectangle, final Vector2 velocity, final StaticEnvironment staticEnvironment) {
+    public static WallCollisionData rectangleWalls(final float dt, final Rectangle rectangle, final Vector2 velocity, final StaticEnvironment staticEnvironment, WallCollisionData wallCollisionData) {
         Rectangle destRectangle = new Rectangle();
         destRectangle.set(rectangle);
         Vector2 center = new Vector2();
@@ -82,7 +82,6 @@ public class IntersectionTests {
         int miny = Math.max(0, (int)Math.floor(destRectangle.y/(float)staticEnvironment.tileSizeInPixels));
         int maxx = Math.min(staticEnvironment.getNumTilesX(), (int)Math.ceil((destRectangle.x+destRectangle.width)/(float)staticEnvironment.tileSizeInPixels));
         int maxy = Math.min(staticEnvironment.getNumTilesY(), (int)Math.ceil((destRectangle.y+destRectangle.height)/(float)staticEnvironment.tileSizeInPixels));
-        WallCollisionData wallCollisionData = new WallCollisionData();
         wallCollision(rectangle, staticEnvironment, StaticEnvironment.LayerId.Wall, true, true, minx, miny, maxx, maxy, wallCollisionData);
         if(!wallCollisionData.didCollide)
             wallCollision(rectangle, staticEnvironment, StaticEnvironment.LayerId.LeftWall, true, false, minx, miny, maxx, maxy, wallCollisionData);
@@ -94,6 +93,7 @@ public class IntersectionTests {
 
     private static void wallCollision(Rectangle rectangle, StaticEnvironment staticEnvironment, StaticEnvironment.LayerId tileId, boolean left, boolean right, int minx, int miny, int maxx, int maxy, WallCollisionData wallCollisionData) {
         boolean didCollide = false;
+        wallCollisionData.didCollide = false;
         for(int y = miny; y < maxy; y++) {
             if(didCollide)
                 break;

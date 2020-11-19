@@ -1,6 +1,6 @@
 package com.sa.game.entities;
 
-enum WalkDirection {
+public enum WalkDirection {
     Left,
     Right
 }

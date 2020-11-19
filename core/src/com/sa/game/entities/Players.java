@@ -20,7 +20,7 @@ public class Players implements Iterable<Player> {
 
     public void remove(Player player, CollisionDetection collisionDetection) {
         players.remove(player);
-        collisionDetection.remove(player.collisionEntity);
+        collisionDetection.remove(player.collisionComponent.entity);
     }
 
     public void clear() {
@@ -42,7 +42,7 @@ public class Players implements Iterable<Player> {
     public void update(float dt, AssetManager assetManager, float worldBoundY, int tileSizeInPixels, CollisionDetection collisionDetection, PlayerStunProjectiles playerStunProjectiles, PickedUpEntities weapons, Enemies enemies) {
         //Move the player to the top if it falls under zero
         for (Player player : players) {
-            if(player.position.y < 0) {
+            if(player.positionComponent.position.y < 0) {
                 player.warpToTop(worldBoundY);
             }
         }

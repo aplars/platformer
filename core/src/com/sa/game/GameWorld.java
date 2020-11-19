@@ -1,5 +1,6 @@
 package com.sa.game;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
@@ -7,14 +8,22 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.sa.game.States.PlayerStunProjectileState;
 import com.sa.game.collision.CollisionDetection;
+import com.sa.game.components.StateComponent;
 import com.sa.game.entities.CreateEnteties;
 import com.sa.game.entities.Enemies;
 import com.sa.game.entities.PickedUpEntities;
 import com.sa.game.entities.PlayerStunProjectiles;
 import com.sa.game.entities.Players;
 import com.sa.game.gfx.Sprites;
-import com.sa.game.models.EditorModel;
+import com.sa.game.systems.DampingSystem;
+import com.sa.game.systems.MovementSystem;
+import com.sa.game.systems.PhysicsSystem;
+import com.sa.game.systems.PlayerControlSystem;
+import com.sa.game.systems.AnimationSystem;
+import com.sa.game.systems.RenderSystem;
+import com.sa.game.systems.ResolveCollisionSystem;
 
 public class GameWorld {
     //game entities
@@ -31,12 +40,30 @@ public class GameWorld {
     OrthogonalTiledMapRenderer mapRenderer;
 
     int visiblelayers[] = {};
+
+    Engine preUpdateEngine = new Engine();
+    Engine updateEngine = new Engine();
+
+    public GameWorld() {
+        preUpdateEngine.addSystem(new PlayerControlSystem());
+        preUpdateEngine.addSystem(new PhysicsSystem());
+
+        updateEngine.addSystem(new ResolveCollisionSystem());
+        updateEngine.addSystem(new MovementSystem());
+        updateEngine.addSystem(new DampingSystem());
+        updateEngine.addSystem(new AnimationSystem());
+        updateEngine.addSystem(new RenderSystem(sprites));
+    }
+
     public void setVisibleLayers(int layers[]) {
         visiblelayers = layers;
     }
 
     public void preUpdate(float dt, Controller controller) {
         players.handleInput(dt, controller);
+
+        preUpdateEngine.update(dt);
+
         players.preUpdate(dt);
         pickedUpEntities.preUpdate(dt);
         enemies.preUpdate(dt);
@@ -46,7 +73,9 @@ public class GameWorld {
         collisionDetection.update(dt, staticEnvironment);
         players.update(dt, assetManager, staticEnvironment.getWorldBoundY(), staticEnvironment.tileSizeInPixels,
                        collisionDetection, playerStunProjectiles, pickedUpEntities, enemies);
-        playerStunProjectiles.update(dt, collisionDetection, staticEnvironment.getWorldBoundY());
+
+        updateEngine.update(dt);
+
         pickedUpEntities.update(dt, staticEnvironment.getWorldBoundY(), collisionDetection);
         enemies.update(dt, staticEnvironment, collisionDetection);
         camera.update();
@@ -61,7 +90,6 @@ public class GameWorld {
         enemies.render(dt, sprites);
         pickedUpEntities.render(dt, sprites);
         players.render(dt, sprites);
-        playerStunProjectiles.render(dt, camera);
         sprites.render(camera);
     }
 
@@ -85,7 +113,6 @@ public class GameWorld {
     }
 
     public boolean loadLevel() {
-        playerStunProjectiles.dispose();
         players.clear();
         enemies.clear();
         pickedUpEntities.clear();
@@ -116,7 +143,9 @@ public class GameWorld {
                                                   entity.position,
                                                   entity.size,
                                                   staticEnvironment,
-                                                  collisionDetection)
+                                                  collisionDetection,
+                                                  preUpdateEngine,
+                                                  updateEngine)
                 );
             }
         }
@@ -126,6 +155,7 @@ public class GameWorld {
         assetManager.finishLoading();
         while(!assetManager.isFinished())
             assetManager.update();
+
         return true;
     }
 }

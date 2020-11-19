@@ -11,8 +11,8 @@ public class CollisionEntity {
     public Vector2 velocity = new Vector2();
     public Object userData;
     public ArrayList<CollisionEntity> collidees = new ArrayList<>();
-    public FloorCollisionData groundCollisionData;
-    public WallCollisionData wallsCollisionData;
+    public FloorCollisionData groundCollisionData = new FloorCollisionData();
+    public WallCollisionData wallsCollisionData = new WallCollisionData();
     public boolean isEnable = true;
     public CollisionFilter filter = new CollisionFilter();
 }

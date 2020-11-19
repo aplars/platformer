@@ -1,6 +1,7 @@
 package com.sa.game.entities;
 
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -15,11 +16,15 @@ import com.sa.game.collision.CollisionEntity;
 import com.sa.game.collision.FloorCollisionData;
 import com.sa.game.collision.IntersectionTests;
 import com.sa.game.collision.WallCollisionData;
+import com.sa.game.components.CollisionComponent;
+import com.sa.game.components.EntityControlComponent;
+import com.sa.game.components.PhysicsComponent;
+import com.sa.game.components.PositionComponent;
 import com.sa.game.gfx.PlayerAnimations;
-import com.sa.game.gfx.PlayerAnimations.AnimationType;
 import com.sa.game.gfx.PlayerWeaponAnimations;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.gfx.Sprites;
+import com.sa.game.gfx.PlayerAnimations.PlayerState;
 
 public class Player {
     enum State {
@@ -33,90 +38,87 @@ public class Player {
         PickupWeapon
     }
 
-    public final Vector2 position = new Vector2();
-    public final Vector2 velocity = new Vector2();
-    private final Vector2 acceleration = new Vector2();
-    private final Vector2 force = new Vector2();
-    private final float mass = 1f;
-    private final float friction = 0.9f;
-    private final float airResistance = 0.8f;
-
-    public final CollisionEntity collisionEntity;
     public boolean fire = false;
 
     private final float timeToWaitUntilNextFire = 0.2f;
     private float fireTimer = 0f;
-
-    private boolean isOnGround = false;
-
-    private final float maxSpeed = 400;
-
-    private final float gravity; //force of gravity
-    private final float jumpImpulse;
-    private final float moveForce;
 
     State state = State.Alive;
 
     PlayerAnimations animations;
 
     TextureRegion currentFrame;
+    Sprite sprite = new Sprite();
 
     PickedUpEntity pickedUpEntity = null;
 
-    WalkDirection walkDirection = WalkDirection.Right;
-
     Entity preUpdateEntity;
+    Entity updateEntity;
+    PositionComponent positionComponent;
+    PhysicsComponent physicsComponent;
+    EntityControlComponent entityControlComponent;
+    CollisionComponent collisionComponent;
 
-    public Player(Vector2 pos, Vector2 vel, Vector2 size, PlayerAnimations playerAnimations, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    Engine preUpdateEngine;
+    Engine updateEngine;
+
+    public Player(Vector2 pos, Vector2 vel, Vector2 size, PlayerAnimations playerAnimations, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection, Engine preUpdatyeEngine, Engine updateEngine) {
+        this.preUpdateEngine = preUpdatyeEngine;
+        this.updateEngine = updateEngine;
+
         preUpdateEntity = new Entity();
+        updateEntity = new Entity();
 
-        position.set(pos);
-        velocity.set(vel);
+        physicsComponent = new PhysicsComponent();
+        entityControlComponent = new EntityControlComponent();
+        positionComponent = new PositionComponent();
+        collisionComponent = new CollisionComponent();
 
-        Rectangle box = new Rectangle(0, 0, size.x, size.y);
-        box.setCenter(position.x, position.y);
+        preUpdateEntity.add(physicsComponent);
+        preUpdateEntity.add(entityControlComponent);
+        preUpdateEntity.add(collisionComponent);
+
+        updateEntity.add(physicsComponent);
+        updateEntity.add(positionComponent);
+        updateEntity.add(collisionComponent);
+
+        positionComponent.position.set(pos);
+        physicsComponent.velocity.set(vel);
+
 
         animations = playerAnimations;
 
-        collisionEntity = new CollisionEntity();
-        collisionEntity.box.set(box);
-        collisionEntity.velocity = velocity;
-        collisionEntity.userData = this;
-        collisionDetection.add(collisionEntity);
+        Rectangle box = new Rectangle(0, 0, size.x, size.y);
+        box.setCenter(positionComponent.position.x, positionComponent.position.y);
+        collisionComponent.entity.box.set(box);
+        collisionComponent.entity.velocity = physicsComponent.velocity;
+        collisionComponent.entity.userData = this;
+        collisionDetection.add(collisionComponent.entity);
 
         float jumpTime = 0.5f;
-        gravity = -2*(staticEnvironment.tileSizeInPixels*5f+2)/(float)Math.pow(jumpTime, 2f);
-        jumpImpulse = 2f*(staticEnvironment.tileSizeInPixels*5f+2)/jumpTime;
-        moveForce = 30*staticEnvironment.tileSizeInPixels*mass;
+        physicsComponent.gravity = -2*(staticEnvironment.tileSizeInPixels*5f+2)/(float)Math.pow(jumpTime, 2f);
+        entityControlComponent.jumpImpulse = 2f*(staticEnvironment.tileSizeInPixels*5f+2)/jumpTime;
+        entityControlComponent.moveForce = 30*staticEnvironment.tileSizeInPixels*physicsComponent.mass;
 
-        animations.setCurrentAnimation(AnimationType.Walk);
+        animations.setCurrentAnimation(PlayerState.Walk);
         currentFrame = animations.getKeyFrame();
+        this.preUpdateEngine.addEntity(preUpdateEntity);
+        this.updateEngine.addEntity(updateEntity);
     }
 
     public void warpToTop(float worldBoundY) {
-        position.y = worldBoundY;
+        positionComponent.position.y = worldBoundY;
         if(pickedUpEntity != null) {
-            pickedUpEntity.dstPosition.y = position.y - 40;
+            pickedUpEntity.dstPosition.y = positionComponent.position.y - 40;
             pickedUpEntity.position.y = pickedUpEntity.dstPosition.y;
         }
     }
 
     public void handleInput(float dt, Controller controller) {
-        acceleration.x = 0;
-        acceleration.y = 0;
         fire = false;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            force.x -= moveForce;
-            walkDirection = WalkDirection.Left;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            force.x += moveForce;
-            walkDirection = WalkDirection.Right;
-        }
-
         if (Gdx.input.isKeyPressed(Input.Keys.W) && pickedUpEntity != null) {
-            pickedUpEntity.fire(walkDirection);
+            pickedUpEntity.fire(physicsComponent.walkDirection);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.W) && fireTimer == 0) {
@@ -124,76 +126,18 @@ public class Player {
             fireTimer = timeToWaitUntilNextFire;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && isOnGround) {
-            velocity.y = jumpImpulse;
-        }
-
-        if(Gdx.input.isKeyPressed(Input.Keys.P) && isOnGround) {
-
-        }
-
-        if (!Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-        }
-
-        if(Gdx.input.isTouched()&&Gdx.input.getDeltaX()>0) {
-            force.x += moveForce;
-            walkDirection = WalkDirection.Right;
-        }
-
-        if(Gdx.input.isTouched()&&Gdx.input.getDeltaX()<0) {
-            force.x -= moveForce;
-            walkDirection = WalkDirection.Left;
-        }
-
-        if(controller != null) {
-            if (controller.getAxis(0) < -0.5) {
-                force.x -= moveForce;
-            }
-            if (controller.getAxis(0) > 0.5) {
-                force.x += moveForce;
-            }
-            if (controller.getButton(1) && isOnGround) {
-                velocity.y = jumpImpulse;
-            }
-
-            if (!controller.getButton(1)) {
-            }
-
-            if(controller.getButton(2) && fireTimer <= 0) {
-                fire = true;
-                fireTimer = timeToWaitUntilNextFire;
-            }
-
-        }
-
         fireTimer-=dt;
         fireTimer = Math.max(0, fireTimer);
     }
 
     public void preUpdate(float dt) {
-        force.add(0, gravity);
-
-        acceleration.mulAdd(force, mass);
-
-        velocity.mulAdd(acceleration, dt);
-
-        if(Math.abs(velocity.x) > maxSpeed) {
-            if(velocity.x > 0)
-                velocity.x = maxSpeed;
-            else
-                velocity.x = -maxSpeed;
-        }
-
         if(pickedUpEntity != null)
             pickedUpEntity.preUpdate(dt);
-
-        force.set(0f, 0f);
     }
 
     public void update(float dt, AssetManager assetManager, CollisionDetection collisionDetection, int tileSizeInPixels, PlayerStunProjectiles playerStunProjectiles, PickedUpEntities weapons, Enemies enemies) {
-        isOnGround = false;
 
-        for(CollisionEntity collidee : collisionEntity.collidees) {
+        for(CollisionEntity collidee : collisionComponent.entity.collidees) {
             if(collidee.userData instanceof Enemy) {
                 Enemy enemy = (Enemy) collidee.userData;
                 if(enemy.isStunned) {
@@ -203,7 +147,7 @@ public class Player {
                     enemy.isShoot = true;
                     if(pickedUpEntity == null) {
                         PlayerWeaponAnimations playerWeaponAnimations = new PlayerWeaponAnimations(enemy.animations.getCurrentAnimation());
-                        pickedUpEntity = CreateEnteties.playerWeapon(playerWeaponAnimations, position, velocity, enemy.size, collisionDetection);
+                        pickedUpEntity = CreateEnteties.playerWeapon(playerWeaponAnimations, positionComponent.position, physicsComponent.velocity, enemy.size, collisionDetection);
                     }
 
                 }
@@ -213,45 +157,23 @@ public class Player {
             }
         }
 
-        if(collisionEntity.groundCollisionData.didCollide)  {
-            if(velocity.y < 0) {
-                velocity.y = 0;
-                position.add(0f, collisionEntity.groundCollisionData.move.y);
-            }
-            isOnGround = true;
-        }
-        if(collisionEntity.wallsCollisionData.didCollide) {
-            velocity.x = 0;
-            position.sub(collisionEntity.wallsCollisionData.move);
-        }
-
-
-        position.mulAdd(velocity, dt);
-        collisionEntity.box.setCenter(position);
-
-        if(isOnGround)
-            velocity.x *= friction;
-        else
-            velocity.x *= airResistance;
-
-        if(Math.abs(velocity.x) > 1f) {
+        if(Math.abs(physicsComponent.velocity.x) > 1f) {
             currentFrame = animations.getKeyFrame();
         }
         if(fire && pickedUpEntity == null) {
-            float projDir = (walkDirection == WalkDirection.Left) ? -300f : 300f;
-            playerStunProjectiles.add(new PlayerStunProjectile(new Vector2(position), new Vector2(projDir, 0f), tileSizeInPixels, collisionDetection));
+            float projDir = (physicsComponent.walkDirection == WalkDirection.Left) ? -300f : 300f;
+            playerStunProjectiles.add(CreateEnteties.playerStunProjectile(assetManager, new Vector2(positionComponent.position), new Vector2(projDir, 0f), tileSizeInPixels, collisionDetection, preUpdateEngine, updateEngine));
         }
         else  if(fire && pickedUpEntity != null) {
             weapons.add(pickedUpEntity);
             pickedUpEntity = null;
         }
         else if(pickedUpEntity != null) {
-            pickedUpEntity.setPosition(position.x, position.y +  this.collisionEntity.box.height*0.8f);
+            pickedUpEntity.setPosition(positionComponent.position.x, positionComponent.position.y +  this.collisionComponent.entity.box.height*0.8f);
             pickedUpEntity.update(dt);
         }
         animations.update(dt);
     }
-    Sprite sprite = new Sprite();
 
     public void render(float t, Sprites sprites) {
         if(pickedUpEntity != null) {
@@ -259,9 +181,9 @@ public class Player {
         }
 
         sprite.textureRegion.setRegion(currentFrame);
-        sprite.position.set(collisionEntity.box.x, collisionEntity.box.y);
-        sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
-        sprite.mirrorX = walkDirection == WalkDirection.Left;
+        sprite.position.set(collisionComponent.entity.box.x, collisionComponent.entity.box.y);
+        sprite.size.set(collisionComponent.entity.box.width, collisionComponent.entity.box.height);
+        sprite.mirrorX = physicsComponent.walkDirection == WalkDirection.Left;
         sprites.add(sprite);
     }
 
