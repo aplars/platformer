@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.sa.game.components.AnimationComponent;
-import com.sa.game.components.PlayerStunProjectileAnimationComponent;
 import com.sa.game.components.RenderComponent;
 import com.sa.game.components.StateComponent;
 

@@ -9,6 +9,7 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.PerformanceCounters;
 import com.sa.game.dirwatcher.DirWatcher;
 import com.sa.game.editor.Editor;
 import com.sa.game.models.EditorModel;
@@ -32,9 +33,11 @@ public class MyGdxGame implements ApplicationListener {
 
     Editor editor;
     EditorModel editorModel;
+    PerformanceCounters performanceCounters = new PerformanceCounters();
+
     @Override
     public void create() {
-        gameWorld = new GameWorld();
+        gameWorld = new GameWorld(performanceCounters);
 
         batch = new SpriteBatch();
         font = new BitmapFont();
@@ -72,7 +75,7 @@ public class MyGdxGame implements ApplicationListener {
             gameWorld.resize(getAspectRatio());
 
             editorModel = new EditorModel(gameWorld.staticEnvironment);
-            editor = new Editor(editorModel);
+            editor = new Editor(editorModel, performanceCounters);
 
             reloadLevel.set(false);
         }

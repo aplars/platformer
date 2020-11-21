@@ -2,11 +2,16 @@ package com.sa.game.editor;
 
 import java.util.ArrayList;
 
+import javax.print.attribute.standard.PrinterInfo;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.utils.PerformanceCounters;
 import com.sa.game.StaticEnvironment;
 import com.sa.game.models.EditorModel;
 import com.sa.game.models.LayersToRenderModel;
@@ -16,8 +21,9 @@ public class Editor {
     Skin skin;
     Stage stage;
     SpriteBatch batch;
+    Performance performance;
 
-    public Editor(EditorModel editorModel) {
+    public Editor(EditorModel editorModel, PerformanceCounters performanceCounters) {
         batch = new SpriteBatch();
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -34,7 +40,14 @@ public class Editor {
         window.setResizeBorder(10);
         Properties properties = new Properties(skin, editorModel.getLayersToRenderModel());
 
-        window.add(properties.getTree());
+        performance = new Performance(skin, performanceCounters);
+
+        VerticalGroup verticalGroup = new VerticalGroup();
+
+        verticalGroup.addActor(performance.getTree());
+        verticalGroup.addActor(properties.getTree());
+
+        window.add(verticalGroup);
 
         //table.setFillParent(true);
         stage.addActor(window);
@@ -51,11 +64,10 @@ public class Editor {
           System.out.println("Clicked! Is checked: " + button.isChecked());
           button.setText("Good job!");
           }
-      
+
           @Override
           public void changed(final ChangeEvent event, final Actor actor) {
           // TODO Auto-generated method stub
-				
           }
           });
         */
@@ -71,6 +83,7 @@ public class Editor {
     }
 
     public void render () {
+        performance.update();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }

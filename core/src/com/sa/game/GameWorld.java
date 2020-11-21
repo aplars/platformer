@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.PerformanceCounter;
+import com.badlogic.gdx.utils.PerformanceCounters;
 import com.sa.game.States.PlayerStunProjectileState;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.components.StateComponent;
@@ -17,13 +19,7 @@ import com.sa.game.entities.PickedUpEntities;
 import com.sa.game.entities.PlayerStunProjectiles;
 import com.sa.game.entities.Players;
 import com.sa.game.gfx.Sprites;
-import com.sa.game.systems.DampingSystem;
-import com.sa.game.systems.MovementSystem;
-import com.sa.game.systems.PhysicsSystem;
-import com.sa.game.systems.PlayerControlSystem;
-import com.sa.game.systems.AnimationSystem;
-import com.sa.game.systems.RenderSystem;
-import com.sa.game.systems.ResolveCollisionSystem;
+import com.sa.game.systems.*;
 
 public class GameWorld {
     //game entities
@@ -44,15 +40,10 @@ public class GameWorld {
     Engine preUpdateEngine = new Engine();
     Engine updateEngine = new Engine();
 
-    public GameWorld() {
-        preUpdateEngine.addSystem(new PlayerControlSystem());
-        preUpdateEngine.addSystem(new PhysicsSystem());
+    PerformanceCounters performanceCounters;
 
-        updateEngine.addSystem(new ResolveCollisionSystem());
-        updateEngine.addSystem(new MovementSystem());
-        updateEngine.addSystem(new DampingSystem());
-        updateEngine.addSystem(new AnimationSystem());
-        updateEngine.addSystem(new RenderSystem(sprites));
+    public GameWorld(PerformanceCounters performanceCounters) {
+        this.performanceCounters = performanceCounters;
     }
 
     public void setVisibleLayers(int layers[]) {
@@ -155,6 +146,19 @@ public class GameWorld {
         assetManager.finishLoading();
         while(!assetManager.isFinished())
             assetManager.update();
+
+        //preUpdateEngine.removeAllEntities();
+        //updateEngine.removeAllEntities();
+
+        preUpdateEngine.addSystem(new PlayerControlSystem(assetManager, staticEnvironment.tileSizeInPixels, collisionDetection, preUpdateEngine, updateEngine));
+        preUpdateEngine.addSystem(new PhysicsSystem());
+        preUpdateEngine.addSystem(new CollisionSystem());
+
+        updateEngine.addSystem(new ResolveCollisionSystem(performanceCounters.add("resolvecollision")));
+        updateEngine.addSystem(new MovementSystem());
+        updateEngine.addSystem(new DampingSystem());
+        updateEngine.addSystem(new AnimationSystem<>());
+        updateEngine.addSystem(new RenderSystem(performanceCounters.add("resolvecollision"), sprites));
 
         return true;
     }

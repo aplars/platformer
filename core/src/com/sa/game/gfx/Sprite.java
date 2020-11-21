@@ -8,4 +8,9 @@ public class Sprite {
     public Vector2 position = new Vector2();
     public Vector2 size = new Vector2();
     public boolean mirrorX = false;
+
+    public void setCenter(float x, float y) {
+        position.x = x - size.x / 2f;
+        position.y = y - size.y / 2f;
+    }
 }

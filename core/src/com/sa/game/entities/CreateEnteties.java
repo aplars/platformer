@@ -46,14 +46,12 @@ public class CreateEnteties {
         assetManager.load("enteties/player/player.atlas", TextureAtlas.class);
         assetManager.finishLoadingAsset("enteties/player/player.atlas");
         TextureAtlas atlas = assetManager.get("enteties/player/player.atlas", TextureAtlas.class);
-        PlayerAnimations playerAnimations = new PlayerAnimations(
-                                                                 new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), PlayMode.LOOP),
-                                                                 new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), PlayMode.LOOP));
         return new Player(
                           pos,
                           new Vector2(),
                           siz,
-                          playerAnimations,
+                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), PlayMode.LOOP),
+                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), PlayMode.LOOP),
                           staticEnvironment,
                           collisionDetection,
                           preUpdateEngine,

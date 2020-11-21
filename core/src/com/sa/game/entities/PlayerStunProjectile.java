@@ -19,8 +19,7 @@ public class PlayerStunProjectile {
     PositionComponent positionComponent;
     CollisionComponent collisionComponent;
     StateComponent<PlayerStunProjectileState> stateComponent;
-    PlayerStunProjectileAnimationComponent animationComponent;
-    AnimationComponent<PlayerStunProjectileState> animationComponent2;
+    AnimationComponent<PlayerStunProjectileState> animationComponent;
     RenderComponent renderComponent;
 
     Entity preUpdateEntity;
@@ -43,7 +42,7 @@ public class PlayerStunProjectile {
         collisionRectangle.setHeight(tileSizeInPixels/2);
         collisionRectangle.setCenter(position);
         collisionEntity.box.set(collisionRectangle);
-        collisionEntity.velocity = velocity;
+        collisionEntity.velocity.set(velocity);
         collisionEntity.userData = this;
         collisionDetection.add(collisionEntity);
 
@@ -53,13 +52,9 @@ public class PlayerStunProjectile {
         stateComponent = new StateComponent<>();
         stateComponent.state = PlayerStunProjectileState.OnTrack;
 
-        animationComponent = new PlayerStunProjectileAnimationComponent();
+        animationComponent = new AnimationComponent<>();
         animationComponent.animations.put(PlayerStunProjectileState.OnTrack, onTrackAnimation);
         animationComponent.animations.put(PlayerStunProjectileState.Explode, explodeAnimation);
-
-        animationComponent2 = new AnimationComponent<>();
-        animationComponent2.animations.put(PlayerStunProjectileState.OnTrack, onTrackAnimation);
-        animationComponent2.animations.put(PlayerStunProjectileState.Explode, explodeAnimation);
 
         renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();
@@ -78,7 +73,6 @@ public class PlayerStunProjectile {
         updateEntity.add(collisionComponent);
         updateEntity.add(stateComponent);
         updateEntity.add(animationComponent);
-        updateEntity.add(animationComponent2);
         updateEntity.add(renderComponent);
 
         preUpdateEngine.addEntity(preUpdateEntity);

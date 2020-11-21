@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -16,10 +17,7 @@ import com.sa.game.collision.CollisionEntity;
 import com.sa.game.collision.FloorCollisionData;
 import com.sa.game.collision.IntersectionTests;
 import com.sa.game.collision.WallCollisionData;
-import com.sa.game.components.CollisionComponent;
-import com.sa.game.components.EntityControlComponent;
-import com.sa.game.components.PhysicsComponent;
-import com.sa.game.components.PositionComponent;
+import com.sa.game.components.*;
 import com.sa.game.gfx.PlayerAnimations;
 import com.sa.game.gfx.PlayerWeaponAnimations;
 import com.sa.game.gfx.Sprite;
@@ -45,7 +43,6 @@ public class Player {
 
     State state = State.Alive;
 
-    PlayerAnimations animations;
 
     TextureRegion currentFrame;
     Sprite sprite = new Sprite();
@@ -58,50 +55,74 @@ public class Player {
     PhysicsComponent physicsComponent;
     EntityControlComponent entityControlComponent;
     CollisionComponent collisionComponent;
+    StateComponent<PlayerState> stateComponent;
+    AnimationComponent<PlayerState> animationComponent;
+    RenderComponent renderComponent;
 
     Engine preUpdateEngine;
     Engine updateEngine;
 
-    public Player(Vector2 pos, Vector2 vel, Vector2 size, PlayerAnimations playerAnimations, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection, Engine preUpdatyeEngine, Engine updateEngine) {
+    public Player(Vector2 pos, Vector2 vel, Vector2 size, final Animation<TextureRegion> idleAnimation, final Animation<TextureRegion> walkAnimation, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection, Engine preUpdatyeEngine, Engine updateEngine) {
+        Rectangle box = new Rectangle(0, 0, size.x, size.y);
+        box.setCenter(pos.x, pos.y);
+
+        CollisionEntity collisionEntity = new CollisionEntity();
+        collisionEntity.box.set(box);
+        collisionEntity.velocity = vel;
+        collisionEntity.userData = this;
+        collisionDetection.add(collisionEntity);
+
+        float jumpTime = 0.5f;
+
+
+
         this.preUpdateEngine = preUpdatyeEngine;
         this.updateEngine = updateEngine;
 
-        preUpdateEntity = new Entity();
-        updateEntity = new Entity();
-
         physicsComponent = new PhysicsComponent();
-        entityControlComponent = new EntityControlComponent();
-        positionComponent = new PositionComponent();
-        collisionComponent = new CollisionComponent();
-
-        preUpdateEntity.add(physicsComponent);
-        preUpdateEntity.add(entityControlComponent);
-        preUpdateEntity.add(collisionComponent);
-
-        updateEntity.add(physicsComponent);
-        updateEntity.add(positionComponent);
-        updateEntity.add(collisionComponent);
-
-        positionComponent.position.set(pos);
+        physicsComponent.gravity = -2*(staticEnvironment.tileSizeInPixels*5f+2)/(float)Math.pow(jumpTime, 2f);
         physicsComponent.velocity.set(vel);
 
-
-        animations = playerAnimations;
-
-        Rectangle box = new Rectangle(0, 0, size.x, size.y);
-        box.setCenter(positionComponent.position.x, positionComponent.position.y);
-        collisionComponent.entity.box.set(box);
-        collisionComponent.entity.velocity = physicsComponent.velocity;
-        collisionComponent.entity.userData = this;
-        collisionDetection.add(collisionComponent.entity);
-
-        float jumpTime = 0.5f;
-        physicsComponent.gravity = -2*(staticEnvironment.tileSizeInPixels*5f+2)/(float)Math.pow(jumpTime, 2f);
+        entityControlComponent = new EntityControlComponent();
         entityControlComponent.jumpImpulse = 2f*(staticEnvironment.tileSizeInPixels*5f+2)/jumpTime;
         entityControlComponent.moveForce = 30*staticEnvironment.tileSizeInPixels*physicsComponent.mass;
 
-        animations.setCurrentAnimation(PlayerState.Walk);
-        currentFrame = animations.getKeyFrame();
+        positionComponent = new PositionComponent();
+        positionComponent.position.set(pos);
+
+        collisionComponent = new CollisionComponent();
+        collisionComponent.entity = collisionEntity;
+
+        stateComponent = new StateComponent<>();
+        stateComponent.state = PlayerState.Idle;
+
+        animationComponent = new AnimationComponent<>();
+        animationComponent.animations.put(PlayerState.Idle, idleAnimation);
+        animationComponent.animations.put(PlayerState.Walk, walkAnimation);
+
+        renderComponent = new RenderComponent();
+        renderComponent.sprite = new Sprite();
+        renderComponent.sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
+
+        preUpdateEntity = new Entity();
+        preUpdateEntity.add(physicsComponent);
+        preUpdateEntity.add(entityControlComponent);
+        preUpdateEntity.add(collisionComponent);
+        preUpdateEntity.add(positionComponent);
+
+        updateEntity = new Entity();
+        updateEntity.add(physicsComponent);
+        updateEntity.add(positionComponent);
+        updateEntity.add(collisionComponent);
+        updateEntity.add(stateComponent);
+        updateEntity.add(animationComponent);
+        updateEntity.add(renderComponent);
+
+
+
+
+
+
         this.preUpdateEngine.addEntity(preUpdateEntity);
         this.updateEngine.addEntity(updateEntity);
     }
@@ -158,13 +179,13 @@ public class Player {
         }
 
         if(Math.abs(physicsComponent.velocity.x) > 1f) {
-            currentFrame = animations.getKeyFrame();
         }
-        if(fire && pickedUpEntity == null) {
-            float projDir = (physicsComponent.walkDirection == WalkDirection.Left) ? -300f : 300f;
-            playerStunProjectiles.add(CreateEnteties.playerStunProjectile(assetManager, new Vector2(positionComponent.position), new Vector2(projDir, 0f), tileSizeInPixels, collisionDetection, preUpdateEngine, updateEngine));
-        }
-        else  if(fire && pickedUpEntity != null) {
+        //if(fire && pickedUpEntity == null) {
+        //    float projDir = (physicsComponent.walkDirection == WalkDirection.Left) ? -300f : 300f;
+        //    playerStunProjectiles.add(CreateEnteties.playerStunProjectile(assetManager, new Vector2(positionComponent.position), new Vector2(projDir, 0f), tileSizeInPixels, collisionDetection, preUpdateEngine, updateEngine));
+        //}
+        //else
+        if(fire && pickedUpEntity != null) {
             weapons.add(pickedUpEntity);
             pickedUpEntity = null;
         }
@@ -172,19 +193,18 @@ public class Player {
             pickedUpEntity.setPosition(positionComponent.position.x, positionComponent.position.y +  this.collisionComponent.entity.box.height*0.8f);
             pickedUpEntity.update(dt);
         }
-        animations.update(dt);
     }
 
     public void render(float t, Sprites sprites) {
         if(pickedUpEntity != null) {
             pickedUpEntity.render(t, sprites);
         }
-
+        /*
         sprite.textureRegion.setRegion(currentFrame);
         sprite.position.set(collisionComponent.entity.box.x, collisionComponent.entity.box.y);
         sprite.size.set(collisionComponent.entity.box.width, collisionComponent.entity.box.height);
         sprite.mirrorX = physicsComponent.walkDirection == WalkDirection.Left;
-        sprites.add(sprite);
+        sprites.add(sprite);*/
     }
 
 }
