@@ -35,12 +35,12 @@ public class Enemies {
 
     public void update(float dt, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         //Move the player to the top if it falls under zero
-        for (Enemy enemy : enemies) {
-            if(enemy.position.y < 0) {
-                enemy.position.y = staticEnvironment.getWorldBoundY();
-            }
+        //for (Enemy enemy : enemies) {
+        //    if(enemy.position.y < 0) {
+        //        enemy.position.y = staticEnvironment.getWorldBoundY();
+        //    }
 
-        }
+        //}
 
         Iterator<Enemy> enemyIterator = enemies.iterator();
         while(enemyIterator.hasNext()) {
@@ -53,12 +53,6 @@ public class Enemies {
 
         for(Enemy enemy : enemies) {
             enemy.update(dt, staticEnvironment);
-        }
-    }
-
-    public void render(float dt, Sprites sprites) {
-        for(Enemy enemy : enemies) {
-            enemy.render(dt, sprites);
         }
     }
 }

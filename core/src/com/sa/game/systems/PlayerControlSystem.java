@@ -13,11 +13,13 @@ import com.sa.game.collision.CollisionDetection;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.EntityControlComponent;
 import com.sa.game.components.PhysicsComponent;
+import com.sa.game.components.Player1Component;
 import com.sa.game.components.PositionComponent;
 import com.sa.game.entities.CreateEnteties;
 import com.sa.game.entities.WalkDirection;
 
 public class PlayerControlSystem extends IteratingSystem{
+    private ComponentMapper<Player1Component> pl1m = ComponentMapper.getFor(Player1Component.class);
     private ComponentMapper<PhysicsComponent> pm = ComponentMapper.getFor(PhysicsComponent.class);
     private ComponentMapper<EntityControlComponent> cm = ComponentMapper.getFor(EntityControlComponent.class);
     private ComponentMapper<CollisionComponent> colm = ComponentMapper.getFor(CollisionComponent.class);
@@ -30,7 +32,7 @@ public class PlayerControlSystem extends IteratingSystem{
     private Engine updateEngine;
 
     public PlayerControlSystem(AssetManager assetManager, int tileSizeInPixels, CollisionDetection collisionDetection, Engine preUpdateEngine, Engine updateEngine) {
-        super(Family.all(PhysicsComponent.class, EntityControlComponent.class, CollisionComponent.class, PositionComponent.class).get());
+        super(Family.all(Player1Component.class, PhysicsComponent.class, EntityControlComponent.class, CollisionComponent.class, PositionComponent.class).get());
 
         this.assetManager = assetManager;
         this.tileSizeInPixels = tileSizeInPixels;
@@ -39,30 +41,30 @@ public class PlayerControlSystem extends IteratingSystem{
         this.updateEngine = updateEngine;
     }
 
-	@Override
-	protected void processEntity(Entity entity, float deltaTime) {
-      PhysicsComponent physicsComponent = pm.get(entity);
-      EntityControlComponent entityControlComponent = cm.get(entity); 
-      CollisionComponent collisionComponent = colm.get(entity);
-      PositionComponent positionComponent = posm.get(entity);
+    @Override
+    protected void processEntity(Entity entity, float deltaTime) {
+        PhysicsComponent physicsComponent = pm.get(entity);
+        EntityControlComponent entityControlComponent = cm.get(entity); 
+        CollisionComponent collisionComponent = colm.get(entity);
+        PositionComponent positionComponent = posm.get(entity);
 
-      if(physicsComponent != null && entityControlComponent != null && collisionComponent != null) {
-          if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-              physicsComponent.force.x -= entityControlComponent.moveForce;
-          }
-          if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-              physicsComponent.force.x += entityControlComponent.moveForce;
-          }
-          if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && collisionComponent.entity.groundCollisionData.didCollide) {
+        if(physicsComponent != null && entityControlComponent != null && collisionComponent != null) {
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                physicsComponent.force.x -= entityControlComponent.moveForce;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                physicsComponent.force.x += entityControlComponent.moveForce;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && collisionComponent.entity.groundCollisionData.didCollide) {
               physicsComponent.velocity.y = entityControlComponent.jumpImpulse;
-          }
-          if(Gdx.input.isKeyPressed(Input.Keys.W) && entityControlComponent.timeUntilNextBulletSpawnPossible <= 0) {
-              float projDir = (physicsComponent.walkDirection == WalkDirection.Left) ? -300f : 300f;
-              CreateEnteties.playerStunProjectile(assetManager, positionComponent.position, new Vector2(projDir, 0f), tileSizeInPixels, collisionDetection, preUpdateEngine, updateEngine);
-              entityControlComponent.timeUntilNextBulletSpawnPossible = EntityControlComponent.SPAWN_TIME_INTERVAL;
-          }
-          entityControlComponent.timeUntilNextBulletSpawnPossible -= deltaTime;
-          entityControlComponent.timeUntilNextBulletSpawnPossible = Float.max(0f, entityControlComponent.timeUntilNextBulletSpawnPossible);
-      }
-	}
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.W) && entityControlComponent.timeUntilNextBulletSpawnPossible <= 0) {
+                float projDir = (physicsComponent.walkDirection == WalkDirection.Left) ? -300f : 300f;
+                CreateEnteties.playerStunProjectile(assetManager, positionComponent.position, new Vector2(projDir, 0f), tileSizeInPixels, collisionDetection, preUpdateEngine, updateEngine);
+                entityControlComponent.timeUntilNextBulletSpawnPossible = EntityControlComponent.SPAWN_TIME_INTERVAL;
+            }
+            entityControlComponent.timeUntilNextBulletSpawnPossible -= deltaTime;
+            entityControlComponent.timeUntilNextBulletSpawnPossible = Float.max(0f, entityControlComponent.timeUntilNextBulletSpawnPossible);
+        }
+    }
 }

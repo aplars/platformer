@@ -66,8 +66,7 @@ public enum ClownEnemyBrain implements State<Enemy> {
                 else
                     enemy.currentDirection = Enemy.XDirection.Left;
             }
-            int tilex = (int) (enemy.collisionEntity.box.x + enemy.collisionEntity.box.width)
-                    / enemy.staticEnvironment.tileSizeInPixels;
+            int tilex = (int) (enemy.collisionEntity.box.x + enemy.collisionEntity.box.width) / enemy.staticEnvironment.tileSizeInPixels;
 
             int tiley = (int) enemy.collisionEntity.box.y / enemy.staticEnvironment.tileSizeInPixels - 1;
 

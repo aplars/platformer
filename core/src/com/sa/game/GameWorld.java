@@ -78,7 +78,6 @@ public class GameWorld {
 
         if(mapRenderer != null)
             mapRenderer.render(visiblelayers);
-        enemies.render(dt, sprites);
         pickedUpEntities.render(dt, sprites);
         players.render(dt, sprites);
         sprites.render(camera);
@@ -121,12 +120,14 @@ public class GameWorld {
         for(StaticEnvironment.Entity entity : staticEnvironment.entities) {
             if (entity.name.equals("clown")) {
                 enemies.add(
-                            CreateEnteties.clown(
-                                                 assetManager,
+                            CreateEnteties.clown(assetManager,
                                                  entity.position,
                                                  entity.size.y,
                                                  staticEnvironment,
-                                                 collisionDetection));
+                                                 collisionDetection,
+                                                 preUpdateEngine,
+                                                 updateEngine)
+                            );
             }
             if(entity.name.equals("player")) {
                 players.add(
@@ -151,6 +152,7 @@ public class GameWorld {
         //updateEngine.removeAllEntities();
 
         preUpdateEngine.addSystem(new PlayerControlSystem(assetManager, staticEnvironment.tileSizeInPixels, collisionDetection, preUpdateEngine, updateEngine));
+        preUpdateEngine.addSystem(new ClownAISystem());
         preUpdateEngine.addSystem(new PhysicsSystem());
         preUpdateEngine.addSystem(new CollisionSystem());
 

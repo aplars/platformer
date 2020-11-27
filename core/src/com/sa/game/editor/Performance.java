@@ -79,7 +79,7 @@ public class Performance {
 
     public void update() {
         for(java.util.Map.Entry<PerformanceCounter, LabelPair> e : modelMap.entrySet()) {
-            e.getValue().setL1(Float.toString(e.getKey().current));
+            e.getValue().setL1(String.format("%.2f", e.getKey().current));
         }
     }
 }

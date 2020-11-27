@@ -19,7 +19,7 @@ import com.sa.game.gfx.PlayerWeaponAnimations;
 import com.sa.game.statemachines.ClownEnemyBrain;
 
 public class CreateEnteties {
-    public static Enemy clown(AssetManager assetManager, Vector2 center, float height, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public static Enemy clown(AssetManager assetManager, Vector2 center, float height, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection, Engine preUpdateEngine, Engine updateEngine) {
         assetManager.load("enteties/clown/clown.atlas", TextureAtlas.class);
         assetManager.finishLoadingAsset("enteties/clown/clown.atlas");
         TextureAtlas atlas = assetManager.get("enteties/clown/clown.atlas", TextureAtlas.class);
@@ -29,12 +29,13 @@ public class CreateEnteties {
                 "clown",
                 center,
                 height,
-                new EnemyAnimations(
-                        new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("idle"), Animation.PlayMode.LOOP),
-                        new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), Animation.PlayMode.LOOP),
-                        new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("stunned"), Animation.PlayMode.NORMAL)),
+                new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("idle"), Animation.PlayMode.LOOP),
+                new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), Animation.PlayMode.LOOP),
+                new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("stunned"), Animation.PlayMode.NORMAL),
                 staticEnvironment,
-                collisionDetection
+                collisionDetection,
+                preUpdateEngine,
+                updateEngine
         );
         State<Enemy> test = ClownEnemyBrain.RESTING;
         enemy.stateMachine = new DefaultStateMachine<>(enemy, test);

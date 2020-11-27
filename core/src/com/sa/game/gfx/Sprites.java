@@ -18,7 +18,6 @@ public class Sprites {
     }
 
     public void render(OrthographicCamera camera) {
-
         spriteBatch.setProjectionMatrix(camera.projection);
         spriteBatch.setTransformMatrix(camera.view);
         spriteBatch.begin();

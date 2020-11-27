@@ -66,6 +66,7 @@ public class PickedUpEntity {
     }
 
     public void preUpdate(float dt) {
+
         if(fire) {
             acceleration.y = gravity;
             velocity.mulAdd(acceleration, dt);

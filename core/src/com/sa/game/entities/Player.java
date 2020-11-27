@@ -51,6 +51,8 @@ public class Player {
 
     Entity preUpdateEntity;
     Entity updateEntity;
+
+    Player1Component player1Component;
     PositionComponent positionComponent;
     PhysicsComponent physicsComponent;
     EntityControlComponent entityControlComponent;
@@ -72,13 +74,13 @@ public class Player {
         collisionEntity.userData = this;
         collisionDetection.add(collisionEntity);
 
-        float jumpTime = 0.5f;
-
-
 
         this.preUpdateEngine = preUpdatyeEngine;
         this.updateEngine = updateEngine;
 
+        player1Component = new Player1Component();
+
+        float jumpTime = 0.5f;
         physicsComponent = new PhysicsComponent();
         physicsComponent.gravity = -2*(staticEnvironment.tileSizeInPixels*5f+2)/(float)Math.pow(jumpTime, 2f);
         physicsComponent.velocity.set(vel);
@@ -109,6 +111,7 @@ public class Player {
         preUpdateEntity.add(entityControlComponent);
         preUpdateEntity.add(collisionComponent);
         preUpdateEntity.add(positionComponent);
+        preUpdateEntity.add(player1Component);
 
         updateEntity = new Entity();
         updateEntity.add(physicsComponent);
@@ -167,8 +170,8 @@ public class Player {
                     //Remove it from the enemy list and add it as player weapon.
                     enemy.isShoot = true;
                     if(pickedUpEntity == null) {
-                        PlayerWeaponAnimations playerWeaponAnimations = new PlayerWeaponAnimations(enemy.animations.getCurrentAnimation());
-                        pickedUpEntity = CreateEnteties.playerWeapon(playerWeaponAnimations, positionComponent.position, physicsComponent.velocity, enemy.size, collisionDetection);
+                        //PlayerWeaponAnimations playerWeaponAnimations = new PlayerWeaponAnimations(enemy.animations.getCurrentAnimation());
+                        //pickedUpEntity = CreateEnteties.playerWeapon(playerWeaponAnimations, positionComponent.position, physicsComponent.velocity, enemy.size, collisionDetection);
                     }
 
                 }
