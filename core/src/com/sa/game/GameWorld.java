@@ -8,26 +8,24 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.utils.PerformanceCounter;
 import com.badlogic.gdx.utils.PerformanceCounters;
-import com.sa.game.States.PlayerStunProjectileState;
 import com.sa.game.collision.CollisionDetection;
-import com.sa.game.components.StateComponent;
 import com.sa.game.entities.CreateEnteties;
-import com.sa.game.entities.Enemies;
-import com.sa.game.entities.PickedUpEntities;
-import com.sa.game.entities.PlayerStunProjectiles;
-import com.sa.game.entities.Players;
 import com.sa.game.gfx.Sprites;
-import com.sa.game.systems.*;
+import com.sa.game.systems.AnimationSystem;
+import com.sa.game.systems.ClownAISystem;
+import com.sa.game.systems.CollisionSystem;
+import com.sa.game.systems.ControlSystem;
+import com.sa.game.systems.DampingSystem;
+import com.sa.game.systems.MovementSystem;
+import com.sa.game.systems.PhysicsSystem;
+import com.sa.game.systems.PlayerInputSystem;
+import com.sa.game.systems.RenderSystem;
+import com.sa.game.systems.ResolveCollisionSystem;
 
 public class GameWorld {
     //game entities
     StaticEnvironment staticEnvironment = new StaticEnvironment();
-    Players players = new Players();
-    Enemies enemies = new Enemies();
-    PlayerStunProjectiles playerStunProjectiles = new PlayerStunProjectiles();
-    PickedUpEntities pickedUpEntities = new PickedUpEntities();
     //////////////////////////////////////////////////////////////
     OrthographicCamera camera = new OrthographicCamera();
     Sprites sprites = new Sprites();
@@ -37,7 +35,6 @@ public class GameWorld {
 
     int visiblelayers[] = {};
 
-    Engine preUpdateEngine = new Engine();
     Engine updateEngine = new Engine();
 
     PerformanceCounters performanceCounters;
@@ -51,24 +48,10 @@ public class GameWorld {
     }
 
     public void preUpdate(float dt, Controller controller) {
-        players.handleInput(dt, controller);
-
-        preUpdateEngine.update(dt);
-
-        players.preUpdate(dt);
-        pickedUpEntities.preUpdate(dt);
-        enemies.preUpdate(dt);
     }
 
     public void update(float dt) {
-        collisionDetection.update(dt, staticEnvironment);
-        players.update(dt, assetManager, staticEnvironment.getWorldBoundY(), staticEnvironment.tileSizeInPixels,
-                       collisionDetection, playerStunProjectiles, pickedUpEntities, enemies);
-
         updateEngine.update(dt);
-
-        pickedUpEntities.update(dt, staticEnvironment.getWorldBoundY(), collisionDetection);
-        enemies.update(dt, staticEnvironment, collisionDetection);
         camera.update();
     }
 
@@ -78,13 +61,13 @@ public class GameWorld {
 
         if(mapRenderer != null)
             mapRenderer.render(visiblelayers);
-        pickedUpEntities.render(dt, sprites);
-        players.render(dt, sprites);
+
         sprites.render(camera);
     }
 
     public void resize(float aspectRatio) {
-        if(staticEnvironment == null) return;
+        if(staticEnvironment == null)
+            return;
         float w = 0f;
         if(Gdx.graphics.getHeight() > Gdx.graphics.getWidth()) {
             camera.setToOrtho(false,
@@ -103,9 +86,6 @@ public class GameWorld {
     }
 
     public boolean loadLevel() {
-        players.clear();
-        enemies.clear();
-        pickedUpEntities.clear();
         collisionDetection.clear();
         staticEnvironment.dispose();
         assetManager.clear();
@@ -117,28 +97,25 @@ public class GameWorld {
         TiledMap tiledMap = assetManager.get("level_1.tmx", TiledMap.class);
         staticEnvironment = new StaticEnvironment(tiledMap, collisionDetection);
         assetManager.finishLoading();
+
+        updateEngine.removeAllEntities();
+
         for(StaticEnvironment.Entity entity : staticEnvironment.entities) {
             if (entity.name.equals("clown")) {
-                enemies.add(
-                            CreateEnteties.clown(assetManager,
-                                                 entity.position,
-                                                 entity.size.y,
-                                                 staticEnvironment,
-                                                 collisionDetection,
-                                                 preUpdateEngine,
-                                                 updateEngine)
-                            );
+                CreateEnteties.clown(assetManager,
+                                     entity.position,
+                                     entity.size.y,
+                                     staticEnvironment,
+                                     collisionDetection,
+                                     updateEngine);
             }
             if(entity.name.equals("player")) {
-                players.add(
-                            CreateEnteties.player(assetManager,
-                                                  entity.position,
-                                                  entity.size,
-                                                  staticEnvironment,
-                                                  collisionDetection,
-                                                  preUpdateEngine,
-                                                  updateEngine)
-                );
+                CreateEnteties.player(assetManager,
+                                      entity.position,
+                                      entity.size,
+                                      staticEnvironment,
+                                      collisionDetection,
+                                      updateEngine);
             }
         }
 
@@ -148,13 +125,12 @@ public class GameWorld {
         while(!assetManager.isFinished())
             assetManager.update();
 
-        //preUpdateEngine.removeAllEntities();
-        //updateEngine.removeAllEntities();
 
-        preUpdateEngine.addSystem(new PlayerControlSystem(assetManager, staticEnvironment.tileSizeInPixels, collisionDetection, preUpdateEngine, updateEngine));
-        preUpdateEngine.addSystem(new ClownAISystem());
-        preUpdateEngine.addSystem(new PhysicsSystem());
-        preUpdateEngine.addSystem(new CollisionSystem());
+        updateEngine.addSystem(new PlayerInputSystem());
+        updateEngine.addSystem(new ClownAISystem());
+        updateEngine.addSystem(new ControlSystem(staticEnvironment.tileSizeInPixels));
+        updateEngine.addSystem(new PhysicsSystem());
+        updateEngine.addSystem(new CollisionSystem(collisionDetection, staticEnvironment));
 
         updateEngine.addSystem(new ResolveCollisionSystem(performanceCounters.add("resolvecollision")));
         updateEngine.addSystem(new MovementSystem());

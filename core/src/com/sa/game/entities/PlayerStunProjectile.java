@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.sa.game.States.PlayerStunProjectileState;
+import com.sa.game.states.PlayerStunProjectileState;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.collision.CollisionEntity;
 import com.sa.game.components.*;

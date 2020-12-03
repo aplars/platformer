@@ -1,46 +1,38 @@
 package com.sa.game.statemachines;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
+import com.sa.game.components.ComponentMappers;
 
-public enum ClownAIState implements State<ClownAIData> {
-    RESTING() {
-        @Override public void update(ClownAIData data) {
-        }
-    },
-
-    WALK_RIGHT() {
-        @Override public void update(ClownAIData data) {
-            if(data.input.collisionEntity.wallsCollisionData.didCollide) {
-                data.stateMachine.changeState(WALK_LEFT);
+public enum ClownAIState implements State<Entity> {
+    WALK() {
+        @Override public void update(final Entity data) {
+            if(ComponentMappers.control.get(data).buttonRight == true && ComponentMappers.collision.get(data).entity.wallsCollisionData.didCollide) {
+                ComponentMappers.control.get(data).buttonLeft = true;
+                ComponentMappers.control.get(data).buttonRight = false;
             }
-            data.output.moveForce = data.constants.moveForce;
-        }
-    },
-    WALK_LEFT() {
-        @Override public void update(ClownAIData data) {
-            if(data.input.collisionEntity.wallsCollisionData.didCollide) {
-                data.stateMachine.changeState(WALK_RIGHT);
+            else if(ComponentMappers.control.get(data).buttonLeft == true && ComponentMappers.collision.get(data).entity.wallsCollisionData.didCollide) {
+                ComponentMappers.control.get(data).buttonLeft = false;
+                ComponentMappers.control.get(data).buttonRight = true;
             }
-            data.output.moveForce = -data.constants.moveForce;
+        }
+        @Override public void enter(final Entity data) {
+            ComponentMappers.control.get(data).buttonLeft = true;
         }
     },
 
     IDLE() {
-        @Override public void enter(ClownAIData data) {
-            data.countDown.setTime(5f);
+        @Override public void enter(final Entity data) {
         }
 
-        @Override public void update(ClownAIData data) {
-            if(data.countDown.isComplete())
-                data.stateMachine.changeState(WALK_LEFT);
+        @Override public void update(final Entity data) {
         }
     },
 
     START() {
-
-        @Override public void update(ClownAIData data) {
-            data.stateMachine.changeState(IDLE);
+        @Override public void update(final Entity data) {
+            ComponentMappers.ai.get(data).stateMachine.changeState(WALK);
         }
     };
 
@@ -48,19 +40,19 @@ public enum ClownAIState implements State<ClownAIData> {
     ClownAIState() {}
 
     @Override
-    public void update(ClownAIData data) {
+    public void update(final Entity data) {
     }
 
     @Override
-    public void enter(ClownAIData data) {
+    public void enter(final Entity data) {
     }
 
     @Override
-    public void exit(ClownAIData data) {
+    public void exit(final Entity data) {
     }
 
     @Override
-    public boolean onMessage(ClownAIData data, Telegram telegram) {
+    public boolean onMessage(final Entity data, final Telegram telegram) {
         return false;
     }
 }

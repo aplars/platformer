@@ -10,22 +10,22 @@ import com.sa.game.components.RenderComponent;
 import com.sa.game.components.StateComponent;
 
 public class AnimationSystem<T> extends IteratingSystem {
-    @SuppressWarnings("unchecked")
-    private ComponentMapper<StateComponent<T>> stateMapper2 = ComponentMapper.getFor((Class<StateComponent<T>>)(Class<?>)StateComponent.class);
-    private ComponentMapper<AnimationComponent<T>> animationMapper = ComponentMapper.getFor((Class<AnimationComponent<T>>)(Class<?>)AnimationComponent.class);
+    private ComponentMapper<StateComponent> stateMapper = ComponentMapper.getFor(StateComponent.class);
+    private ComponentMapper<AnimationComponent> animationMapper = ComponentMapper.getFor(AnimationComponent.class);
     private ComponentMapper<RenderComponent> renderMapper = ComponentMapper.getFor(RenderComponent.class);
     private ComponentMapper<PhysicsComponent> physicsMapper = ComponentMapper.getFor(PhysicsComponent.class);
 
     public AnimationSystem() {
         super(Family.all(
-                (Class<StateComponent<T>>)(Class<?>)StateComponent.class,
-                (Class<AnimationComponent<T>>)(Class<?>)AnimationComponent.class,
-                RenderComponent.class,
-                PhysicsComponent.class).get());
+                         StateComponent.class,
+                         AnimationComponent.class,
+                         RenderComponent.class,
+                         PhysicsComponent.class).get());
     }
-	@Override
-	protected void processEntity(Entity entity, float deltaTime) {
-        StateComponent<T> state = stateMapper2.get(entity);
+
+    @Override
+    protected void processEntity(Entity entity, float deltaTime) {
+        StateComponent<T> state = stateMapper.get(entity);
         AnimationComponent<T> animation = animationMapper.get(entity);
         RenderComponent render = renderMapper.get(entity);
         PhysicsComponent physics = physicsMapper.get(entity);
@@ -38,5 +38,5 @@ public class AnimationSystem<T> extends IteratingSystem {
             render.sprite.mirrorX = false;
         }
         animation.currentTime += deltaTime;
-  }
+    }
 }

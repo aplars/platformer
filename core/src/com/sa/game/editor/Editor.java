@@ -1,20 +1,13 @@
 package com.sa.game.editor;
 
-import java.util.ArrayList;
-
-import javax.print.attribute.standard.PrinterInfo;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.PerformanceCounters;
-import com.sa.game.StaticEnvironment;
 import com.sa.game.models.EditorModel;
-import com.sa.game.models.LayersToRenderModel;
 
 public class Editor {
 

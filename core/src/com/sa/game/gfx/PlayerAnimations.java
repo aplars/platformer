@@ -3,12 +3,9 @@ package com.sa.game.gfx;
 import java.util.HashMap;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.sa.game.states.PlayerState;
 
 public class PlayerAnimations {
-    public enum PlayerState {
-        Idle,
-        Walk,
-    }
 
     HashMap<PlayerState, Animation<TextureRegion>> animations = new HashMap<>();
     Animation<TextureRegion> currentAnimation;

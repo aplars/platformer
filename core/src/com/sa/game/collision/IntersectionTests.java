@@ -74,7 +74,6 @@ public class IntersectionTests {
         destRectangle.set(rectangle);
         Vector2 center = new Vector2();
         rectangle.getCenter(center);
-        //center.add(velocity.x*dt, velocity.y*dt);
         center.add(velocity.x*dt, 0f);
         destRectangle.setCenter(center);
 
@@ -82,16 +81,16 @@ public class IntersectionTests {
         int miny = Math.max(0, (int)Math.floor(destRectangle.y/(float)staticEnvironment.tileSizeInPixels));
         int maxx = Math.min(staticEnvironment.getNumTilesX(), (int)Math.ceil((destRectangle.x+destRectangle.width)/(float)staticEnvironment.tileSizeInPixels));
         int maxy = Math.min(staticEnvironment.getNumTilesY(), (int)Math.ceil((destRectangle.y+destRectangle.height)/(float)staticEnvironment.tileSizeInPixels));
-        wallCollision(rectangle, staticEnvironment, StaticEnvironment.LayerId.Wall, true, true, minx, miny, maxx, maxy, wallCollisionData);
+        wallCollision(rectangle, velocity, staticEnvironment, StaticEnvironment.LayerId.Wall, true, true, minx, miny, maxx, maxy, wallCollisionData);
         if(!wallCollisionData.didCollide)
-            wallCollision(rectangle, staticEnvironment, StaticEnvironment.LayerId.LeftWall, true, false, minx, miny, maxx, maxy, wallCollisionData);
+            wallCollision(rectangle, velocity, staticEnvironment, StaticEnvironment.LayerId.LeftWall, true, false, minx, miny, maxx, maxy, wallCollisionData);
         if(!wallCollisionData.didCollide)
-            wallCollision(rectangle, staticEnvironment, StaticEnvironment.LayerId.RightWall, false, true, minx, miny, maxx, maxy, wallCollisionData);
+            wallCollision(rectangle, velocity, staticEnvironment, StaticEnvironment.LayerId.RightWall, false, true, minx, miny, maxx, maxy, wallCollisionData);
 
         return wallCollisionData;
     }
 
-    private static void wallCollision(Rectangle rectangle, StaticEnvironment staticEnvironment, StaticEnvironment.LayerId tileId, boolean left, boolean right, int minx, int miny, int maxx, int maxy, WallCollisionData wallCollisionData) {
+    private static void wallCollision(Rectangle rectangle, Vector2 velocity, StaticEnvironment staticEnvironment, StaticEnvironment.LayerId tileId, boolean left, boolean right, int minx, int miny, int maxx, int maxy, WallCollisionData wallCollisionData) {
         boolean didCollide = false;
         wallCollisionData.didCollide = false;
         for(int y = miny; y < maxy; y++) {
@@ -100,23 +99,28 @@ public class IntersectionTests {
             for(int x = minx; x < maxx; x++) {
                 if(staticEnvironment.getTileId(tileId, x, y) != 0) {
                     //We did collide with the tile.
-                    //Narrow down the test to only collide if source is on the left or on the right side of the tile.
-                    if (right && rectangle.x <= x * staticEnvironment.tileSizeInPixels && (rectangle.x + rectangle.width) <= x * staticEnvironment.tileSizeInPixels) {
-                        //src is on the left side
-                        didCollide = true;
-                        //wallCollisionData.set(didCollide, new Vector2((rectangle.x + rectangle.width) - x * staticEnvironment.tileSizeInPixels, 0f));
-                        wallCollisionData.set(didCollide, new Vector2(0f, 0f));
-                        break;
-                    }
-                    else if (left && rectangle.x >= (staticEnvironment.tileSizeInPixels + x * staticEnvironment.tileSizeInPixels) && (rectangle.x + rectangle.width) >= (staticEnvironment.tileSizeInPixels + x * staticEnvironment.tileSizeInPixels)) {
-                        //src is on the right side
-                        didCollide = true;
-                        //wallCollisionData.set(didCollide, new Vector2(rectangle.x - (staticEnvironment.tileSizeInPixels + x * staticEnvironment.tileSizeInPixels), 0f));
-                        wallCollisionData.set(didCollide, new Vector2(0f, 0f));
-                        break;
-                    }
-                    else {
 
+                    //Only collide if source is outside
+                    if((rectangle.x >= (staticEnvironment.tileSizeInPixels + (x*staticEnvironment.tileSizeInPixels)) ||
+                        ((rectangle.x+rectangle.width) <= (x * staticEnvironment.tileSizeInPixels)))) {
+
+                        if (velocity.x > 0f) {
+                            //src is on the left side
+                            didCollide = true;
+                            wallCollisionData.set(didCollide, new Vector2((rectangle.x + rectangle.width) - x * staticEnvironment.tileSizeInPixels, 0f));
+                            //wallCollisionData.set(didCollide, new Vector2(0f, 0f));
+                            break;
+                        }
+                        else if (velocity.x < 0f) {
+                            //src is on the right side
+                            didCollide = true;
+                            wallCollisionData.set(didCollide, new Vector2(rectangle.x - (staticEnvironment.tileSizeInPixels + x * staticEnvironment.tileSizeInPixels), 0f));
+                            //wallCollisionData.set(didCollide, new Vector2(0f, 0f));
+                            break;
+                        }
+                        else {
+                            
+                        }
                     }
                 }
             }

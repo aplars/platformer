@@ -1,4 +1,4 @@
-package com.sa.game.States;
+package com.sa.game.states;
 
 public enum EnemyState {
     Idle,

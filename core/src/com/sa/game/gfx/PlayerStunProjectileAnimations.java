@@ -3,7 +3,7 @@ package com.sa.game.gfx;
 import java.util.HashMap;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.sa.game.States.PlayerStunProjectileState;
+import com.sa.game.states.PlayerStunProjectileState;
 
 public class PlayerStunProjectileAnimations {
     HashMap<PlayerStunProjectileState, Animation<TextureRegion>> animations = new HashMap<>();

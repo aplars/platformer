@@ -1,12 +1,9 @@
 package com.sa.game.systems;
 
-import java.util.Comparator;
-
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.sa.game.components.PhysicsComponent;
 import com.sa.game.entities.WalkDirection;
 
