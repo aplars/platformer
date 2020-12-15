@@ -9,12 +9,12 @@ import com.sa.game.entities.WalkDirection;
 
 public class PhysicsSystem extends IteratingSystem {
     private ComponentMapper<PhysicsComponent> pm = ComponentMapper.getFor(PhysicsComponent.class);
-
+    
     public PhysicsSystem() {
         super(Family.all(PhysicsComponent.class).get());
     }
 
-	@Override
+    @Override
     protected void processEntity(Entity entity, float deltaTime) {
         PhysicsComponent physicsComponent = pm.get(entity);
         if (physicsComponent != null) {

@@ -3,6 +3,8 @@ package com.sa.game.editor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
@@ -15,6 +17,7 @@ public class Editor {
     Stage stage;
     SpriteBatch batch;
     Performance performance;
+    Label numSpritesLabel;
 
     public Editor(EditorModel editorModel, PerformanceCounters performanceCounters) {
         batch = new SpriteBatch();
@@ -31,12 +34,20 @@ public class Editor {
         };
         window.setResizable(true);
         window.setResizeBorder(10);
+
+        HorizontalGroup numSpritesGroup = new HorizontalGroup();
+        numSpritesGroup.addActor(new Label("num sprites: ", skin));
+        numSpritesLabel = new Label("----", skin);
+        numSpritesGroup.addActor(numSpritesLabel);
+
+
         Properties properties = new Properties(skin, editorModel.getLayersToRenderModel());
 
         performance = new Performance(skin, performanceCounters);
 
         VerticalGroup verticalGroup = new VerticalGroup();
 
+        verticalGroup.addActor(numSpritesGroup);
         verticalGroup.addActor(performance.getTree());
         verticalGroup.addActor(properties.getTree());
 
@@ -75,7 +86,8 @@ public class Editor {
         stage.getViewport().update(width, height, true);
     }
 
-    public void render () {
+    public void render (int numSprites) {
+        numSpritesLabel.setText(numSprites);
         performance.update();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

@@ -41,7 +41,7 @@ public class SweepAndPrune {
 
     static int iii = 0;
     void update(final float dt) {
-
+        iii = 0;
         //Sort the list on min
         axisList.sort(new Comparator<CollisionEntity>(){
                 @Override
@@ -55,16 +55,18 @@ public class SweepAndPrune {
                     return Float.compare(o1.box.x+o1Ext, o2.box.x + o2Ext);
                 }
             });
-
         ArrayList<CollisionEntity> activeList = new ArrayList<>();
         Iterator<CollisionEntity> axisListIterator = axisList.iterator();
+        //Add first to active list.
+        activeList.add(axisListIterator.next());
 
         intersections.clear();
         //Add the first
-        activeList.add(axisListIterator.next());
+
         while(axisListIterator.hasNext()) {
             CollisionEntity axis = axisListIterator.next();
             ListIterator<CollisionEntity> activeListIterator = activeList.listIterator();
+            boolean addToActive = false;
             while(activeListIterator.hasNext()) {
                 CollisionEntity active = activeListIterator.next();
                 float axisExt = 0f;
@@ -74,20 +76,23 @@ public class SweepAndPrune {
                     axisExt = axis.velocity.x * dt;
                 if(active.velocity.x > 0f)
                     activeExt = active.velocity.x * dt;
-                if(axis.box.x+axisExt < (active.box.x+active.box.width) + activeExt) {
-                    //We have a pair! report it if both oerands are active.
-                    if(axis.isEnable && active.isEnable)
+                if(active.box.x < (axis.box.x+axis.box.width)) {
+                    //We have a pair! report it if both operands are active.
+                    if(axis.isEnable && active.isEnable) {
                         intersections.add(new Pair(axis, active));
-                    iii++;
+                        addToActive=true;
+                    }
                 }
 
                 else {
                     //Not intersecting, we can remove item from activeList
                     activeListIterator.remove();
                 }
-                //Add next entity to active list.
-                activeListIterator.add(axis);
+                iii++;
             }
+            if(addToActive)
+                activeListIterator.add(axis);
         }
+        System.out.println();
     }
 }

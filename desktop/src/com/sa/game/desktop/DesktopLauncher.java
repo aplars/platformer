@@ -1,15 +1,19 @@
 package com.sa.game.desktop;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.sa.game.MyGdxGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
-      LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-      config.width = 1280;
-      config.height = 720;
+      Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+      config.setWindowedMode(1280, 720);
+      config.useVsync(true);
+      config.setIdleFPS(60);
+
       //new LwjglApplicatiedon(new MyGdxGame(), config);
-      new LwjglApplication(MyGdxGame.createDesktop(), config);
-	}
+      Lwjgl3Application app = new Lwjgl3Application(MyGdxGame.createDesktop(), config);
+      app.exit();
+      System.exit(0);
+  }
 }

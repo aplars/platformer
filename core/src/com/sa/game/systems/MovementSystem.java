@@ -13,7 +13,7 @@ public class MovementSystem extends IteratingSystem {
     private ComponentMapper<PositionComponent> posm = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
     public MovementSystem() {
-        super(Family.all(PhysicsComponent.class, PositionComponent.class, CollisionComponent.class).get());
+        super(Family.all(PhysicsComponent.class, PositionComponent.class).get());
     }
 
     @Override
@@ -23,6 +23,7 @@ public class MovementSystem extends IteratingSystem {
         CollisionComponent collisionComponent = cm.get(entity);
 
         positionComponent.position.mulAdd(physicsComponent.velocity, deltaTime);
-        collisionComponent.entity.box.setCenter(positionComponent.position);
+        if(collisionComponent != null)
+            collisionComponent.entity.box.setCenter(positionComponent.position);
     }
 }

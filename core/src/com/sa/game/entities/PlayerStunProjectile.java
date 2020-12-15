@@ -9,24 +9,23 @@ import com.badlogic.gdx.math.Vector2;
 import com.sa.game.states.PlayerStunProjectileState;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.collision.CollisionEntity;
+import com.sa.game.collision.CollisionFilter;
 import com.sa.game.components.*;
 import com.sa.game.gfx.Sprite;
 
 public class PlayerStunProjectile {
-    public CollisionEntity collisionEntity = new CollisionEntity();
-
-    PhysicsComponent physicsComponent;
-    PositionComponent positionComponent;
-    CollisionComponent collisionComponent;
-    StateComponent<PlayerStunProjectileState> stateComponent;
-    AnimationComponent<PlayerStunProjectileState> animationComponent;
-    RenderComponent renderComponent;
-
-    Entity preUpdateEntity;
-    Entity updateEntity;
 
 
-    public PlayerStunProjectile(Vector2 position, Vector2 velocity, final Animation<TextureRegion> onTrackAnimation, final Animation<TextureRegion> explodeAnimation, int tileSizeInPixels, CollisionDetection collisionDetection, Engine preUpdateEngine, Engine updateEngine) {
+    public static Entity create(Vector2 position, Vector2 velocity, final Animation<TextureRegion> onTrackAnimation, final Animation<TextureRegion> explodeAnimation, int tileSizeInPixels, CollisionDetection collisionDetection) {
+        Entity entity = new Entity();
+        CollisionEntity collisionEntity = new CollisionEntity();
+        PhysicsComponent physicsComponent;
+        PositionComponent positionComponent;
+        CollisionComponent collisionComponent;
+        StateComponent<PlayerStunProjectileState> stateComponent;
+        AnimationComponent<PlayerStunProjectileState> animationComponent;
+        RenderComponent renderComponent;
+
         physicsComponent = new PhysicsComponent();
         physicsComponent.acceleration.set(0f, 0f);
         physicsComponent.gravity = 0f;
@@ -43,11 +42,15 @@ public class PlayerStunProjectile {
         collisionRectangle.setCenter(position);
         collisionEntity.box.set(collisionRectangle);
         collisionEntity.velocity.set(velocity);
-        collisionEntity.userData = this;
+        collisionEntity.userData = entity;
+        collisionEntity.filter.category = CollisionFilter.PLAYER_PROJECTILE;
+        collisionEntity.filter.mask = CollisionFilter.ENEMY;
         collisionDetection.add(collisionEntity);
 
         collisionComponent = new CollisionComponent();
-        collisionComponent.entity = collisionEntity; 
+        collisionComponent.entity = collisionEntity;
+
+        ExplodeOnContactComponent explodeOnContactComponent = new ExplodeOnContactComponent();
 
         stateComponent = new StateComponent<>();
         stateComponent.state = PlayerStunProjectileState.OnTrack;
@@ -61,21 +64,22 @@ public class PlayerStunProjectile {
         renderComponent.sprite.position.set(collisionComponent.entity.box.x, collisionComponent.entity.box.y);
         renderComponent.sprite.size.set(collisionComponent.entity.box.width, collisionComponent.entity.box.height);
 
-        preUpdateEntity = new Entity();
-        updateEntity = new Entity();
+        DamageComponent damageComponent = new DamageComponent();
+        damageComponent.stun = true;
 
-        preUpdateEntity.add(physicsComponent);
-        preUpdateEntity.add(positionComponent);
-        preUpdateEntity.add(collisionComponent);
+        entity.add(damageComponent);
+        entity.add(physicsComponent);
+        entity.add(positionComponent);
+        entity.add(collisionComponent);
 
-        updateEntity.add(physicsComponent);
-        updateEntity.add(positionComponent);
-        updateEntity.add(collisionComponent);
-        updateEntity.add(stateComponent);
-        updateEntity.add(animationComponent);
-        updateEntity.add(renderComponent);
+        entity.add(physicsComponent);
+        entity.add(positionComponent);
+        entity.add(collisionComponent);
+        entity.add(explodeOnContactComponent);
+        entity.add(stateComponent);
+        entity.add(animationComponent);
+        entity.add(renderComponent);
 
-        preUpdateEngine.addEntity(preUpdateEntity);
-        updateEngine.addEntity(updateEntity);
+        return entity;
     }
 }

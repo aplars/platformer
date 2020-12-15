@@ -14,4 +14,10 @@ public class PhysicsComponent implements Component {
     public float gravity = 0f; //force of gravity
     public WalkDirection walkDirection = WalkDirection.Right;
 
+    public int GetWalkDirectionScalar() {
+        if(walkDirection == WalkDirection.Right)
+            return 1;
+        else
+            return -1;
+    }
 }

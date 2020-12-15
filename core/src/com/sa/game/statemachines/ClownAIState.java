@@ -6,8 +6,15 @@ import com.badlogic.gdx.ai.msg.Telegram;
 import com.sa.game.components.ComponentMappers;
 
 public enum ClownAIState implements State<Entity> {
+    STUNNED() {
+    },
     WALK() {
         @Override public void update(final Entity data) {
+            if(ComponentMappers.health.get(data).isStunned) {
+                ComponentMappers.ai.get(data).stateMachine.changeState(STUNNED);
+                ComponentMappers.control.get(data).buttonLeft = false;
+                ComponentMappers.control.get(data).buttonRight = false;
+            }
             if(ComponentMappers.control.get(data).buttonRight == true && ComponentMappers.collision.get(data).entity.wallsCollisionData.didCollide) {
                 ComponentMappers.control.get(data).buttonLeft = true;
                 ComponentMappers.control.get(data).buttonRight = false;
@@ -21,7 +28,6 @@ public enum ClownAIState implements State<Entity> {
             ComponentMappers.control.get(data).buttonLeft = true;
         }
     },
-
     IDLE() {
         @Override public void enter(final Entity data) {
         }
@@ -29,7 +35,6 @@ public enum ClownAIState implements State<Entity> {
         @Override public void update(final Entity data) {
         }
     },
-
     START() {
         @Override public void update(final Entity data) {
             ComponentMappers.ai.get(data).stateMachine.changeState(WALK);

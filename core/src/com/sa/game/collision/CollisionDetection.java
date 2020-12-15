@@ -6,6 +6,8 @@ import com.sa.game.entities.PlayerStunProjectile;
 
 import java.util.ArrayList;
 
+import javax.print.attribute.standard.ColorSupported;
+
 public class CollisionDetection {
     final ArrayList<CollisionEntity> entities = new ArrayList<>();
     SweepAndPrune sap = new SweepAndPrune();
@@ -25,7 +27,7 @@ public class CollisionDetection {
         sap.clear();
     }
 
-    public void update(float dt, StaticEnvironment staticEnvironment) {
+    public void update(final float dt, final StaticEnvironment staticEnvironment) {
         sap.update(dt);
 
         //Clear all collisions. New ones get populated below.
@@ -33,21 +35,27 @@ public class CollisionDetection {
             a.collidees.clear();
         }
 
-        Vector2 aVel = new Vector2();
-        Vector2 bVel = new Vector2();
+        final Vector2 aVel = new Vector2();
+        final Vector2 bVel = new Vector2();
 
-        for(SweepAndPrune.Pair colPair : sap.intersections) {
-            CollisionEntity a = colPair.a;
+        for(final SweepAndPrune.Pair colPair : sap.intersections) {
+            final CollisionEntity a = colPair.a;
             aVel.set(a.velocity);
             aVel.x*=dt;
             aVel.y*=dt;
-            CollisionEntity b = colPair.b;
+            final CollisionEntity b = colPair.b;
             bVel.set(b.velocity);
             bVel.x*=dt;
             bVel.y*=dt;
 
+            final int aa = colPair.a.filter.category & colPair.b.filter.mask;
+            final int bb = colPair.b.filter.category & colPair.a.filter.mask;
+            if(aa == 0 && bb == 0)
+                continue;
+
             final RectangleCollisionData data = IntersectionTests.rectangleRectangle(a.box, aVel, b.box, bVel);
             if(data.didCollide) {
+                System.out.println("didCollide");
                 a.collidees.add(b);
                 b.collidees.add(a);
             }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.PerformanceCounters;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.sa.game.dirwatcher.DirWatcher;
 import com.sa.game.editor.Editor;
 import com.sa.game.models.EditorModel;
@@ -70,6 +71,8 @@ public class MyGdxGame implements ApplicationListener {
 
     @Override
     public void render() {
+        long startTime = TimeUtils.millis();
+
         if (reloadLevel.get()) {
             gameWorld.loadLevel();
             gameWorld.resize(getAspectRatio());
@@ -88,15 +91,27 @@ public class MyGdxGame implements ApplicationListener {
         }
 
         gameWorld.setVisibleLayers(editorModel.getLayersToRenderModel().getVisibleLayerIndices());
-
+        
         gameWorld.preUpdate(dt, controller);
         gameWorld.update(dt);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        int numSprites = gameWorld.sprites.numberOfSprites();
         gameWorld.render(dt);
 
-        if(showEditor)
-            editor.render();
+        if(showEditor) {
+            editor.render(numSprites);
+        }
+
+        long estimatedTime = TimeUtils.millis() - startTime;
+        if(estimatedTime < 16) {
+            try {
+                Thread.sleep(16-estimatedTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
         batch.begin();
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
         batch.end();

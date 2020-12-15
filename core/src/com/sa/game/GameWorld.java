@@ -12,16 +12,7 @@ import com.badlogic.gdx.utils.PerformanceCounters;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.entities.CreateEnteties;
 import com.sa.game.gfx.Sprites;
-import com.sa.game.systems.AnimationSystem;
-import com.sa.game.systems.ClownAISystem;
-import com.sa.game.systems.CollisionSystem;
-import com.sa.game.systems.ControlSystem;
-import com.sa.game.systems.DampingSystem;
-import com.sa.game.systems.MovementSystem;
-import com.sa.game.systems.PhysicsSystem;
-import com.sa.game.systems.PlayerInputSystem;
-import com.sa.game.systems.RenderSystem;
-import com.sa.game.systems.ResolveCollisionSystem;
+import com.sa.game.systems.*;
 
 public class GameWorld {
     //game entities
@@ -98,24 +89,23 @@ public class GameWorld {
         staticEnvironment = new StaticEnvironment(tiledMap, collisionDetection);
         assetManager.finishLoading();
 
+        updateEngine = new Engine();
         updateEngine.removeAllEntities();
 
         for(StaticEnvironment.Entity entity : staticEnvironment.entities) {
             if (entity.name.equals("clown")) {
-                CreateEnteties.clown(assetManager,
-                                     entity.position,
-                                     entity.size.y,
-                                     staticEnvironment,
-                                     collisionDetection,
-                                     updateEngine);
+                updateEngine.addEntity(CreateEnteties.clown(assetManager,
+                                                            entity.position,
+                                                            entity.size.y,
+                                                            staticEnvironment,
+                                                            collisionDetection));
             }
             if(entity.name.equals("player")) {
-                CreateEnteties.player(assetManager,
-                                      entity.position,
-                                      entity.size,
-                                      staticEnvironment,
-                                      collisionDetection,
-                                      updateEngine);
+                updateEngine.addEntity(CreateEnteties.player(assetManager,
+                                                             entity.position,
+                                                             entity.size,
+                                                             staticEnvironment,
+                                                             collisionDetection));
             }
         }
 
@@ -125,18 +115,20 @@ public class GameWorld {
         while(!assetManager.isFinished())
             assetManager.update();
 
-
         updateEngine.addSystem(new PlayerInputSystem());
         updateEngine.addSystem(new ClownAISystem());
-        updateEngine.addSystem(new ControlSystem(staticEnvironment.tileSizeInPixels));
+        updateEngine.addSystem(new ControlSystem(assetManager, collisionDetection, staticEnvironment.tileSizeInPixels));
+        updateEngine.addSystem(new MoveToEntitySystem());
         updateEngine.addSystem(new PhysicsSystem());
-        updateEngine.addSystem(new CollisionSystem(collisionDetection, staticEnvironment));
-
+        updateEngine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
+        updateEngine.addSystem(new DamageSystem());
+        updateEngine.addSystem(new PickUpEntitySystem());
+        updateEngine.addSystem(new ExplodeOnContactSystem(collisionDetection));
         updateEngine.addSystem(new ResolveCollisionSystem(performanceCounters.add("resolvecollision")));
         updateEngine.addSystem(new MovementSystem());
         updateEngine.addSystem(new DampingSystem());
         updateEngine.addSystem(new AnimationSystem<>());
-        updateEngine.addSystem(new RenderSystem(performanceCounters.add("resolvecollision"), sprites));
+        updateEngine.addSystem(new RenderSystem(performanceCounters.add("render"), sprites));
 
         return true;
     }

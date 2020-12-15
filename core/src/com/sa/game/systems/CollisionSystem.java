@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.utils.PerformanceCounter;
 import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.components.CollisionComponent;
@@ -15,12 +16,13 @@ public class CollisionSystem extends IteratingSystem {
     private ComponentMapper<PositionComponent> posm = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
 
+    PerformanceCounter performanceCounter;
     CollisionDetection collisionDetection;
     StaticEnvironment staticEnvironment;
 
-    public CollisionSystem(CollisionDetection collisionDetection, StaticEnvironment staticEnvironment) {
+    public CollisionSystem(PerformanceCounter performanceCounter, CollisionDetection collisionDetection, StaticEnvironment staticEnvironment) {
         super(Family.all(PhysicsComponent.class, PositionComponent.class, CollisionComponent.class).get());
-
+        this.performanceCounter = performanceCounter;
         this.collisionDetection = collisionDetection;
         this.staticEnvironment = staticEnvironment;
     }
@@ -37,7 +39,8 @@ public class CollisionSystem extends IteratingSystem {
 
     @Override public void update(float deltaTime) {
         super.update(deltaTime);
-
+        performanceCounter.start();
         this.collisionDetection.update(deltaTime, this.staticEnvironment);
+        performanceCounter.stop();
     }
 }
