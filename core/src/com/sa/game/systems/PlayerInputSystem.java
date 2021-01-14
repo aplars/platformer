@@ -30,6 +30,7 @@ public class PlayerInputSystem extends IteratingSystem{
     protected void processEntity(Entity entity, float deltaTime) {
         ControlComponent controlComponent = controlMap.get(entity);
         controlComponent.clear();
+
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             //physicsComponent.force.x -= entityControlComponent.moveForce;
             controlComponent.buttonLeft = true;
@@ -38,11 +39,17 @@ public class PlayerInputSystem extends IteratingSystem{
             //physicsComponent.force.x += entityControlComponent.moveForce;
             controlComponent.buttonRight = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+            controlComponent.buttonUp = true;
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+            controlComponent.buttonDown = true;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.J)) {
             //physicsComponent.velocity.y = entityControlComponent.jumpImpulse;
             controlComponent.buttonA = true;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.K)) {
             //float projDir = (physicsComponent.walkDirection == WalkDirection.Left) ? -300f : 300f;
             //CreateEnteties.playerStunProjectile(assetManager, positionComponent.position, new Vector2(projDir, 0f), tileSizeInPixels, collisionDetection, preUpdateEngine, updateEngine);
             //entityControlComponent.timeUntilNextBulletSpawnPossible = EntityControlComponent.SPAWN_TIME_INTERVAL;

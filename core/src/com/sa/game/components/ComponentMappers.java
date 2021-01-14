@@ -11,4 +11,7 @@ public class ComponentMappers {
     public static ComponentMapper<DamageComponent> damage = ComponentMapper.getFor(DamageComponent.class);
     public static ComponentMapper<HealthComponent> health = ComponentMapper.getFor(HealthComponent.class);
     public static ComponentMapper<MoveToEntityComponent> moveToEntity = ComponentMapper.getFor(MoveToEntityComponent.class);
+    public static ComponentMapper<PickUpEntityComponent> pickUp = ComponentMapper.getFor(PickUpEntityComponent.class);
+    public static ComponentMapper<RenderDebugInfoComponent> renderDebugInfo = ComponentMapper.getFor(RenderDebugInfoComponent.class);
+    public static ComponentMapper<RenderComponent> render = ComponentMapper.getFor(RenderComponent.class);
 }

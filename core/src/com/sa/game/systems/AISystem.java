@@ -6,14 +6,13 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.sa.game.components.AIComponent;
 import com.sa.game.components.ControlComponent;
-import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.StateComponent;
 
-public class ClownAISystem extends IteratingSystem {
+public class AISystem extends IteratingSystem {
     private ComponentMapper<AIComponent> aiMapper = ComponentMapper.getFor(AIComponent.class);
     private ComponentMapper<StateComponent> stateMapper = ComponentMapper.getFor(StateComponent.class);
 
-    public ClownAISystem() {
+    public AISystem() {
         super(Family.all(AIComponent.class, ControlComponent.class).get());
     }
 

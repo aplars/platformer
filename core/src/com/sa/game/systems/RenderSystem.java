@@ -7,17 +7,17 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.utils.PerformanceCounter;
 import com.sa.game.components.PositionComponent;
 import com.sa.game.components.RenderComponent;
-import com.sa.game.gfx.Sprites;
+import com.sa.game.gfx.Renderer;
 
 public class RenderSystem extends IteratingSystem {
     private ComponentMapper<RenderComponent> renderMapper = ComponentMapper.getFor(RenderComponent.class);
     private ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
-    public Sprites sprites;
+    public Renderer renderer;
     PerformanceCounter performanceCounter;
 
-    public RenderSystem(PerformanceCounter performanceCounter, Sprites sprites) {
+    public RenderSystem(PerformanceCounter performanceCounter, Renderer renderer) {
         super(Family.all(RenderComponent.class).get());
-        this.sprites = sprites;
+        this.renderer = renderer;
         this.performanceCounter = performanceCounter;
     }
 
@@ -29,7 +29,7 @@ public class RenderSystem extends IteratingSystem {
 
       renderComponent.sprite.setCenter(positionComponent.position.x, positionComponent.position.y);
 
-      sprites.add(renderComponent.sprite);
+      renderer.add(renderComponent.sprite);
       performanceCounter.stop();
 	}
 }

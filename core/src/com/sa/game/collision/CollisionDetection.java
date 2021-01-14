@@ -55,15 +55,28 @@ public class CollisionDetection {
 
             final RectangleCollisionData data = IntersectionTests.rectangleRectangle(a.box, aVel, b.box, bVel);
             if(data.didCollide) {
-                System.out.println("didCollide");
                 a.collidees.add(b);
                 b.collidees.add(a);
             }
         }
         //Check collision against static scene parts
         for(final CollisionEntity collisionEntity : entities) {
-            IntersectionTests.rectangleGround(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment, collisionEntity.groundCollisionData);
-            IntersectionTests.rectangleWalls(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment, collisionEntity.wallsCollisionData);
+            if (collisionEntity.isEnable) {
+                IntersectionTests.rectangleGround(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment, collisionEntity.groundCollisionData);
+                IntersectionTests.rectangleWalls(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment, collisionEntity.wallsCollisionData);
+
+                //If we collides then take a small step up and try again. This makes it possible to traverse small obstacles. 
+                if(collisionEntity.wallsCollisionData.didCollide) {
+                    Vector2 c = new Vector2();
+                    c = collisionEntity.box.getCenter(c);
+                    collisionEntity.box.setCenter(c.x, c.y+0.1f);
+                    IntersectionTests.rectangleWalls(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment, collisionEntity.wallsCollisionData);
+                }
+            }
+            else {
+                collisionEntity.wallsCollisionData.didCollide = false;
+                collisionEntity.groundCollisionData.didCollide = false;
+            }
         }
     }
 

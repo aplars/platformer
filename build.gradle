@@ -51,7 +51,7 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-controllers-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
-
+        api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
     }
 }
 
@@ -78,7 +78,6 @@ project(":android") {
         api "com.badlogicgames.gdx:gdx-controllers-android:$gdxVersion"
         api "com.badlogicgames.ashley:ashley:$ashleyVersion"
         api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
-
     }
 }
 

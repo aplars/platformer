@@ -11,7 +11,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.PerformanceCounters;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.entities.CreateEnteties;
-import com.sa.game.gfx.Sprites;
+import com.sa.game.gfx.Renderer;
 import com.sa.game.systems.*;
 
 public class GameWorld {
@@ -19,7 +19,8 @@ public class GameWorld {
     StaticEnvironment staticEnvironment = new StaticEnvironment();
     //////////////////////////////////////////////////////////////
     OrthographicCamera camera = new OrthographicCamera();
-    Sprites sprites = new Sprites();
+    OrthographicCamera fontCamera = new OrthographicCamera();
+    Renderer renderer = new Renderer();
     CollisionDetection collisionDetection = new CollisionDetection();
     AssetManager assetManager = new AssetManager();
     OrthogonalTiledMapRenderer mapRenderer;
@@ -53,7 +54,7 @@ public class GameWorld {
         if(mapRenderer != null)
             mapRenderer.render(visiblelayers);
 
-        sprites.render(camera);
+        renderer.render(camera, fontCamera);
     }
 
     public void resize(float aspectRatio) {
@@ -74,6 +75,10 @@ public class GameWorld {
         }
         camera.translate(staticEnvironment.getWidth()/2f-w/2f, 0f);
         camera.update();
+
+        fontCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        fontCamera.update();
     }
 
     public boolean loadLevel() {
@@ -116,19 +121,20 @@ public class GameWorld {
             assetManager.update();
 
         updateEngine.addSystem(new PlayerInputSystem());
-        updateEngine.addSystem(new ClownAISystem());
+        updateEngine.addSystem(new AISystem());
         updateEngine.addSystem(new ControlSystem(assetManager, collisionDetection, staticEnvironment.tileSizeInPixels));
         updateEngine.addSystem(new MoveToEntitySystem());
         updateEngine.addSystem(new PhysicsSystem());
         updateEngine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
         updateEngine.addSystem(new DamageSystem());
-        updateEngine.addSystem(new PickUpEntitySystem());
+        updateEngine.addSystem(new PickUpEntitySystem(collisionDetection));
         updateEngine.addSystem(new ExplodeOnContactSystem(collisionDetection));
         updateEngine.addSystem(new ResolveCollisionSystem(performanceCounters.add("resolvecollision")));
         updateEngine.addSystem(new MovementSystem());
         updateEngine.addSystem(new DampingSystem());
         updateEngine.addSystem(new AnimationSystem<>());
-        updateEngine.addSystem(new RenderSystem(performanceCounters.add("render"), sprites));
+        updateEngine.addSystem(new RenderSystem(performanceCounters.add("render"), renderer));
+        updateEngine.addSystem(new RenderDebugInfoSystem(renderer, camera, fontCamera, staticEnvironment));
 
         return true;
     }

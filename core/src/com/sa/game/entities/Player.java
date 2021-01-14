@@ -19,7 +19,9 @@ import com.sa.game.components.PickUpEntityComponent;
 import com.sa.game.components.Player1Component;
 import com.sa.game.components.PositionComponent;
 import com.sa.game.components.RenderComponent;
+import com.sa.game.components.RenderDebugInfoComponent;
 import com.sa.game.components.StateComponent;
+import com.sa.game.components.WeaponComponent;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.states.PlayerState;
 
@@ -88,6 +90,12 @@ public class Player {
         renderComponent.sprite = new Sprite();
         renderComponent.sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
 
+        RenderDebugInfoComponent renderDebugInfoComponent = new RenderDebugInfoComponent();
+        // WeaponComponent weaponComponent = new WeaponComponent();
+        //Vector2 projectileVelocity = new Vector2(300f * (float) physics.GetWalkDirectionScalar(), 0f);
+        //Entity projectile = CreateEnteties.playerStunProjectile(assetManager, position.position, projectileVelocity, tileSizeInPixels, collisionDetection);
+        //weaponComponent.entity =;
+
         updateEntity.add(physicsComponent);
         updateEntity.add(collisionComponent);
         updateEntity.add(positionComponent);
@@ -101,6 +109,7 @@ public class Player {
         updateEntity.add(stateComponent);
         updateEntity.add(animationComponent);
         updateEntity.add(renderComponent);
+        updateEntity.add(renderDebugInfoComponent);
 
         return updateEntity;
     }

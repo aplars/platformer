@@ -19,7 +19,7 @@ public class ResolveCollisionSystem extends IteratingSystem {
         super(Family.all(PhysicsComponent.class, PositionComponent.class, CollisionComponent.class).get());
         this.performanceCounter = performanceCounter;
     }
-
+    int coll = 0;
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         performanceCounter.start();
@@ -35,7 +35,9 @@ public class ResolveCollisionSystem extends IteratingSystem {
         }
         if(collisionComponent.entity.wallsCollisionData.didCollide) {
             physicsComponent.velocity.x = 0;
-            positionComponent.position.sub(collisionComponent.entity.wallsCollisionData.move);
+            positionComponent.position.add(collisionComponent.entity.wallsCollisionData.move.x, 0f);
+            System.out.println(coll);
+            coll++;
         }
         performanceCounter.stop();
     }

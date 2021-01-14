@@ -8,7 +8,7 @@ import com.sa.game.collision.CollisionDetection;
 import com.sa.game.collision.CollisionEntity;
 import com.sa.game.gfx.PlayerWeaponAnimations;
 import com.sa.game.gfx.Sprite;
-import com.sa.game.gfx.Sprites;
+import com.sa.game.gfx.Renderer;
 
 public class PickedUpEntity {
     ShapeRenderer shapeRenderer;
@@ -106,13 +106,13 @@ public class PickedUpEntity {
     }
     Sprite sprite = new Sprite();
 
-    public void render(float t, Sprites sprites) {
+    public void render(float t, Renderer renderer) {
 
         sprite.textureRegion.setRegion(currentFrame);
         sprite.position.set(collisionEntity.box.x, collisionEntity.box.y);
         sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
         sprite.mirrorX = (walkDirection == WalkDirection.Left);
-        sprites.add(sprite);
+        renderer.add(sprite);
     }
 
 }

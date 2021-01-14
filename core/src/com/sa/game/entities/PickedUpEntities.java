@@ -1,8 +1,7 @@
 package com.sa.game.entities;
 
-import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
-import com.sa.game.gfx.Sprites;
+import com.sa.game.gfx.Renderer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -55,9 +54,9 @@ public class PickedUpEntities {
         }
     }
 
-    public void render(float dt, Sprites sprites) {
+    public void render(float dt, Renderer renderer) {
         for (PickedUpEntity pickedUpEntity : pickedUpEnteties) {
-            pickedUpEntity.render(dt, sprites);
+            pickedUpEntity.render(dt, renderer);
         }
     }
 }

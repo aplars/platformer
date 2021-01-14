@@ -22,9 +22,9 @@ public class DamageSystem extends IteratingSystem {
         CollisionComponent collision = ComponentMappers.collision.get(entity);
         for(CollisionEntity colEnt : collision.entity.collidees) {
             Entity colledee = (Entity)colEnt.userData;
-             HealthComponent health = ComponentMappers.health.get(colledee);
-             if(health != null && damage.stun)
-                 health.isStunned = damage.stun;
+            HealthComponent health = ComponentMappers.health.get(colledee);
+            if(health != null && damage.stun)
+                health.isStunned = damage.stun;
         }
     }
 }

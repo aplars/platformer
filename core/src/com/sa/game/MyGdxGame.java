@@ -1,6 +1,5 @@
 package com.sa.game;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -14,7 +13,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.sa.game.dirwatcher.DirWatcher;
 import com.sa.game.editor.Editor;
 import com.sa.game.models.EditorModel;
-import com.sa.game.models.LayerToRenderModel;
 
 import java.io.File;
 import java.util.Date;
@@ -91,12 +89,13 @@ public class MyGdxGame implements ApplicationListener {
         }
 
         gameWorld.setVisibleLayers(editorModel.getLayersToRenderModel().getVisibleLayerIndices());
-        
-        gameWorld.preUpdate(dt, controller);
-        gameWorld.update(dt);
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        int numSprites = gameWorld.sprites.numberOfSprites();
+
+        gameWorld.preUpdate(dt, controller);
+        gameWorld.update(dt);
+        int numSprites = gameWorld.renderer.numberOfSprites();
         gameWorld.render(dt);
 
         if(showEditor) {

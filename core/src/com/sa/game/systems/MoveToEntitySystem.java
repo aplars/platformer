@@ -24,7 +24,8 @@ public class MoveToEntitySystem extends IteratingSystem  {
       PhysicsComponent physicsComponent = ComponentMappers.physics.get(entity);
 
       MoveToEntityComponent moveToEntityComponent = ComponentMappers.moveToEntity.get(entity);
-
+      if(moveToEntityComponent.isEnable == false)
+          return;
       PositionComponent dstPositionComponent = ComponentMappers.position.get(moveToEntityComponent.entity);
       Vector2 dstPosition = new Vector2(dstPositionComponent.position);
       dstPosition.add(moveToEntityComponent.offset);

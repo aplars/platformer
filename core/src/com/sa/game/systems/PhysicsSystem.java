@@ -9,7 +9,7 @@ import com.sa.game.entities.WalkDirection;
 
 public class PhysicsSystem extends IteratingSystem {
     private ComponentMapper<PhysicsComponent> pm = ComponentMapper.getFor(PhysicsComponent.class);
-    
+
     public PhysicsSystem() {
         super(Family.all(PhysicsComponent.class).get());
     }

@@ -76,7 +76,7 @@ public class SweepAndPrune {
                     axisExt = axis.velocity.x * dt;
                 if(active.velocity.x > 0f)
                     activeExt = active.velocity.x * dt;
-                if(active.box.x < (axis.box.x+axis.box.width)) {
+                if(axis.box.x < (active.box.x+active.box.width)) {
                     //We have a pair! report it if both operands are active.
                     if(axis.isEnable && active.isEnable) {
                         intersections.add(new Pair(axis, active));
@@ -90,9 +90,8 @@ public class SweepAndPrune {
                 }
                 iii++;
             }
-            if(addToActive)
-                activeListIterator.add(axis);
+            activeListIterator.add(axis);
         }
-        System.out.println();
+        //System.out.println();
     }
 }
