@@ -18,6 +18,7 @@ import com.sa.game.components.AnimationComponent;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ComponentMappers;
 import com.sa.game.components.ControlComponent;
+import com.sa.game.components.DamageComponent;
 import com.sa.game.components.HealthComponent;
 import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PositionComponent;
@@ -74,10 +75,15 @@ public class Enemy {
 
         HealthComponent healthComponent = new HealthComponent();
 
+        DamageComponent damageComponent = new DamageComponent();
+        damageComponent.stun = false;
+        damageComponent.damage = 1;
+
         RenderDebugInfoComponent renderDebugInfoComponent = new RenderDebugInfoComponent();
         //updateEntity.add(player1Component);
         updateEntity.add(controlComponent);
         updateEntity.add(healthComponent);
+        updateEntity.add(damageComponent);
         updateEntity.add(aiComponent);
         updateEntity.add(positionComponent);
         updateEntity.add(physicsComponent);
@@ -88,7 +94,7 @@ public class Enemy {
         updateEntity.add(stateComponent);
         updateEntity.add(animationComponent);
         updateEntity.add(renderComponent);
-        updateEntity.add(renderDebugInfoComponent);
+        //updateEntity.add(renderDebugInfoComponent);
         return updateEntity;
     }
 }

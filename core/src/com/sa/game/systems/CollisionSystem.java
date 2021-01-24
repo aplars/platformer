@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.PerformanceCounter;
 import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
@@ -33,7 +34,8 @@ public class CollisionSystem extends IteratingSystem {
         PositionComponent positionComponent = posm.get(entity);
         CollisionComponent collisionComponent = cm.get(entity);
 
-        collisionComponent.entity.box.setCenter(positionComponent.position);
+        Vector2 pos = new Vector2(positionComponent.position);
+        collisionComponent.entity.box.setCenter(pos.add(collisionComponent.offset));
         collisionComponent.entity.velocity.set(physicsComponent.velocity);
     }
 

@@ -31,13 +31,9 @@ public class IntersectionTests {
                 break;
             for(int x = minx; x <= maxx; x++) {
                 if(staticEnvironment.getTileId(StaticEnvironment.LayerId.Floor, x, y) != 0) {
-                    //We did collide with the tile.
-                    //Narrow to just the upper part of the tile.
-                    //if(destRectangle.y <= ((y+1) * staticEnvironment.tileSizeInPixels) &&
-                    //   rectangle.y >= ((y+1) * staticEnvironment.tileSizeInPixels))
                     if(miny != srcMinY && srcMinY > y){
                         didCollide = true;
-                        moveY = 0;//((y+1) * staticEnvironment.tileSizeInPixels+0.001f)-(rectangle.y);
+                        moveY = ((y+1) * staticEnvironment.tileSizeInPixels+0.001f)-(rectangle.y);
                         breakLoop = true;
                         break;
                     }
@@ -45,29 +41,6 @@ public class IntersectionTests {
             }
         }
 
-        //If the rect at the collision point is in a tile then we do not collide
-        /*breakLoop = false;
-        if(didCollide) {
-            Rectangle dst = new Rectangle();
-            dst.set(rectangle);
-            dst.setY(dst.getY() + moveY);
-
-            minx = Math.max(0, (int) Math.floor(dst.x / staticEnvironment.tileSizeInPixels));
-            miny = Math.max(0, (int) Math.floor(dst.y / staticEnvironment.tileSizeInPixels));
-            maxx = Math.min(staticEnvironment.getNumTilesX(), (int) Math.ceil((dst.x + dst.width) / staticEnvironment.tileSizeInPixels));
-            maxy = Math.min(staticEnvironment.getNumTilesY(), (int) Math.ceil((dst.y + dst.height) / staticEnvironment.tileSizeInPixels));
-            for (int y = miny; y < maxy; y++) {
-                if (breakLoop)
-                    break;
-                for (int x = minx; x < maxx; x++) {
-                    if(staticEnvironment.getTileId(StaticEnvironment.LayerId.Wall, x, y) != 0) {
-                         didCollide = false;
-                        breakLoop = true;
-                        break;
-                    }
-                }
-            }
-            }*/
         floorCollisionData.set(didCollide, moveX, moveY);
     }
 

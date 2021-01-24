@@ -36,7 +36,6 @@ public class ResolveCollisionSystem extends IteratingSystem {
         if(collisionComponent.entity.wallsCollisionData.didCollide) {
             physicsComponent.velocity.x = 0;
             positionComponent.position.add(collisionComponent.entity.wallsCollisionData.move.x, 0f);
-            System.out.println(coll);
             coll++;
         }
         performanceCounter.stop();

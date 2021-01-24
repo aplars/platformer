@@ -31,15 +31,17 @@ public class CreateEnteties {
 
     public static Entity player(AssetManager assetManager, Vector2 pos, Vector2 siz, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         //TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
-        assetManager.load("enteties/player/player.atlas", TextureAtlas.class);
-        assetManager.finishLoadingAsset("enteties/player/player.atlas");
-        TextureAtlas atlas = assetManager.get("enteties/player/player.atlas", TextureAtlas.class);
+        assetManager.load("enteties/game.atlas", TextureAtlas.class);
+        assetManager.finishLoadingAsset("enteties/game.atlas");
+        TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
         return Player.create(
                           pos,
                           new Vector2(),
                           siz,
-                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), PlayMode.LOOP),
-                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), PlayMode.LOOP),
+                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochiidle"), PlayMode.LOOP),
+                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochirunning"), PlayMode.LOOP),
+                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochijumping"), PlayMode.LOOP),
+                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochihurt"), PlayMode.LOOP),
                           staticEnvironment,
                           collisionDetection);
     }

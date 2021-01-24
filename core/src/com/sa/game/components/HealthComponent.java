@@ -4,4 +4,5 @@ import com.badlogic.ashley.core.Component;
 
 public class HealthComponent implements Component{
     public boolean isStunned = false;
+    public int health = 0;
 }

@@ -138,17 +138,17 @@ public class MyGdxGame implements ApplicationListener {
 
     public static MyGdxGame createDesktop() {
         final MyGdxGame game = new MyGdxGame();
-
+        /*
         DirWatcher dirWatcher = new DirWatcher(".") {
             @Override
             protected void onChange(File file, String action) {
                 game.reloadLevel.set(true);
                 ;
             }
-        };
+            };*/
 
-        Timer timer = new Timer();
-        timer.schedule(dirWatcher, new Date(), 1000);
+        //Timer timer = new Timer();
+        //timer.schedule(dirWatcher, new Date(), 1000);
         return game;
     }
 

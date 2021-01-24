@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.sa.game.StaticEnvironment;
 import com.sa.game.components.CollisionComponent;
@@ -42,6 +43,10 @@ public class RenderDebugInfoSystem extends IteratingSystem {
         RenderComponent renderComponent = ComponentMappers.render.get(entity);
         CollisionComponent collisionComponent = ComponentMappers.collision.get(entity);
 
+        Rectangle rect = new Rectangle(collisionComponent.entity.box);
+        rect.x += collisionComponent.offset.x;
+        rect.y += collisionComponent.offset.y;
+
         float xMax = collisionComponent.entity.box.x+collisionComponent.entity.box.width;
         float xMin = collisionComponent.entity.box.x;
         Text txt = new Text();
@@ -50,6 +55,6 @@ public class RenderDebugInfoSystem extends IteratingSystem {
         txt.y = positionComponent.position.y+renderComponent.sprite.size.y;
         renderer.add(txt);
 
-        renderer.add(collisionComponent.entity.box);
+        renderer.add(rect);
     }
 }
