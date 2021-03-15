@@ -4,149 +4,219 @@ size: 256,128
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+boxingglove
+  rotate: false
+  xy: 2, 88
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
 clown_idle
   rotate: false
-  xy: 2, 70
+  xy: 2, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 clown_stunned
   rotate: false
-  xy: 2, 36
+  xy: 36, 88
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 clown_walk
   rotate: false
-  xy: 36, 70
+  xy: 2, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 clown_walk
   rotate: false
-  xy: 36, 70
+  xy: 2, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 clown_walk
   rotate: false
-  xy: 2, 2
+  xy: 36, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 clown_walk
   rotate: false
-  xy: 36, 36
+  xy: 70, 88
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 clown_walk
   rotate: false
-  xy: 70, 70
+  xy: 36, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
+devodevilfalling
+  rotate: false
+  xy: 2, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+devodevilhurt
+  rotate: false
+  xy: 20, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+devodeviljumping
+  rotate: false
+  xy: 38, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+devodevilrunning
+  rotate: false
+  xy: 56, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+devodevilrunning
+  rotate: false
+  xy: 56, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
+devodevilrunning
+  rotate: false
+  xy: 74, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
+devodevilrunning
+  rotate: false
+  xy: 92, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 4
+devodevilstanding
+  rotate: false
+  xy: 110, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+key
+  rotate: false
+  xy: 128, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 mrmochihurt
   rotate: false
-  xy: 36, 2
+  xy: 70, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 mrmochiidle
   rotate: false
-  xy: 70, 36
+  xy: 104, 88
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 mrmochiidle
   rotate: false
-  xy: 104, 70
+  xy: 70, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 mrmochijumping
   rotate: false
-  xy: 70, 2
+  xy: 104, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 mrmochirunning
   rotate: false
-  xy: 104, 36
+  xy: 138, 88
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 mrmochirunning
   rotate: false
-  xy: 138, 70
+  xy: 104, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 mrmochirunning
   rotate: false
-  xy: 104, 2
+  xy: 138, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 mrmochirunning
   rotate: false
-  xy: 138, 36
+  xy: 172, 88
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 player
   rotate: false
-  xy: 172, 70
+  xy: 138, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 player
   rotate: false
-  xy: 138, 2
+  xy: 172, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 player
   rotate: false
-  xy: 172, 36
+  xy: 206, 88
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 player
   rotate: false
-  xy: 206, 70
+  xy: 172, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 player
   rotate: false
-  xy: 172, 2
+  xy: 206, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 player
   rotate: false
-  xy: 206, 36
+  xy: 206, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

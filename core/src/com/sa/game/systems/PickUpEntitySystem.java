@@ -34,7 +34,7 @@ public class PickUpEntitySystem extends IteratingSystem {
             HealthComponent health = ComponentMappers.health.get(collideeEnt);
             if(health != null && health.isStunned) {
                 if(!ComponentMappers.moveToEntity.has(collideeEnt)) {
-                    collideeEnt.add(new MoveToEntityComponent(entity, new Vector2(0, collision.entity.box.height), 130f));
+                    collideeEnt.add(new MoveToEntityComponent(entity, new Vector2(0, 0/*collision.entity.box.height*/), 130f));
                     //CollisionEntity colEnt = ComponentMappers.collision.get(collideeEnt).entity;
                     //collisionDetection.remove(colEnt);
                     ComponentMappers.collision.get(collideeEnt).setIsEnable(false);

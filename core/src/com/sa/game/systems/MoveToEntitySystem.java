@@ -9,11 +9,12 @@ import com.sa.game.components.ComponentMappers;
 import com.sa.game.components.MoveToEntityComponent;
 import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PositionComponent;
+import com.sa.game.components.WorldConstantsComponent;
 
 //Moves an entity towards another one in an absolutly brute force way.
 public class MoveToEntitySystem extends IteratingSystem  {
     public MoveToEntitySystem() {
-        super(Family.all(PositionComponent.class, PhysicsComponent.class, MoveToEntityComponent.class).get());
+        super(Family.all(WorldConstantsComponent.class, PositionComponent.class, PhysicsComponent.class, MoveToEntityComponent.class).get());
     }
 
 	@Override
@@ -27,10 +28,17 @@ public class MoveToEntitySystem extends IteratingSystem  {
       if(moveToEntityComponent.isEnable == false)
           return;
       PositionComponent dstPositionComponent = ComponentMappers.position.get(moveToEntityComponent.entity);
-      Vector2 dstPosition = new Vector2(dstPositionComponent.position);
-      dstPosition.add(moveToEntityComponent.offset);
+      Vector2 dstPositionA = new Vector2(dstPositionComponent.position);
 
-      Vector2 directionToTarget = new Vector2(dstPosition.sub(srcPosition));
+      WorldConstantsComponent worldConstantsComponent = ComponentMappers.worldConstats.get(entity);
+      Vector2 dstPositionB = new Vector2(dstPositionComponent.position.x, dstPositionComponent.position.y-worldConstantsComponent.height);
+
+      Vector2 directionToTargetA = new Vector2(dstPositionA.sub(srcPosition));
+      Vector2 directionToTargetB = new Vector2(dstPositionB.sub(srcPosition));
+
+      Vector2 directionToTarget = directionToTargetA;
+      if(directionToTargetB.len() < directionToTarget.len())
+          directionToTarget = directionToTargetB;
 
       float speed = Math.min(directionToTarget.len()/deltaTime, moveToEntityComponent.maxSpeed);
 

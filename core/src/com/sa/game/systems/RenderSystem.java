@@ -21,14 +21,14 @@ public class RenderSystem extends IteratingSystem {
         this.performanceCounter = performanceCounter;
     }
 
-	@Override
+  @Override
 	protected void processEntity(Entity entity, float deltaTime) {
       performanceCounter.start();
       RenderComponent renderComponent = renderMapper.get(entity);
       PositionComponent positionComponent = positionMapper.get(entity);
 
       renderComponent.sprite.setCenter(positionComponent.position.x, positionComponent.position.y);
-
+      //renderComponent.sprite.mirrorX = false;//renderComponent.mirror;
       renderer.add(renderComponent.sprite);
       performanceCounter.stop();
 	}

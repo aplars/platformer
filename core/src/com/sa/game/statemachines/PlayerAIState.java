@@ -7,6 +7,7 @@ import com.sa.game.components.ComponentMappers;
 
 public enum PlayerAIState implements State<Entity> {
     DEAD() {
+        @Override
         public void update(final Entity data) {
             ComponentMappers.collision.get(data).setIsEnable(false);
             ComponentMappers.control.get(data).buttonA = true;
@@ -44,7 +45,7 @@ public enum PlayerAIState implements State<Entity> {
             if(!ComponentMappers.collision.get(data).entity.groundCollisionData.didCollide) {
                 ComponentMappers.ai.get(data).stateMachine.changeState(JUMP);
             }
-            if(Math.abs(ComponentMappers.physics.get(data).velocity.x) > 0.9f) {
+            if(Math.abs(ComponentMappers.physics.get(data).velocity.x) > 16.0f) {
                 ComponentMappers.ai.get(data).stateMachine.changeState(WALK);
             }
         }

@@ -5,5 +5,8 @@
 *** TODO hadle screen resize and multiple resolution
 *** TODO implement touch input for mobile
 *** TODO implement tiled loader
+*** TODO create background
 
+    Idea
+    En kock och en kypare samarbetar.
 

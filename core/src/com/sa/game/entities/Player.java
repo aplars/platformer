@@ -1,7 +1,6 @@
 package com.sa.game.entities;
 
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -23,35 +22,11 @@ import com.sa.game.components.Player1Component;
 import com.sa.game.components.PositionComponent;
 import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderDebugInfoComponent;
-import com.sa.game.components.StateComponent;
-import com.sa.game.components.WeaponComponent;
+import com.sa.game.components.WorldConstantsComponent;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.statemachines.PlayerAIState;
-import com.sa.game.states.PlayerState;
 
 public class Player {
-    /*enum State {
-        Alive,
-        Dying,
-        Dead
-    }
-
-    enum AliveState {
-        Idle,
-        PickupWeapon
-    }
-
-    public boolean fire = false;
-
-
-    State state = State.Alive;
-
-
-    TextureRegion currentFrame;
-    Sprite sprite = new Sprite();
-    */
-
-
     public static Entity create(Vector2 pos, Vector2 vel, Vector2 size,
                                 final Animation<TextureRegion> idleAnimation,
                                 final Animation<TextureRegion> walkAnimation,
@@ -59,6 +34,9 @@ public class Player {
                                 final Animation<TextureRegion> deadAnimation,
                                 StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         Entity updateEntity = new Entity();
+
+        WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
+        worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
 
         Rectangle colbBox = new Rectangle(0, 0, size.x/2, size.y/2);
         colbBox.setCenter(pos.x, pos.y);
@@ -81,20 +59,17 @@ public class Player {
         physicsComponent.velocity.set(vel);
 
         PositionComponent positionComponent = new PositionComponent();
-        positionComponent.position.set(pos);
+        positionComponent.position.set(pos.x, pos.y);
 
         CollisionComponent collisionComponent = new CollisionComponent();
         collisionComponent.entity = collisionEntity;
-        collisionComponent.offset.y = -size.y / 4;
+        //collisionComponent.offset.y = -size.y / 4;
 
         HealthComponent healthComponent = new HealthComponent();
         healthComponent.isStunned = false;
         healthComponent.health = 1;
 
         PickUpEntityComponent pickUpEntityComponent = new PickUpEntityComponent();
-
-        StateComponent<PlayerState> stateComponent = new StateComponent<>();
-        stateComponent.state = PlayerState.Idle;
 
         AnimationComponent<PlayerAIState> animationComponent = new AnimationComponent<>();
         animationComponent.animations.put(PlayerAIState.IDLE, idleAnimation);
@@ -109,6 +84,7 @@ public class Player {
         RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();
         renderComponent.sprite.size.set(size.x, size.y);
+        renderComponent.sprite.offset.y = size.y / 4;
 
         RenderDebugInfoComponent renderDebugInfoComponent = new RenderDebugInfoComponent();
         // WeaponComponent weaponComponent = new WeaponComponent();
@@ -116,6 +92,7 @@ public class Player {
         //Entity projectile = CreateEnteties.playerStunProjectile(assetManager, position.position, projectileVelocity, tileSizeInPixels, collisionDetection);
         //weaponComponent.entity =;
 
+        updateEntity.add(worldConstantsComponent);
         updateEntity.add(physicsComponent);
         updateEntity.add(collisionComponent);
         updateEntity.add(positionComponent);
@@ -127,11 +104,10 @@ public class Player {
         updateEntity.add(collisionComponent);
         updateEntity.add(healthComponent);
         updateEntity.add(pickUpEntityComponent);
-        updateEntity.add(stateComponent);
         updateEntity.add(animationComponent);
         updateEntity.add(aiComponent);
         updateEntity.add(renderComponent);
-        //updateEntity.add(renderDebugInfoComponent);
+        updateEntity.add(renderDebugInfoComponent);
 
         return updateEntity;
     }

@@ -3,6 +3,7 @@ package com.sa.game.components;
 import com.badlogic.ashley.core.ComponentMapper;
 
 public class ComponentMappers {
+    public static ComponentMapper<Player1Component> player1 = ComponentMapper.getFor(Player1Component.class);
     public static ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);
     public static ComponentMapper<AIComponent> ai = ComponentMapper.getFor(AIComponent.class);
     public static ComponentMapper<ControlComponent> control = ComponentMapper.getFor(ControlComponent.class);
@@ -14,4 +15,7 @@ public class ComponentMappers {
     public static ComponentMapper<PickUpEntityComponent> pickUp = ComponentMapper.getFor(PickUpEntityComponent.class);
     public static ComponentMapper<RenderDebugInfoComponent> renderDebugInfo = ComponentMapper.getFor(RenderDebugInfoComponent.class);
     public static ComponentMapper<RenderComponent> render = ComponentMapper.getFor(RenderComponent.class);
+    public static ComponentMapper<SensorComponent> sensor = ComponentMapper.getFor(SensorComponent.class);
+    public static ComponentMapper<WorldConstantsComponent> worldConstats = ComponentMapper
+            .getFor(WorldConstantsComponent.class);
 }

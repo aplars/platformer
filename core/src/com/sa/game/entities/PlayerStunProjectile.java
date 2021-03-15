@@ -22,7 +22,6 @@ public class PlayerStunProjectile {
         PhysicsComponent physicsComponent;
         PositionComponent positionComponent;
         CollisionComponent collisionComponent;
-        StateComponent<PlayerStunProjectileState> stateComponent;
         AnimationComponent<PlayerStunProjectileState> animationComponent;
         RenderComponent renderComponent;
 
@@ -52,9 +51,6 @@ public class PlayerStunProjectile {
 
         ExplodeOnContactComponent explodeOnContactComponent = new ExplodeOnContactComponent();
 
-        stateComponent = new StateComponent<>();
-        stateComponent.state = PlayerStunProjectileState.OnTrack;
-
         animationComponent = new AnimationComponent<>();
         animationComponent.animations.put(PlayerStunProjectileState.OnTrack, onTrackAnimation);
         animationComponent.animations.put(PlayerStunProjectileState.Explode, explodeAnimation);
@@ -76,7 +72,6 @@ public class PlayerStunProjectile {
         entity.add(positionComponent);
         entity.add(collisionComponent);
         entity.add(explodeOnContactComponent);
-        entity.add(stateComponent);
         entity.add(animationComponent);
         entity.add(renderComponent);
 

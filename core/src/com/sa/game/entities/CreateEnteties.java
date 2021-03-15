@@ -13,24 +13,21 @@ import com.sa.game.gfx.PlayerWeaponAnimations;
 
 public class CreateEnteties {
     public static Entity clown(AssetManager assetManager, Vector2 center, float height, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
-        assetManager.load("enteties/clown/clown.atlas", TextureAtlas.class);
-        assetManager.finishLoadingAsset("enteties/clown/clown.atlas");
-        TextureAtlas atlas = assetManager.get("enteties/clown/clown.atlas", TextureAtlas.class);
-
-
+        assetManager.load("enteties/game.atlas", TextureAtlas.class);
+        assetManager.finishLoadingAsset("enteties/game.atlas");
+        TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
         return Enemy.create(
                 "clown",
                 center,
                 height,
-                new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("idle"), Animation.PlayMode.LOOP),
-                new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("walk"), Animation.PlayMode.LOOP),
-                new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("stunned"), Animation.PlayMode.NORMAL),
+                new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("devodevilstanding"), Animation.PlayMode.LOOP),
+                new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("devodevilrunning"), Animation.PlayMode.LOOP),
+                new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("devodevilstanding"), Animation.PlayMode.NORMAL),
                 staticEnvironment,
                 collisionDetection);
     }
 
     public static Entity player(AssetManager assetManager, Vector2 pos, Vector2 siz, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
-        //TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
         assetManager.load("enteties/game.atlas", TextureAtlas.class);
         assetManager.finishLoadingAsset("enteties/game.atlas");
         TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
@@ -45,6 +42,20 @@ public class CreateEnteties {
                           staticEnvironment,
                           collisionDetection);
     }
+
+    public static Entity key(AssetManager assetManager, Vector2 center, float height, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+        assetManager.load("enteties/game.atlas", TextureAtlas.class);
+        assetManager.finishLoadingAsset("enteties/game.atlas");
+        TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
+        return Key.create(
+                          "key",
+                          center,
+                          height,
+                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("key"), Animation.PlayMode.NORMAL),
+                          staticEnvironment,
+                          collisionDetection);
+    }
+
 
     public static Entity playerStunProjectile(AssetManager assetManager, Vector2 position, Vector2 velocity, int tileSizeInPixels, CollisionDetection collisionDetection) {
         assetManager.load("enteties/player_stun_projectile/player_stun_projectile.atlas", TextureAtlas.class);

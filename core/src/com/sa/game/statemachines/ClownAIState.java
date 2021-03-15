@@ -10,6 +10,7 @@ public enum ClownAIState implements State<Entity> {
     },
     WALK() {
         @Override public void update(final Entity data) {
+
             if(ComponentMappers.health.get(data).isStunned) {
                 ComponentMappers.ai.get(data).stateMachine.changeState(STUNNED);
                 ComponentMappers.control.get(data).buttonLeft = false;

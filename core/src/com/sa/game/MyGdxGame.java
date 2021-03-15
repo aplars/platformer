@@ -1,5 +1,7 @@
 package com.sa.game;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -10,14 +12,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.PerformanceCounters;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.sa.game.dirwatcher.DirWatcher;
 import com.sa.game.editor.Editor;
 import com.sa.game.models.EditorModel;
-
-import java.io.File;
-import java.util.Date;
-import java.util.Timer;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MyGdxGame implements ApplicationListener {
     private GameWorld gameWorld;
@@ -26,6 +22,7 @@ public class MyGdxGame implements ApplicationListener {
     private boolean showEditor = false;
     SpriteBatch batch;
     private BitmapFont font;
+    private BitmapFont bigFont;
 
     float dt = 1 / 60f;
     Controller controller;
@@ -40,6 +37,10 @@ public class MyGdxGame implements ApplicationListener {
 
         batch = new SpriteBatch();
         font = new BitmapFont();
+
+        bigFont = new BitmapFont(Gdx.files.internal("skins/score-font/score-font.fnt"),
+                                 Gdx.files.internal("skins/score-font/score-font.png"), false);
+
         com.badlogic.gdx.utils.Array<Controller> theControllers = Controllers.getControllers();
 
         for (Controller c : theControllers) {

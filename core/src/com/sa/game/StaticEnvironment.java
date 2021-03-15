@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.sa.game.collision.CollisionDetection;
 
@@ -18,7 +19,8 @@ public class StaticEnvironment {
         Floor,
         Wall,
         LeftWall,
-        RightWall
+        RightWall,
+        Back
     }
 
     public class Entity {
@@ -126,6 +128,15 @@ public class StaticEnvironment {
                 entities.add(new Entity(mapObject.getProperties().get("type", String.class), rectangleMapObject.getRectangle().getCenter(center), rectangleMapObject.getRectangle().getSize(size)));
             }
         }
+        for(MapObject mapObject : tiledMap.getLayers().get("objects").getObjects()) {
+            if(mapObject
+               .getProperties().get("type", String.class).equals("key") && mapObject.isVisible()) {
+                RectangleMapObject rectangleMapObject = (RectangleMapObject)mapObject;
+                Vector2 center = new Vector2();
+                Vector2 size = new Vector2();
+                entities.add(new Entity(mapObject.getProperties().get("type", String.class), rectangleMapObject.getRectangle().getCenter(center), rectangleMapObject.getRectangle().getSize(size)));
+            }
+        }
     }
 
     public String getLayerName(LayerId t) {
@@ -134,6 +145,7 @@ public class StaticEnvironment {
         else if(t == LayerId.Wall) return "wall";
         else if(t == LayerId.LeftWall) return "leftwall";
         else if(t == LayerId.RightWall) return "rightwall";
+        else if(t == LayerId.Back) return "back";
         else return "";
     }
 
@@ -156,6 +168,14 @@ public class StaticEnvironment {
         int x = (int)(pos.x/mapLayer.getTileWidth());
         int y = (int)(pos.y/mapLayer.getTileHeight());
         return getTileId(layer, x, y);
+    }
+
+    public GridPoint2 getGridPointFromWorldCoordinate(LayerId layer, Vector2 pos, GridPoint2 gridPnt) {
+        TiledMapTileLayer mapLayer = (TiledMapTileLayer)getMap().getLayers().get(getLayerName(layer));
+        int x = (int)(pos.x/mapLayer.getTileWidth());
+        int y = (int)(pos.y/mapLayer.getTileHeight());
+        gridPnt.set(x, y);
+        return gridPnt;
     }
 
     public int getNumTilesX() {
@@ -185,9 +205,21 @@ public class StaticEnvironment {
      * @return Where the world ends in world coordinates.
      */
     public float getWorldBoundY() {
+        if (getMap().getLayers() == null || getMap().getLayers().getCount() <= 0)
+            return 0;
+        TiledMapTileLayer layer = (TiledMapTileLayer) getMap().getLayers().get("base");
+
+        return getNumTilesY() * layer.getTileHeight();
+    }
+
+    /**
+     *
+     * @return Where the world ends in world coordinates.
+     */
+    public float getWorldBoundX() {
         if(getMap().getLayers() == null || getMap().getLayers().getCount() <= 0) return 0;
         TiledMapTileLayer layer = (TiledMapTileLayer)getMap().getLayers().get("base");
 
-        return getNumTilesY()*layer.getTileHeight();
+        return getNumTilesX()*layer.getTileWidth();
     }
 }

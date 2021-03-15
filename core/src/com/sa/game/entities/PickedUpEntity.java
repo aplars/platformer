@@ -31,7 +31,7 @@ public class PickedUpEntity {
 
     public PickedUpEntity(Vector2 position, Vector2 velocity, float size, PlayerWeaponAnimations playerWeaponAnimations, CollisionDetection collisionDetection) {
         shapeRenderer = new ShapeRenderer();
-        
+
         this.position.set(position);
         this.dstPosition.set(position);
         this.velocity.set(velocity);

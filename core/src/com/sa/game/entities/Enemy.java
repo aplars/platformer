@@ -1,9 +1,6 @@
 package com.sa.game.entities;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.signals.Listener;
-import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,7 +13,6 @@ import com.sa.game.collision.CollisionFilter;
 import com.sa.game.components.AIComponent;
 import com.sa.game.components.AnimationComponent;
 import com.sa.game.components.CollisionComponent;
-import com.sa.game.components.ComponentMappers;
 import com.sa.game.components.ControlComponent;
 import com.sa.game.components.DamageComponent;
 import com.sa.game.components.HealthComponent;
@@ -24,16 +20,17 @@ import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PositionComponent;
 import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderDebugInfoComponent;
-import com.sa.game.components.StateComponent;
+import com.sa.game.components.WorldConstantsComponent;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.statemachines.ClownAIState;
 
 public class Enemy {
-
     public static Entity create(String name, Vector2 position, float size, final Animation<TextureRegion> idleAnimation, final Animation<TextureRegion> walkAnimation, final Animation<TextureRegion> stunnedAnimation, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
-
         Entity updateEntity = new Entity();
         updateEntity.flags = EntityType.Enemy.type;
+
+        WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
+        worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
 
         Rectangle collisionRectangle = new Rectangle();
         collisionRectangle.setSize(size, size);
@@ -45,7 +42,6 @@ public class Enemy {
         collisionEntity.filter.category = CollisionFilter.ENEMY;
         collisionDetection.add(collisionEntity);
 
-        //Player1Component player1Component = new Player1Component();
         ControlComponent controlComponent = new ControlComponent();
 
         PositionComponent positionComponent = new PositionComponent();
@@ -58,9 +54,6 @@ public class Enemy {
         CollisionComponent collisionComponent = new CollisionComponent();
         collisionComponent.entity = collisionEntity;
 
-        StateComponent<ClownAIState> stateComponent = new StateComponent<>();
-        stateComponent.state = ClownAIState.IDLE;
-
         AnimationComponent<ClownAIState> animationComponent = new AnimationComponent<>();
         animationComponent.animations.put(ClownAIState.IDLE, idleAnimation);
         animationComponent.animations.put(ClownAIState.STUNNED, stunnedAnimation);
@@ -69,6 +62,7 @@ public class Enemy {
         RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();
         renderComponent.sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
+        renderComponent.mirror = true;
 
         DefaultStateMachine<Entity, ClownAIState> stateMachine = new DefaultStateMachine<>(updateEntity, ClownAIState.START);
         AIComponent<ClownAIState> aiComponent = new AIComponent<>(updateEntity, stateMachine);
@@ -79,8 +73,9 @@ public class Enemy {
         damageComponent.stun = false;
         damageComponent.damage = 1;
 
-        RenderDebugInfoComponent renderDebugInfoComponent = new RenderDebugInfoComponent();
-        //updateEntity.add(player1Component);
+        final RenderDebugInfoComponent renderDebugInfoComponent = new RenderDebugInfoComponent();
+
+        updateEntity.add(worldConstantsComponent);
         updateEntity.add(controlComponent);
         updateEntity.add(healthComponent);
         updateEntity.add(damageComponent);
@@ -91,10 +86,9 @@ public class Enemy {
         updateEntity.add(positionComponent);
         updateEntity.add(physicsComponent);
         updateEntity.add(collisionComponent);
-        updateEntity.add(stateComponent);
         updateEntity.add(animationComponent);
         updateEntity.add(renderComponent);
-        //updateEntity.add(renderDebugInfoComponent);
+        updateEntity.add(renderDebugInfoComponent);
         return updateEntity;
     }
 }

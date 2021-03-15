@@ -6,11 +6,9 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.sa.game.components.AIComponent;
 import com.sa.game.components.ControlComponent;
-import com.sa.game.components.StateComponent;
 
 public class AISystem extends IteratingSystem {
     private ComponentMapper<AIComponent> aiMapper = ComponentMapper.getFor(AIComponent.class);
-    private ComponentMapper<StateComponent> stateMapper = ComponentMapper.getFor(StateComponent.class);
 
     public AISystem() {
         super(Family.all(AIComponent.class, ControlComponent.class).get());
@@ -19,8 +17,7 @@ public class AISystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         AIComponent ai = aiMapper.get(entity);
+        ai.deltaTime = deltaTime;
         ai.stateMachine.update();
-        StateComponent stateComponent = stateMapper.get(entity);
-        stateComponent.state = ai.stateMachine.getCurrentState();
     }
 }

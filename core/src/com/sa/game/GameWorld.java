@@ -77,7 +77,6 @@ public class GameWorld {
         camera.update();
 
         fontCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
         fontCamera.update();
     }
 
@@ -112,6 +111,13 @@ public class GameWorld {
                                                              staticEnvironment,
                                                              collisionDetection));
             }
+            if (entity.name.equals("key")) {
+                updateEngine.addEntity(CreateEnteties.key(assetManager,
+                                                          entity.position,
+                                                          entity.size.y,
+                                                          staticEnvironment,
+                                                          collisionDetection));
+            }
         }
 
         mapRenderer = new OrthogonalTiledMapRenderer(staticEnvironment.getMap());
@@ -130,10 +136,12 @@ public class GameWorld {
         updateEngine.addSystem(new PickUpEntitySystem(collisionDetection));
         updateEngine.addSystem(new ExplodeOnContactSystem(collisionDetection));
         updateEngine.addSystem(new ResolveCollisionSystem(performanceCounters.add("resolvecollision")));
+        updateEngine.addSystem(new WrapEntitySystem());
         updateEngine.addSystem(new MovementSystem());
         updateEngine.addSystem(new DampingSystem());
         updateEngine.addSystem(new AnimationSystem<>());
         updateEngine.addSystem(new RenderSystem(performanceCounters.add("render"), renderer));
+        updateEngine.addSystem(new RenderScoreSystem(renderer, camera, fontCamera, staticEnvironment));
         updateEngine.addSystem(new RenderDebugInfoSystem(renderer, camera, fontCamera, staticEnvironment));
 
         return true;
