@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.Vector2;
+import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ComponentMappers;
@@ -25,14 +26,14 @@ public class ControlSystem extends IteratingSystem {
     private ComponentMapper<CollisionComponent> collisionMap = ComponentMapper.getFor(CollisionComponent.class);
     AssetManager assetManager;
     CollisionDetection collisionDetection;
-    int tileSizeInPixels;
     float timeToNextProjectile = 0f;
+    StaticEnvironment staticEnvironment;
 
-    public ControlSystem(AssetManager assetManager, CollisionDetection collisionDetection, int tileSizeInPixels) {
+    public ControlSystem(AssetManager assetManager, CollisionDetection collisionDetection, StaticEnvironment staticEnvironment) {
         super(Family.all(ControlComponent.class, PhysicsComponent.class).get());
         this.assetManager = assetManager;
         this.collisionDetection = collisionDetection;
-        this.tileSizeInPixels = tileSizeInPixels;
+        this.staticEnvironment = staticEnvironment;
     }
 
     @Override
@@ -45,8 +46,8 @@ public class ControlSystem extends IteratingSystem {
         MoveToEntityComponent moveToEntityComponent = ComponentMappers.moveToEntity.get(entity);
 
         float jumpTime = 0.5f;
-        float jumpImpulse = 2f*(tileSizeInPixels*5f+2)/jumpTime;
-        float moveForce = 30 * tileSizeInPixels * physics.mass;
+        float jumpImpulse = 2f*(staticEnvironment.tileSizeInPixels*5f+2)/jumpTime;
+        float moveForce = 30 * staticEnvironment.tileSizeInPixels * physics.mass;
 
         if(control.buttonLeft) {
             physics.force.add(-moveForce, 0f);
@@ -73,11 +74,14 @@ public class ControlSystem extends IteratingSystem {
                 if(moveToEntityComponent != null)
                     moveToEntityComponent.isEnable = false;
                 pickUpEntity.entity.remove(MoveToEntityComponent.class);
+                entity.remove(PickUpEntityComponent.class);
             }
             else if(timeToNextProjectile <= 0f){
-                Vector2 projectileVelocity = new Vector2(300f * (float) physics.GetWalkDirectionScalar(), 0f);
-                Entity projectile = CreateEnteties.playerStunProjectile(assetManager, position.position, projectileVelocity, tileSizeInPixels, collisionDetection);
-                this.getEngine().addEntity(projectile);
+                Vector2 vel = new Vector2(300f * (float) physics.GetWalkDirectionScalar(), 0f);
+                //Entity projectile = CreateEnteties.playerStunProjectile(assetManager, position.position, projectileVelocity, tileSizeInPixels, collisionDetection);
+                Entity boxingGlove = CreateEnteties.boxingGlove(assetManager, position.position, vel,
+                        staticEnvironment.tileSizeInPixels*3, entity, staticEnvironment, collisionDetection);
+                this.getEngine().addEntity(boxingGlove);
                 timeToNextProjectile = 1.0f;
             }
         }

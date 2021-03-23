@@ -25,9 +25,11 @@ import com.sa.game.gfx.Sprite;
 import com.sa.game.statemachines.ClownAIState;
 
 public class Enemy {
-    public static Entity create(String name, Vector2 position, float size, final Animation<TextureRegion> idleAnimation, final Animation<TextureRegion> walkAnimation, final Animation<TextureRegion> stunnedAnimation, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
-        Entity updateEntity = new Entity();
-        updateEntity.flags = EntityType.Enemy.type;
+    public static Entity create(String name, Vector2 position, float size, final Animation<TextureRegion> idleAnimation,
+                                final Animation<TextureRegion> walkAnimation, final Animation<TextureRegion> stunnedAnimation,
+                                StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+        Entity entity = new Entity();
+        entity.flags = EntityType.Enemy.type;
 
         WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
         worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
@@ -38,7 +40,7 @@ public class Enemy {
         CollisionEntity collisionEntity = new CollisionEntity();
         collisionEntity.box.set(collisionRectangle);
         collisionEntity.velocity.set(0, 0);
-        collisionEntity.userData = updateEntity;
+        collisionEntity.userData = entity;
         collisionEntity.filter.category = CollisionFilter.ENEMY;
         collisionDetection.add(collisionEntity);
 
@@ -49,7 +51,7 @@ public class Enemy {
 
         float jumpTime = 0.5f;
         PhysicsComponent physicsComponent = new PhysicsComponent();
-        physicsComponent.gravity = -2*(staticEnvironment.tileSizeInPixels*5f+2)/(float)Math.pow(jumpTime, 2f);
+        physicsComponent.gravity = -2 * (staticEnvironment.tileSizeInPixels * 5f + 2) / (float) Math.pow(jumpTime, 2f);
 
         CollisionComponent collisionComponent = new CollisionComponent();
         collisionComponent.entity = collisionEntity;
@@ -64,8 +66,9 @@ public class Enemy {
         renderComponent.sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
         renderComponent.mirror = true;
 
-        DefaultStateMachine<Entity, ClownAIState> stateMachine = new DefaultStateMachine<>(updateEntity, ClownAIState.START);
-        AIComponent<ClownAIState> aiComponent = new AIComponent<>(updateEntity, stateMachine);
+        DefaultStateMachine<Entity, ClownAIState> stateMachine = new DefaultStateMachine<>(entity,
+                ClownAIState.START);
+        AIComponent<ClownAIState> aiComponent = new AIComponent<>(entity, stateMachine);
 
         HealthComponent healthComponent = new HealthComponent();
 
@@ -75,20 +78,20 @@ public class Enemy {
 
         final RenderDebugInfoComponent renderDebugInfoComponent = new RenderDebugInfoComponent();
 
-        updateEntity.add(worldConstantsComponent);
-        updateEntity.add(controlComponent);
-        updateEntity.add(healthComponent);
-        updateEntity.add(damageComponent);
-        updateEntity.add(aiComponent);
-        updateEntity.add(positionComponent);
-        updateEntity.add(physicsComponent);
-        updateEntity.add(collisionComponent);
-        updateEntity.add(positionComponent);
-        updateEntity.add(physicsComponent);
-        updateEntity.add(collisionComponent);
-        updateEntity.add(animationComponent);
-        updateEntity.add(renderComponent);
-        updateEntity.add(renderDebugInfoComponent);
-        return updateEntity;
+        entity.add(worldConstantsComponent);
+        entity.add(controlComponent);
+        entity.add(healthComponent);
+        entity.add(damageComponent);
+        entity.add(aiComponent);
+        entity.add(positionComponent);
+        entity.add(physicsComponent);
+        entity.add(collisionComponent);
+        entity.add(positionComponent);
+        entity.add(physicsComponent);
+        entity.add(collisionComponent);
+        entity.add(animationComponent);
+        entity.add(renderComponent);
+        entity.add(renderDebugInfoComponent);
+        return entity;
     }
 }

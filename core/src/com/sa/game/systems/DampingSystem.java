@@ -17,14 +17,14 @@ public class DampingSystem extends IteratingSystem {
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-        PhysicsComponent physicsComponent= pm.get(entity);
-        CollisionComponent collisionComponent = cm.get(entity);
+      PhysicsComponent physicsComponent = pm.get(entity);
+      CollisionComponent collisionComponent = cm.get(entity);
 
-        if(physicsComponent != null && collisionComponent != null) {
-            if(collisionComponent.entity.groundCollisionData.didCollide)
-                physicsComponent.velocity.x *= physicsComponent.friction;
-            else
-                physicsComponent.velocity.x *= physicsComponent.airResistance;
-        }
+      if(physicsComponent != null && collisionComponent != null) {
+          if(collisionComponent.entity.groundCollisionData.didCollide)
+              physicsComponent.velocity.x *= physicsComponent.friction;
+          else
+              physicsComponent.velocity.x *= physicsComponent.airResistance;
+      }
   }
 }

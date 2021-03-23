@@ -10,8 +10,8 @@ import com.sa.game.collision.CollisionDetection;
 import com.sa.game.collision.CollisionEntity;
 import com.sa.game.collision.CollisionFilter;
 import com.sa.game.components.CollisionComponent;
+import com.sa.game.components.DamageComponent;
 import com.sa.game.components.ExplodeOnContactComponent;
-import com.sa.game.components.MoveToEntityComponent;
 import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PositionComponent;
 import com.sa.game.components.RenderComponent;
@@ -44,14 +44,16 @@ public class BoxingGlove {
         PositionComponent positionComponent = new PositionComponent();
         positionComponent.position.set(position);
 
-        float jumpTime = 0.5f;
         PhysicsComponent physicsComponent = new PhysicsComponent();
-        physicsComponent.gravity = 0;//-2*(staticEnvironment.tileSizeInPixels*5f+2)/(float)Math.pow(jumpTime, 2f);
+        physicsComponent.gravity = 0;
         physicsComponent.airResistance = 1;
         physicsComponent.friction = 1;
         physicsComponent.velocity.set(vel);
 
         ExplodeOnContactComponent explodeOnContactComponent = new ExplodeOnContactComponent();
+
+        DamageComponent damageComponent = new DamageComponent();
+        damageComponent.stun = true;
 
         RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();
@@ -65,6 +67,7 @@ public class BoxingGlove {
         entity.add(positionComponent);
         entity.add(physicsComponent);
         entity.add(explodeOnContactComponent);
+        entity.add(damageComponent);
         entity.add(renderComponent);
         entity.add(renderDebugInfoComponent);
         return entity;

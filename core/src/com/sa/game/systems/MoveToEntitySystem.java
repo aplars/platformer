@@ -33,6 +33,9 @@ public class MoveToEntitySystem extends IteratingSystem  {
       WorldConstantsComponent worldConstantsComponent = ComponentMappers.worldConstats.get(entity);
       Vector2 dstPositionB = new Vector2(dstPositionComponent.position.x, dstPositionComponent.position.y-worldConstantsComponent.height);
 
+      dstPositionA.add(moveToEntityComponent.offset);
+      dstPositionB.add(moveToEntityComponent.offset);
+
       Vector2 directionToTargetA = new Vector2(dstPositionA.sub(srcPosition));
       Vector2 directionToTargetB = new Vector2(dstPositionB.sub(srcPosition));
 

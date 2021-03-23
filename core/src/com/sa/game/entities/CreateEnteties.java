@@ -43,6 +43,20 @@ public class CreateEnteties {
                           collisionDetection);
     }
 
+    public static Entity boxingGlove(AssetManager assetManager, Vector2 pos, Vector2 vel, float size, Entity parent, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+        assetManager.load("enteties/game.atlas", TextureAtlas.class);
+        assetManager.finishLoadingAsset("enteties/game.atlas");
+        TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
+        return BoxingGlove.create("glove",
+                                  pos,
+                                  vel,
+                                  size,
+                                  new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("boxingglove"), PlayMode.LOOP),
+                                  parent,
+                                  staticEnvironment,
+                                  collisionDetection);
+    }
+
     public static Entity key(AssetManager assetManager, Vector2 center, float height, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         assetManager.load("enteties/game.atlas", TextureAtlas.class);
         assetManager.finishLoadingAsset("enteties/game.atlas");

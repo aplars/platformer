@@ -1,6 +1,7 @@
 package com.sa.game;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
@@ -105,11 +106,13 @@ public class GameWorld {
                                                             collisionDetection));
             }
             if(entity.name.equals("player")) {
-                updateEngine.addEntity(CreateEnteties.player(assetManager,
-                                                             entity.position,
-                                                             entity.size,
-                                                             staticEnvironment,
-                                                             collisionDetection));
+                Entity player = CreateEnteties.player(assetManager,
+                                                      entity.position,
+                                                      entity.size,
+                                                      staticEnvironment,
+                                                      collisionDetection);
+                updateEngine.addEntity(player);
+                //updateEngine.addEntity(CreateEnteties.boxingGlove(assetManager, entity.position, 12, player, staticEnvironment, collisionDetection));
             }
             if (entity.name.equals("key")) {
                 updateEngine.addEntity(CreateEnteties.key(assetManager,
@@ -128,7 +131,7 @@ public class GameWorld {
 
         updateEngine.addSystem(new PlayerInputSystem());
         updateEngine.addSystem(new AISystem());
-        updateEngine.addSystem(new ControlSystem(assetManager, collisionDetection, staticEnvironment.tileSizeInPixels));
+        updateEngine.addSystem(new ControlSystem(assetManager, collisionDetection, staticEnvironment));
         updateEngine.addSystem(new MoveToEntitySystem());
         updateEngine.addSystem(new PhysicsSystem());
         updateEngine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
