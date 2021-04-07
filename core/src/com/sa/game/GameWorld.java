@@ -99,7 +99,7 @@ public class GameWorld {
 
         for(StaticEnvironment.Entity entity : staticEnvironment.entities) {
             if (entity.name.equals("clown")) {
-                updateEngine.addEntity(CreateEnteties.clown(assetManager,
+                updateEngine.addEntity(CreateEnteties.enemy(assetManager,
                                                             entity.position,
                                                             entity.size.y,
                                                             staticEnvironment,
@@ -144,8 +144,9 @@ public class GameWorld {
         updateEngine.addSystem(new DampingSystem());
         updateEngine.addSystem(new AnimationSystem<>());
         updateEngine.addSystem(new RenderSystem(performanceCounters.add("render"), renderer));
+        updateEngine.addSystem(new RenderStarsSystem(renderer));
         updateEngine.addSystem(new RenderScoreSystem(renderer, camera, fontCamera, staticEnvironment));
-        updateEngine.addSystem(new RenderDebugInfoSystem(renderer, camera, fontCamera, staticEnvironment));
+        //updateEngine.addSystem(new RenderDebugInfoSystem(renderer, camera, fontCamera, staticEnvironment));
 
         return true;
     }

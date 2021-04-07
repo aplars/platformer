@@ -16,6 +16,6 @@ public class ComponentMappers {
     public static ComponentMapper<RenderDebugInfoComponent> renderDebugInfo = ComponentMapper.getFor(RenderDebugInfoComponent.class);
     public static ComponentMapper<RenderComponent> render = ComponentMapper.getFor(RenderComponent.class);
     public static ComponentMapper<SensorComponent> sensor = ComponentMapper.getFor(SensorComponent.class);
-    public static ComponentMapper<WorldConstantsComponent> worldConstats = ComponentMapper
-            .getFor(WorldConstantsComponent.class);
+    public static ComponentMapper<WorldConstantsComponent> worldConstats = ComponentMapper.getFor(WorldConstantsComponent.class);
+    public static ComponentMapper<RenderStarsComponent> renderStars = ComponentMapper.getFor(RenderStarsComponent.class);
 }

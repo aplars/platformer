@@ -46,7 +46,7 @@ public class Player {
         collisionEntity.velocity = vel;
         collisionEntity.userData = updateEntity;
         collisionEntity.filter.category = CollisionFilter.PLAYER;
-        collisionEntity.filter.mask = CollisionFilter.ENEMY;
+        collisionEntity.filter.mask = (short)(CollisionFilter.ENEMY|CollisionFilter.OBJECT);
         collisionDetection.add(collisionEntity);
 
         Player1Component player1Component = new Player1Component();

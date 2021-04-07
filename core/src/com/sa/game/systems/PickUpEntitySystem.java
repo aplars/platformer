@@ -26,21 +26,26 @@ public class PickUpEntitySystem extends IteratingSystem {
         PickUpEntityComponent pickUpEntityComponent = ComponentMappers.pickUp.get(entity);
         ControlComponent controlComponent = ComponentMappers.control.get(entity);
 
-        if(!controlComponent.buttonUp)
-            return;
+        //if(!controlComponent.buttonUp)
+        //    return;
+
+        if(pickUpEntityComponent != null && pickUpEntityComponent.entity != null) {
+            HealthComponent h = ComponentMappers.health.get(pickUpEntityComponent.entity);
+            if(h != null)
+                h.stunTime = Math.max(h.stunTime, 1.0f);
+        }
 
         for(CollisionEntity collidee : collision.entity.collidees) {
             Entity collideeEnt = (Entity)collidee.userData;
             HealthComponent health = ComponentMappers.health.get(collideeEnt);
+
             if(health != null && health.isStunned) {
-                if(!ComponentMappers.moveToEntity.has(collideeEnt)) {
-                    collideeEnt.add(new MoveToEntityComponent(entity, new Vector2(0, 0/*collision.entity.box.height*/), 130f));
-                    //CollisionEntity colEnt = ComponentMappers.collision.get(collideeEnt).entity;
-                    //collisionDetection.remove(colEnt);
-                    ComponentMappers.collision.get(collideeEnt).setIsEnable(false);
-                    //collideeEnt.remove(CollisionComponent.class);
-                    if(pickUpEntityComponent.entity == null)
+                if(!ComponentMappers.moveToEntity.has(collideeEnt) || !ComponentMappers.moveToEntity.get(collideeEnt).isEnable) {
+                    if(pickUpEntityComponent.entity == null) {
+                        collideeEnt.add(new MoveToEntityComponent(entity, new Vector2(0, collision.entity.box.height), 130f));
+                        ComponentMappers.collision.get(collideeEnt).setIsEnable(false);
                         pickUpEntityComponent.entity = collideeEnt;
+                    }
                 }
             }
         }

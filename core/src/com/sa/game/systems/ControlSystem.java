@@ -8,9 +8,11 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.Vector2;
 import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
+import com.sa.game.collision.CollisionFilter;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ComponentMappers;
 import com.sa.game.components.ControlComponent;
+import com.sa.game.components.ExplodeOnContactComponent;
 import com.sa.game.components.MoveToEntityComponent;
 import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PickUpEntityComponent;
@@ -42,7 +44,7 @@ public class ControlSystem extends IteratingSystem {
         ControlComponent control = controlMap.get(entity);
         PhysicsComponent physics = physicsMap.get(entity);
         CollisionComponent collision = collisionMap.get(entity);
-        PickUpEntityComponent pickUpEntity = ComponentMappers.pickUp.get(entity);
+        PickUpEntityComponent pickUpEntityComponent = ComponentMappers.pickUp.get(entity);
         MoveToEntityComponent moveToEntityComponent = ComponentMappers.moveToEntity.get(entity);
 
         float jumpTime = 0.5f;
@@ -59,12 +61,13 @@ public class ControlSystem extends IteratingSystem {
             physics.velocity.y += jumpImpulse;
         }
         if(control.buttonB) {
-            if(pickUpEntity != null && pickUpEntity.entity!=null) {
-                PhysicsComponent pickedUpEntPhysics = ComponentMappers.physics.get(pickUpEntity.entity);
-                CollisionComponent collisionComponent = ComponentMappers.collision.get(pickUpEntity.entity);
+            if(pickUpEntityComponent != null && pickUpEntityComponent.entity!=null) {
+                PhysicsComponent pickedUpEntPhysics = ComponentMappers.physics.get(pickUpEntityComponent.entity);
+                CollisionComponent collisionComponent = ComponentMappers.collision.get(pickUpEntityComponent.entity);
                 collisionComponent.entity.isEnable = true;
+                collisionComponent.entity.filter.mask &= ~CollisionFilter.PLAYER; // Disable collision vs player 
                 //pickedUpEntPhysics.force.x = 1800f;
-                if(pickedUpEntPhysics.walkDirection == WalkDirection.Right)
+                if(physics.walkDirection == WalkDirection.Right)
                     pickedUpEntPhysics.velocity.x = 300;
                 else
                     pickedUpEntPhysics.velocity.x = -300;
@@ -73,8 +76,10 @@ public class ControlSystem extends IteratingSystem {
                 pickedUpEntPhysics.airResistance = 1f;
                 if(moveToEntityComponent != null)
                     moveToEntityComponent.isEnable = false;
-                pickUpEntity.entity.remove(MoveToEntityComponent.class);
-                entity.remove(PickUpEntityComponent.class);
+                pickUpEntityComponent.entity.remove(MoveToEntityComponent.class);
+                pickUpEntityComponent.entity.add(new ExplodeOnContactComponent());
+                pickUpEntityComponent.entity = null;
+                timeToNextProjectile = 1.0f;
             }
             else if(timeToNextProjectile <= 0f){
                 Vector2 vel = new Vector2(300f * (float) physics.GetWalkDirectionScalar(), 0f);

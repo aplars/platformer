@@ -54,6 +54,7 @@ public class BoxingGlove {
 
         DamageComponent damageComponent = new DamageComponent();
         damageComponent.stun = true;
+        damageComponent.stunTime = 5f;
 
         RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();

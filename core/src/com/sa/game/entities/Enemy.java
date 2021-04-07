@@ -20,14 +20,19 @@ import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PositionComponent;
 import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderDebugInfoComponent;
+import com.sa.game.components.RenderStarsComponent;
 import com.sa.game.components.WorldConstantsComponent;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.statemachines.ClownAIState;
 
 public class Enemy {
-    public static Entity create(String name, Vector2 position, float size, final Animation<TextureRegion> idleAnimation,
-                                final Animation<TextureRegion> walkAnimation, final Animation<TextureRegion> stunnedAnimation,
-                                StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public static Entity create(String name, Vector2 position, float size,
+                                final Animation<TextureRegion> idleAnimation,
+                                final Animation<TextureRegion> walkAnimation,
+                                final Animation<TextureRegion> stunnedAnimation,
+                                final Animation<TextureRegion> starsAnimation,
+                                StaticEnvironment staticEnvironment,
+                                CollisionDetection collisionDetection) {
         Entity entity = new Entity();
         entity.flags = EntityType.Enemy.type;
 
@@ -66,8 +71,10 @@ public class Enemy {
         renderComponent.sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
         renderComponent.mirror = true;
 
-        DefaultStateMachine<Entity, ClownAIState> stateMachine = new DefaultStateMachine<>(entity,
-                ClownAIState.START);
+        RenderStarsComponent renderStarsComponent = new RenderStarsComponent();
+        renderStarsComponent.animation = starsAnimation;
+
+        DefaultStateMachine<Entity, ClownAIState> stateMachine = new DefaultStateMachine<>(entity, ClownAIState.START);
         AIComponent<ClownAIState> aiComponent = new AIComponent<>(entity, stateMachine);
 
         HealthComponent healthComponent = new HealthComponent();
@@ -91,6 +98,7 @@ public class Enemy {
         entity.add(collisionComponent);
         entity.add(animationComponent);
         entity.add(renderComponent);
+        entity.add(renderStarsComponent);
         entity.add(renderDebugInfoComponent);
         return entity;
     }

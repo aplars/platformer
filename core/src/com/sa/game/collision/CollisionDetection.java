@@ -50,13 +50,15 @@ public class CollisionDetection {
 
             final int aa = colPair.a.filter.category & colPair.b.filter.mask;
             final int bb = colPair.b.filter.category & colPair.a.filter.mask;
-            if(aa == 0 && bb == 0)
+            if(aa == 0  || bb == 0)
                 continue;
 
             final RectangleCollisionData data = IntersectionTests.rectangleRectangle(a.box, aVel, b.box, bVel);
             if(data.didCollide) {
-                a.collidees.add(b);
-                b.collidees.add(a);
+                if(aa != 0)
+                    a.collidees.add(b);
+                if(bb != 0)
+                    b.collidees.add(a);
             }
         }
         //Check collision against static scene parts

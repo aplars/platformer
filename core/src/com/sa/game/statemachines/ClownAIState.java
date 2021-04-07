@@ -7,6 +7,13 @@ import com.sa.game.components.ComponentMappers;
 
 public enum ClownAIState implements State<Entity> {
     STUNNED() {
+        @Override public void update(final Entity data) {
+            ComponentMappers.health.get(data).stunTime -= ComponentMappers.ai.get(data).deltaTime;
+            if (ComponentMappers.health.get(data).stunTime < 0f) {
+                ComponentMappers.health.get(data).isStunned = false;
+                ComponentMappers.ai.get(data).stateMachine.changeState(WALK);
+            }
+        }
     },
     WALK() {
         @Override public void update(final Entity data) {
