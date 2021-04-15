@@ -3,7 +3,7 @@
  <tileset firstgid="1" source="base.tsx"/>
  <objectgroup id="5" name="enemies">
   <object id="66" name="clown" type="clown" x="33" y="143.666" width="14" height="14"/>
-  <object id="67" name="clown" type="clown" x="137.334" y="112.666" width="14" height="14"/>
+  <object id="67" name="clown" type="clown" x="137.334" y="112.666" width="14" height="14" visible="0"/>
  </objectgroup>
  <objectgroup id="8" name="objects">
   <object id="69" name="key" type="key" x="65.3337" y="46.3337" width="8" height="8"/>

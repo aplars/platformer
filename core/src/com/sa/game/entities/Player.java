@@ -20,6 +20,7 @@ import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PickUpEntityComponent;
 import com.sa.game.components.Player1Component;
 import com.sa.game.components.PositionComponent;
+import com.sa.game.components.PunchComponent;
 import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderDebugInfoComponent;
 import com.sa.game.components.WorldConstantsComponent;
@@ -33,7 +34,7 @@ public class Player {
                                 final Animation<TextureRegion> jumpAnimation,
                                 final Animation<TextureRegion> deadAnimation,
                                 StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
-        Entity updateEntity = new Entity();
+        Entity entity = new Entity();
 
         WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
         worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
@@ -44,7 +45,7 @@ public class Player {
         CollisionEntity collisionEntity = new CollisionEntity();
         collisionEntity.box.set(colbBox);
         collisionEntity.velocity = vel;
-        collisionEntity.userData = updateEntity;
+        collisionEntity.userData = entity;
         collisionEntity.filter.category = CollisionFilter.PLAYER;
         collisionEntity.filter.mask = (short)(CollisionFilter.ENEMY|CollisionFilter.OBJECT);
         collisionDetection.add(collisionEntity);
@@ -71,14 +72,16 @@ public class Player {
 
         PickUpEntityComponent pickUpEntityComponent = new PickUpEntityComponent();
 
+        PunchComponent punchComponent = new PunchComponent();
+
         AnimationComponent<PlayerAIState> animationComponent = new AnimationComponent<>();
         animationComponent.animations.put(PlayerAIState.IDLE, idleAnimation);
         animationComponent.animations.put(PlayerAIState.WALK, walkAnimation);
         animationComponent.animations.put(PlayerAIState.JUMP, jumpAnimation);
         animationComponent.animations.put(PlayerAIState.DEAD, deadAnimation);
 
-        DefaultStateMachine<Entity, PlayerAIState> stateMachine = new DefaultStateMachine<>(updateEntity, PlayerAIState.IDLE);
-        AIComponent<PlayerAIState> aiComponent = new AIComponent<>(updateEntity, stateMachine);
+        DefaultStateMachine<Entity, PlayerAIState> stateMachine = new DefaultStateMachine<>(entity, PlayerAIState.IDLE);
+        AIComponent<PlayerAIState> aiComponent = new AIComponent<>(entity, stateMachine);
 
 
         RenderComponent renderComponent = new RenderComponent();
@@ -92,23 +95,23 @@ public class Player {
         //Entity projectile = CreateEnteties.playerStunProjectile(assetManager, position.position, projectileVelocity, tileSizeInPixels, collisionDetection);
         //weaponComponent.entity =;
 
-        updateEntity.add(worldConstantsComponent);
-        updateEntity.add(physicsComponent);
-        updateEntity.add(collisionComponent);
-        updateEntity.add(positionComponent);
-        updateEntity.add(player1Component);
-        updateEntity.add(controlComponent);
+        entity.add(worldConstantsComponent);
+        entity.add(physicsComponent);
+        entity.add(collisionComponent);
+        entity.add(positionComponent);
+        entity.add(player1Component);
+        entity.add(controlComponent);
+        entity.add(physicsComponent);
+        entity.add(positionComponent);
+        entity.add(collisionComponent);
+        entity.add(healthComponent);
+        entity.add(pickUpEntityComponent);
+        entity.add(punchComponent);
+        entity.add(animationComponent);
+        entity.add(aiComponent);
+        entity.add(renderComponent);
+        entity.add(renderDebugInfoComponent);
 
-        updateEntity.add(physicsComponent);
-        updateEntity.add(positionComponent);
-        updateEntity.add(collisionComponent);
-        updateEntity.add(healthComponent);
-        updateEntity.add(pickUpEntityComponent);
-        updateEntity.add(animationComponent);
-        updateEntity.add(aiComponent);
-        updateEntity.add(renderComponent);
-        updateEntity.add(renderDebugInfoComponent);
-
-        return updateEntity;
+        return entity;
     }
 }

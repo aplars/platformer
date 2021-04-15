@@ -23,7 +23,7 @@ public class RenderDebugInfoSystem extends IteratingSystem {
     private Renderer renderer;
     private StaticEnvironment staticEnvironment;
 
-    public RenderDebugInfoSystem(Renderer renderer, OrthographicCamera camera, OrthographicCamera fontCamera, StaticEnvironment staticEnvironment) {
+    public RenderDebugInfoSystem(Renderer renderer, StaticEnvironment staticEnvironment) {
         super(Family.all(RenderDebugInfoComponent.class, RenderComponent.class, PositionComponent.class, PhysicsComponent.class).get());
         this.renderer = renderer;
         this.staticEnvironment = staticEnvironment;

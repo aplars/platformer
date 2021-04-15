@@ -71,6 +71,9 @@ public class CreateEnteties {
                           collisionDetection);
     }
 
+    public static Entity explosion(Vector2 position) {
+        return Explosion.create(position);
+    }
 
     public static Entity playerStunProjectile(AssetManager assetManager, Vector2 position, Vector2 velocity, int tileSizeInPixels, CollisionDetection collisionDetection) {
         assetManager.load("enteties/player_stun_projectile/player_stun_projectile.atlas", TextureAtlas.class);

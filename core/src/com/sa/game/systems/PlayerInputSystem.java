@@ -1,22 +1,13 @@
 package com.sa.game.systems;
 
 import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.math.Vector2;
-import com.sa.game.collision.CollisionDetection;
-import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ControlComponent;
-import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.Player1Component;
-import com.sa.game.components.PositionComponent;
-import com.sa.game.entities.CreateEnteties;
-import com.sa.game.entities.WalkDirection;
 
 public class PlayerInputSystem extends IteratingSystem{
     private ComponentMapper<ControlComponent> controlMap = ComponentMapper.getFor(ControlComponent.class);
