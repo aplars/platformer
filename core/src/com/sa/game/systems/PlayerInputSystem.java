@@ -10,7 +10,7 @@ import com.sa.game.components.ControlComponent;
 import com.sa.game.components.Player1Component;
 
 public class PlayerInputSystem extends IteratingSystem{
-    private ComponentMapper<ControlComponent> controlMap = ComponentMapper.getFor(ControlComponent.class);
+    private final ComponentMapper<ControlComponent> controlMap = ComponentMapper.getFor(ControlComponent.class);
 
     public PlayerInputSystem() {
         super(Family.all(ControlComponent.class, Player1Component.class).get());
@@ -18,16 +18,14 @@ public class PlayerInputSystem extends IteratingSystem{
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        ControlComponent controlComponent = controlMap.get(entity);
+    protected void processEntity(final Entity entity, final float deltaTime) {
+        final ControlComponent controlComponent = controlMap.get(entity);
         controlComponent.clear();
 
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            //physicsComponent.force.x -= entityControlComponent.moveForce;
             controlComponent.buttonLeft = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            //physicsComponent.force.x += entityControlComponent.moveForce;
             controlComponent.buttonRight = true;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.W)) {
@@ -37,16 +35,15 @@ public class PlayerInputSystem extends IteratingSystem{
             controlComponent.buttonDown = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.J)) {
-            //physicsComponent.velocity.y = entityControlComponent.jumpImpulse;
             controlComponent.buttonA = true;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.K)) {
-            //float projDir = (physicsComponent.walkDirection == WalkDirection.Left) ? -300f : 300f;
-            //CreateEnteties.playerStunProjectile(assetManager, positionComponent.position, new Vector2(projDir, 0f), tileSizeInPixels, collisionDetection, preUpdateEngine, updateEngine);
-            //entityControlComponent.timeUntilNextBulletSpawnPossible = EntityControlComponent.SPAWN_TIME_INTERVAL;
-            controlComponent.buttonB = true;
+        if(!Gdx.input.isKeyPressed(Input.Keys.K)) {
+            controlComponent.buttonBTime = Math.min(0.1f, controlComponent.buttonBTime);
         }
-        //entityControlComponent.timeUntilNextBulletSpawnPossible -= deltaTime;
-            //entityControlComponent.timeUntilNextBulletSpawnPossible = Float.max(0f, entityControlComponent.timeUntilNextBulletSpawnPossible);
+        if(Gdx.input.isKeyPressed(Input.Keys.K) && controlComponent.buttonBTime <= 0f) {
+            controlComponent.buttonB = true;
+            controlComponent.buttonBTime = 0.5f;
+        }
+        controlComponent.buttonBTime = Math.max(0f, controlComponent.buttonBTime - deltaTime);
     }
 }

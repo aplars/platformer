@@ -15,16 +15,15 @@ import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PositionComponent;
 import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderDebugInfoComponent;
-import com.sa.game.components.TypeComponent;
 import com.sa.game.components.WorldConstantsComponent;
+import com.sa.game.components.groups.ToolGroupComponent;
 import com.sa.game.gfx.Sprite;
 
 public class Key {
     public static Entity create(String name, Vector2 position, float size, final Animation<TextureRegion> idleAnimation, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         Entity entity = new Entity();
 
-        TypeComponent typeComponent = new TypeComponent();
-        typeComponent.entityType = EntityType.Key;
+        ToolGroupComponent toolGroupComponent = new ToolGroupComponent();
 
         WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
         worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
@@ -59,7 +58,7 @@ public class Key {
 
         RenderDebugInfoComponent renderDebugInfoComponent = new RenderDebugInfoComponent();
 
-        entity.add(typeComponent);
+        entity.add(toolGroupComponent);
         entity.add(worldConstantsComponent);
         entity.add(positionComponent);
         entity.add(physicsComponent);

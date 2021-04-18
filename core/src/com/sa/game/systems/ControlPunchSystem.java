@@ -14,18 +14,21 @@ import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PickUpEntityComponent;
 import com.sa.game.components.PositionComponent;
 import com.sa.game.components.PunchComponent;
+import com.sa.game.components.ThrownComponent;
 import com.sa.game.entities.CreateEnteties;
 
 public class ControlPunchSystem extends IteratingSystem {
     AssetManager assetManager;
     CollisionDetection collisionDetection;
     StaticEnvironment staticEnvironment;
+    float currentTime = 0f;
 
     public ControlPunchSystem(AssetManager assetManager, CollisionDetection collisionDetection, StaticEnvironment staticEnvironment) {
         super(Family.all(PunchComponent.class,
                          ControlComponent.class,
                          PositionComponent.class,
-                         PhysicsComponent.class).get());
+                         PhysicsComponent.class,
+                         PickUpEntityComponent.class).get());
 
         this.assetManager = assetManager;
         this.collisionDetection = collisionDetection;
@@ -40,20 +43,19 @@ public class ControlPunchSystem extends IteratingSystem {
         PhysicsComponent physicsComponent = ComponentMappers.physics.get(entity);
         PickUpEntityComponent pickUpEntityComponent = ComponentMappers.pickUp.get(entity);
 
-        if (pickUpEntityComponent != null && pickUpEntityComponent.entity != null) {
-            controlComponent.buttonBTimer = Math.max(0f, controlComponent.buttonBTimer - deltaTime);
-
-            return;
-        }
-
-        if (controlComponent.buttonB && controlComponent.buttonBTimer <= 0f) {
+        if (controlComponent.buttonB && pickUpEntityComponent.entity == null) {
             Vector2 vel = new Vector2(300f * (float) physicsComponent.GetWalkDirectionScalar(), 0f);
             Entity boxingGlove = CreateEnteties.boxingGlove(assetManager, positionComponent.position, vel,
                                                             staticEnvironment.tileSizeInPixels * 3, entity, staticEnvironment, collisionDetection);
             this.getEngine().addEntity(boxingGlove);
 
-            controlComponent.buttonBTimer = 1f;
         }
-        controlComponent.buttonBTimer = Math.max(0f, controlComponent.buttonBTimer - deltaTime);
     }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        currentTime += deltaTime;
+    }
+
 }

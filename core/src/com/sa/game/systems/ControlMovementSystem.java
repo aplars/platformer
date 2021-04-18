@@ -17,7 +17,6 @@ import com.sa.game.components.MoveToEntityComponent;
 import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PickUpEntityComponent;
 import com.sa.game.components.PositionComponent;
-import com.sa.game.components.TypeComponent;
 import com.sa.game.entities.CreateEnteties;
 import com.sa.game.entities.EntityType;
 import com.sa.game.entities.PlayerStunProjectile;
@@ -61,7 +60,7 @@ public class ControlMovementSystem extends IteratingSystem {
         if(control.buttonA && collision.entity.groundCollisionData.didCollide) {
             physics.velocity.y += jumpImpulse;
         }
-        if(control.buttonB) {
+        /*if(control.buttonB) {
             if(pickUpEntityComponent != null && pickUpEntityComponent.entity!=null && control.buttonBTimer <= 0f) {
                 TypeComponent typeComponent = ComponentMappers.type.get(pickUpEntityComponent.entity);
                 PhysicsComponent pickedUpEntPhysics = ComponentMappers.physics.get(pickUpEntityComponent.entity);
@@ -86,16 +85,8 @@ public class ControlMovementSystem extends IteratingSystem {
                 }
                 pickUpEntityComponent.entity.remove(MoveToEntityComponent.class);
                 pickUpEntityComponent.entity = null;
-                control.buttonBTimer = 1.0f;
+                //control.buttonBTimer = 1.0f;
             }
-            /*else if(timeToNextProjectile <= 0f){
-                Vector2 vel = new Vector2(300f * (float) physics.GetWalkDirectionScalar(), 0f);
-                //Entity projectile = CreateEnteties.playerStunProjectile(assetManager, position.position, projectileVelocity, tileSizeInPixels, collisionDetection);
-                Entity boxingGlove = CreateEnteties.boxingGlove(assetManager, position.position, vel,
-                        staticEnvironment.tileSizeInPixels*3, entity, staticEnvironment, collisionDetection);
-                this.getEngine().addEntity(boxingGlove);
-                timeToNextProjectile = 1.0f;
-                }*/
-        }
+            }*/
     }
 }

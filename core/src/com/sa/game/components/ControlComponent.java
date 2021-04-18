@@ -11,8 +11,8 @@ public class ControlComponent implements Component {
     public boolean buttonUp = false;
     public boolean buttonDown = false;
 
-    public float buttonBTimer = 0f;
-    
+    public float buttonBTime = 0f;
+
     public void clear() {
         buttonA = false;
         buttonB = false;

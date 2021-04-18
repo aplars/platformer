@@ -21,8 +21,8 @@ import com.sa.game.components.PositionComponent;
 import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderDebugInfoComponent;
 import com.sa.game.components.RenderStarsComponent;
-import com.sa.game.components.TypeComponent;
 import com.sa.game.components.WorldConstantsComponent;
+import com.sa.game.components.groups.EnemyGroupComponent;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.statemachines.ClownAIState;
 
@@ -37,8 +37,7 @@ public class Enemy {
         Entity entity = new Entity();
         entity.flags = EntityType.Enemy.type;
 
-        TypeComponent typeComponent = new TypeComponent();
-        typeComponent.entityType = EntityType.Enemy;
+        EnemyGroupComponent enemyGroupComponent = new EnemyGroupComponent();
 
         WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
         worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
@@ -89,7 +88,7 @@ public class Enemy {
 
         final RenderDebugInfoComponent renderDebugInfoComponent = new RenderDebugInfoComponent();
 
-        entity.add(typeComponent);
+        entity.add(enemyGroupComponent);
         entity.add(worldConstantsComponent);
         entity.add(controlComponent);
         entity.add(healthComponent);

@@ -133,6 +133,9 @@ public class GameWorld {
         updateEngine.addSystem(new AISystem());
         updateEngine.addSystem(new ControlMovementSystem(assetManager, collisionDetection, staticEnvironment));
         updateEngine.addSystem(new ControlPunchSystem(assetManager, collisionDetection, staticEnvironment));
+        updateEngine.addSystem(new ControlThrowEntitySystem());
+        updateEngine.addSystem(new ThrownSystem());
+        updateEngine.addSystem(new DroppedSystem());
         updateEngine.addSystem(new MoveToEntitySystem());
         updateEngine.addSystem(new PhysicsSystem());
         updateEngine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
@@ -148,6 +151,7 @@ public class GameWorld {
         updateEngine.addSystem(new RenderParticleSystem(camera));
         updateEngine.addSystem(new RenderStarsSystem(renderer));
         updateEngine.addSystem(new RenderScoreSystem(renderer, camera, fontCamera, staticEnvironment));
+        updateEngine.addSystem(new LastSystem());
         //updateEngine.addSystem(new RenderDebugInfoSystem(renderer, camera, fontCamera, staticEnvironment));
 
         return true;
