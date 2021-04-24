@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
 
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -109,6 +110,21 @@ public class StaticEnvironment {
             }
         }
 
+        for (MapLayer mapLayer : tiledMap.getLayers()) {
+            for (MapObject mapObject : mapLayer.getObjects()) {
+
+                if (mapObject.isVisible()) {
+                    RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
+                    Vector2 center = new Vector2();
+                    Vector2 size = new Vector2();
+                    entities.add(new Entity(mapObject.getProperties().get("type", String.class),
+                            rectangleMapObject.getRectangle().getCenter(center),
+                            rectangleMapObject.getRectangle().getSize(size)));
+                }
+            }
+        }
+
+        /*
         for(MapObject mapObject : tiledMap.getLayers().get("enemies").getObjects()) {
             if(mapObject
                .getProperties().get("type", String.class).equals("clown") && mapObject.isVisible()) {
@@ -136,7 +152,14 @@ public class StaticEnvironment {
                 Vector2 size = new Vector2();
                 entities.add(new Entity(mapObject.getProperties().get("type", String.class), rectangleMapObject.getRectangle().getCenter(center), rectangleMapObject.getRectangle().getSize(size)));
             }
-        }
+            if(mapObject
+               .getProperties().get("type", String.class).equals("apple") && mapObject.isVisible()) {
+                RectangleMapObject rectangleMapObject = (RectangleMapObject)mapObject;
+                Vector2 center = new Vector2();
+                Vector2 size = new Vector2();
+                entities.add(new Entity(mapObject.getProperties().get("type", String.class), rectangleMapObject.getRectangle().getCenter(center), rectangleMapObject.getRectangle().getSize(size)));
+            }
+            }*/
     }
 
     public String getLayerName(LayerId t) {

@@ -70,6 +70,17 @@ public class CreateEnteties {
                           staticEnvironment,
                           collisionDetection);
     }
+    public static Entity apple(AssetManager assetManager, Vector2 center, float height, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+        assetManager.load("enteties/game.atlas", TextureAtlas.class);
+        assetManager.finishLoadingAsset("enteties/game.atlas");
+        TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
+        return Apple.create(
+                          center,
+                          height,
+                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("apple"), Animation.PlayMode.NORMAL),
+                          staticEnvironment,
+                          collisionDetection);
+    }
 
     public static Entity explosion(Vector2 position) {
         return Explosion.create(position);

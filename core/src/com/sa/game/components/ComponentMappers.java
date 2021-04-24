@@ -1,6 +1,7 @@
 package com.sa.game.components;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.sa.game.entities.CoinGroupComponent;
 
 public class ComponentMappers {
     public static ComponentMapper<Player1Component> player1 = ComponentMapper.getFor(Player1Component.class);
@@ -21,4 +22,6 @@ public class ComponentMappers {
     public static ComponentMapper<PunchComponent> punch = ComponentMapper.getFor(PunchComponent.class);
     public static ComponentMapper<ParticleEffectComponent> particleEffect = ComponentMapper.getFor(ParticleEffectComponent.class);
     public static ComponentMapper<ThrownComponent> thrown = ComponentMapper.getFor(ThrownComponent.class);
+    public static ComponentMapper<ExplodeOnContactComponent> explodeOnContact = ComponentMapper.getFor(ExplodeOnContactComponent.class);
+    public static ComponentMapper<CoinGroupComponent> coinGroup = ComponentMapper.getFor(CoinGroupComponent.class);
 }

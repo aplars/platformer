@@ -13,7 +13,30 @@ import com.badlogic.gdx.utils.PerformanceCounters;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.entities.CreateEnteties;
 import com.sa.game.gfx.Renderer;
-import com.sa.game.systems.*;
+import com.sa.game.systems.AISystem;
+import com.sa.game.systems.AnimationSystem;
+import com.sa.game.systems.CoinSystem;
+import com.sa.game.systems.CollisionSystem;
+import com.sa.game.systems.ControlMovementSystem;
+import com.sa.game.systems.ControlPunchSystem;
+import com.sa.game.systems.ControlThrowEntitySystem;
+import com.sa.game.systems.DamageSystem;
+import com.sa.game.systems.DampingSystem;
+import com.sa.game.systems.DroppedSystem;
+import com.sa.game.systems.ExplodeOnContactSystem;
+import com.sa.game.systems.LastSystem;
+import com.sa.game.systems.MoveToEntitySystem;
+import com.sa.game.systems.MovementSystem;
+import com.sa.game.systems.PhysicsSystem;
+import com.sa.game.systems.PickUpEntitySystem;
+import com.sa.game.systems.PlayerInputSystem;
+import com.sa.game.systems.render.RenderScoreSystem;
+import com.sa.game.systems.render.RenderStarsSystem;
+import com.sa.game.systems.render.RenderSystem;
+import com.sa.game.systems.ResolveCollisionSystem;
+import com.sa.game.systems.ThrownSystem;
+import com.sa.game.systems.WrapEntitySystem;
+import com.sa.game.systems.render.RenderParticleSystem;
 
 public class GameWorld {
     //game entities
@@ -115,11 +138,19 @@ public class GameWorld {
                 //updateEngine.addEntity(CreateEnteties.boxingGlove(assetManager, entity.position, 12, player, staticEnvironment, collisionDetection));
             }
             if (entity.name.equals("key")) {
+
                 updateEngine.addEntity(CreateEnteties.key(assetManager,
                                                           entity.position,
                                                           entity.size.y,
                                                           staticEnvironment,
                                                           collisionDetection));
+            }
+            if (entity.name.equals("apple")) {
+                updateEngine.addEntity(CreateEnteties.apple(assetManager,
+                                                            entity.position,
+                                                            entity.size.y,
+                                                            staticEnvironment,
+                                                            collisionDetection));
             }
         }
 
@@ -142,6 +173,7 @@ public class GameWorld {
         updateEngine.addSystem(new DamageSystem());
         updateEngine.addSystem(new PickUpEntitySystem(collisionDetection));
         updateEngine.addSystem(new ExplodeOnContactSystem(collisionDetection));
+        updateEngine.addSystem(new CoinSystem());
         updateEngine.addSystem(new ResolveCollisionSystem(performanceCounters.add("resolvecollision")));
         updateEngine.addSystem(new WrapEntitySystem());
         updateEngine.addSystem(new MovementSystem());

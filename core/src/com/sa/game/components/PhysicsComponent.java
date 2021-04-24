@@ -10,8 +10,9 @@ public class PhysicsComponent implements Component {
     public Vector2 force = new Vector2();
     public float mass = 1f;
     public float friction = 0.9f;
-    public float airResistance = 0.8f;
+    public float airResistance = 0.85f;
     public float gravity = 0f; //force of gravity
+    public float jumpTime = 0f;
     public WalkDirection walkDirection = WalkDirection.Right;
 
     public int GetWalkDirectionScalar() {

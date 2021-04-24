@@ -58,6 +58,7 @@ public class Player {
         PhysicsComponent physicsComponent = new PhysicsComponent();
         physicsComponent.gravity = -2*(staticEnvironment.tileSizeInPixels*5f+2)/(float)Math.pow(jumpTime, 2f);
         physicsComponent.velocity.set(vel);
+        physicsComponent.jumpTime = jumpTime;
 
         PositionComponent positionComponent = new PositionComponent();
         positionComponent.position.set(pos.x, pos.y);

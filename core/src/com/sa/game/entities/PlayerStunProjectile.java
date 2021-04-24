@@ -49,7 +49,7 @@ public class PlayerStunProjectile {
         collisionComponent = new CollisionComponent();
         collisionComponent.entity = collisionEntity;
 
-        ExplodeOnContactComponent explodeOnContactComponent = new ExplodeOnContactComponent();
+        ExplodeOnContactComponent explodeOnContactComponent = new ExplodeOnContactComponent(null);
 
         animationComponent = new AnimationComponent<>();
         animationComponent.animations.put(PlayerStunProjectileState.OnTrack, onTrackAnimation);

@@ -1,4 +1,4 @@
-package com.sa.game.systems;
+package com.sa.game.systems.render;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
