@@ -11,7 +11,7 @@ import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.RenderComponent;
 
 public class AnimationSystem<T> extends IteratingSystem {
-    private ComponentMapper<AnimationComponent> animationMapper = ComponentMapper.getFor(AnimationComponent.class);
+    private final ComponentMapper<AnimationComponent> animationMapper = ComponentMapper.getFor(AnimationComponent.class);
 
     public AnimationSystem() {
         super(Family.all(
@@ -22,11 +22,11 @@ public class AnimationSystem<T> extends IteratingSystem {
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        AIComponent ai = ComponentMappers.ai.get(entity);
-        AnimationComponent<T> animation = animationMapper.get(entity);
-        RenderComponent render = ComponentMappers.render.get(entity);
-        PhysicsComponent physics = ComponentMappers.physics.get(entity);
+    protected void processEntity(final Entity entity, final float deltaTime) {
+        final AIComponent ai = ComponentMappers.ai.get(entity);
+        final AnimationComponent<T> animation = animationMapper.get(entity);
+        final RenderComponent render = ComponentMappers.render.get(entity);
+        final PhysicsComponent physics = ComponentMappers.physics.get(entity);
 
         render.sprite.textureRegion.setRegion(animation.animations.get(ai.stateMachine.getCurrentState()).getKeyFrame(animation.currentTime));
         if(physics.velocity.x < 0.0f) {

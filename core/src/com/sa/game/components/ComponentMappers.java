@@ -2,7 +2,7 @@ package com.sa.game.components;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.sa.game.components.groups.EnemyGroupComponent;
-import com.sa.game.entities.CoinGroupComponent;
+import com.sa.game.components.groups.CoinGroupComponent;
 
 public class ComponentMappers {
     public static ComponentMapper<Player1Component> player1 = ComponentMapper.getFor(Player1Component.class);

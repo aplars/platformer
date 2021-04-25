@@ -2,7 +2,6 @@ package com.sa.game.collision;
 
 import com.badlogic.gdx.math.Vector2;
 import com.sa.game.StaticEnvironment;
-import com.sa.game.entities.PlayerStunProjectile;
 
 import java.util.ArrayList;
 

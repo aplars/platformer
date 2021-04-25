@@ -1,4 +1,4 @@
-package com.sa.game.systems;
+package com.sa.game.systems.control;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;

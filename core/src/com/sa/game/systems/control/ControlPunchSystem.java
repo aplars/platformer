@@ -1,10 +1,9 @@
-package com.sa.game.systems;
+package com.sa.game.systems.control;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
@@ -14,7 +13,6 @@ import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PickUpEntityComponent;
 import com.sa.game.components.PositionComponent;
 import com.sa.game.components.PunchComponent;
-import com.sa.game.components.ThrownComponent;
 import com.sa.game.entities.CreateEnteties;
 
 public class ControlPunchSystem extends IteratingSystem {
@@ -23,7 +21,7 @@ public class ControlPunchSystem extends IteratingSystem {
     StaticEnvironment staticEnvironment;
     float currentTime = 0f;
 
-    public ControlPunchSystem(AssetManager assetManager, CollisionDetection collisionDetection, StaticEnvironment staticEnvironment) {
+    public ControlPunchSystem(final AssetManager assetManager, final CollisionDetection collisionDetection, final StaticEnvironment staticEnvironment) {
         super(Family.all(PunchComponent.class,
                          ControlComponent.class,
                          PositionComponent.class,
@@ -36,24 +34,24 @@ public class ControlPunchSystem extends IteratingSystem {
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        PunchComponent punchComponent = ComponentMappers.punch.get(entity);
-        ControlComponent controlComponent = ComponentMappers.control.get(entity);
-        PositionComponent positionComponent = ComponentMappers.position.get(entity);
-        PhysicsComponent physicsComponent = ComponentMappers.physics.get(entity);
-        PickUpEntityComponent pickUpEntityComponent = ComponentMappers.pickUp.get(entity);
+    protected void processEntity(final Entity entity, final float deltaTime) {
+        final PunchComponent punchComponent = ComponentMappers.punch.get(entity);
+        final ControlComponent controlComponent = ComponentMappers.control.get(entity);
+        final PositionComponent positionComponent = ComponentMappers.position.get(entity);
+        final PhysicsComponent physicsComponent = ComponentMappers.physics.get(entity);
+        final PickUpEntityComponent pickUpEntityComponent = ComponentMappers.pickUp.get(entity);
 
         if (controlComponent.buttonB && pickUpEntityComponent.entity == null) {
-            Vector2 vel = new Vector2(300f * (float) physicsComponent.GetWalkDirectionScalar(), 0f);
-            Entity boxingGlove = CreateEnteties.boxingGlove(assetManager, positionComponent.position, vel,
-                                                            staticEnvironment.tileSizeInPixels * 3, entity, staticEnvironment, collisionDetection);
+            final Vector2 vel = new Vector2(300f * (float) physicsComponent.GetWalkDirectionScalar(), 0f);
+            final Entity boxingGlove = CreateEnteties.boxingGlove(assetManager, positionComponent.position, vel,
+                                                                  staticEnvironment.tileSizeInPixels * 3, entity, staticEnvironment, collisionDetection);
             this.getEngine().addEntity(boxingGlove);
 
         }
     }
 
     @Override
-    public void update(float deltaTime) {
+    public void update(final float deltaTime) {
         super.update(deltaTime);
         currentTime += deltaTime;
     }

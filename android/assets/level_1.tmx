@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="8" tileheight="8" infinite="0" nextlayerid="9" nextobjectid="72">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="8" tileheight="8" infinite="0" nextlayerid="10" nextobjectid="72">
  <tileset firstgid="1" source="base.tsx"/>
+ <objectgroup id="9" name="test"/>
  <objectgroup id="5" name="enemies">
   <object id="66" name="clown" type="clown" x="33" y="143.666" width="16" height="16"/>
   <object id="67" name="clown" type="clown" x="137.334" y="112.666" width="16" height="16"/>

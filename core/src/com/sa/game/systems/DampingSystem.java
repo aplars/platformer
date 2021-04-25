@@ -8,17 +8,17 @@ import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.PhysicsComponent;
 
 public class DampingSystem extends IteratingSystem {
-    private ComponentMapper<PhysicsComponent> pm = ComponentMapper.getFor(PhysicsComponent.class);
-    private ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
+    private final ComponentMapper<PhysicsComponent> pm = ComponentMapper.getFor(PhysicsComponent.class);
+    private final ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
 
     public DampingSystem() {
         super(Family.all(PhysicsComponent.class).get());
     }
 
 	@Override
-	protected void processEntity(Entity entity, float deltaTime) {
-      PhysicsComponent physicsComponent = pm.get(entity);
-      CollisionComponent collisionComponent = cm.get(entity);
+	protected void processEntity(final Entity entity, final float deltaTime) {
+      final PhysicsComponent physicsComponent = pm.get(entity);
+      final CollisionComponent collisionComponent = cm.get(entity);
 
       if(physicsComponent != null && collisionComponent != null) {
           if(collisionComponent.entity.groundCollisionData.didCollide)

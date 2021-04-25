@@ -1,4 +1,4 @@
-package com.sa.game.systems;
+package com.sa.game.systems.control;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -18,10 +18,10 @@ public class ControlThrowEntitySystem extends IteratingSystem {
     }
 
 	@Override
-	protected void processEntity(Entity entity, float deltaTime) {
-      ControlComponent controlComponent = ComponentMappers.control.get(entity);
-      PhysicsComponent physicsComponent = ComponentMappers.physics.get(entity);
-      PickUpEntityComponent pickUpEntityComponent = ComponentMappers.pickUp.get(entity);
+	protected void processEntity(final Entity entity, final float deltaTime) {
+      final ControlComponent controlComponent = ComponentMappers.control.get(entity);
+      final PhysicsComponent physicsComponent = ComponentMappers.physics.get(entity);
+      final PickUpEntityComponent pickUpEntityComponent = ComponentMappers.pickUp.get(entity);
 
       if (controlComponent.buttonB) {
           if (pickUpEntityComponent != null && pickUpEntityComponent.entity != null) {

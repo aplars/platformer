@@ -3,7 +3,6 @@ package com.sa.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.sa.game.collision.CollisionFilter;
 import com.sa.game.collision.IntersectionTests;
@@ -20,7 +19,7 @@ public class DroppedSystem extends IteratingSystem {
     }
 
 	@Override
-	protected void processEntity(Entity entity, float deltaTime) {
+	protected void processEntity(final Entity entity, final float deltaTime) {
       final CollisionComponent collisionComponent = ComponentMappers.collision.get(entity);
       final ThrownComponent thrownComponent = ComponentMappers.thrown.get(entity);
 
@@ -30,7 +29,7 @@ public class DroppedSystem extends IteratingSystem {
       entity.remove(MoveToEntityComponent.class);
 
       final CollisionComponent parentCollisionComponent = ComponentMappers.collision.get(thrownComponent.parent);
-      RectangleCollisionData colData = IntersectionTests.rectangleRectangle(collisionComponent.entity.box, new Vector2(), parentCollisionComponent.entity.box);
+      final RectangleCollisionData colData = IntersectionTests.rectangleRectangle(collisionComponent.entity.box, new Vector2(), parentCollisionComponent.entity.box);
       if(!colData.didCollide && collisionComponent.entity.groundCollisionData.didCollide) {
           entity.remove(ThrownComponent.class);
           collisionComponent.entity.filter.mask |= CollisionFilter.PLAYER; // Disable collision vs player 

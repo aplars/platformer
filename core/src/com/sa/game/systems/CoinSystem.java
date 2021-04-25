@@ -8,23 +8,23 @@ import com.sa.game.collision.CollisionEntity;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ComponentMappers;
 import com.sa.game.components.Player1Component;
-import com.sa.game.entities.CoinGroupComponent;
+import com.sa.game.components.groups.CoinGroupComponent;
 
 public class CoinSystem extends IteratingSystem {
     CollisionDetection collisionDetection;
 
-    public CoinSystem(CollisionDetection collisionDetection) {
+    public CoinSystem(final CollisionDetection collisionDetection) {
         super(Family.all(CoinGroupComponent.class, CollisionComponent.class).get());
         this.collisionDetection = collisionDetection;
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        CoinGroupComponent coinGroupComponent = ComponentMappers.coinGroup.get(entity);
-        CollisionComponent collisionComponent = ComponentMappers.collision.get(entity);
+    protected void processEntity(final Entity entity, final float deltaTime) {
+        final CoinGroupComponent coinGroupComponent = ComponentMappers.coinGroup.get(entity);
+        final CollisionComponent collisionComponent = ComponentMappers.collision.get(entity);
 
-        for (CollisionEntity collisionEntity : collisionComponent.entity.collidees) {
-            Player1Component player1Component = ComponentMappers.player1.get((Entity) collisionEntity.userData);
+        for (final CollisionEntity collisionEntity : collisionComponent.entity.collidees) {
+            final Player1Component player1Component = ComponentMappers.player1.get((Entity) collisionEntity.userData);
             if (player1Component != null) {
                 player1Component.score += coinGroupComponent.points;
                 this.getEngine().removeEntity(entity);

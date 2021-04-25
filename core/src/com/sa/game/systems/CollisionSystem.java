@@ -12,16 +12,19 @@ import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PositionComponent;
 
+/**
+ * CollisionSystem - Sets the collision detector entitys position, sets the velocty and runs the collision detector. 
+ */
 public class CollisionSystem extends IteratingSystem {
-    private ComponentMapper<PhysicsComponent> pm = ComponentMapper.getFor(PhysicsComponent.class);
-    private ComponentMapper<PositionComponent> posm = ComponentMapper.getFor(PositionComponent.class);
-    private ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
+    private final ComponentMapper<PhysicsComponent> pm = ComponentMapper.getFor(PhysicsComponent.class);
+    private final ComponentMapper<PositionComponent> posm = ComponentMapper.getFor(PositionComponent.class);
+    private final ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
 
     PerformanceCounter performanceCounter;
     CollisionDetection collisionDetection;
     StaticEnvironment staticEnvironment;
 
-    public CollisionSystem(PerformanceCounter performanceCounter, CollisionDetection collisionDetection, StaticEnvironment staticEnvironment) {
+    public CollisionSystem(final PerformanceCounter performanceCounter, final CollisionDetection collisionDetection, final StaticEnvironment staticEnvironment) {
         super(Family.all(PhysicsComponent.class, PositionComponent.class, CollisionComponent.class).get());
         this.performanceCounter = performanceCounter;
         this.collisionDetection = collisionDetection;
@@ -29,17 +32,17 @@ public class CollisionSystem extends IteratingSystem {
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        PhysicsComponent physicsComponent = pm.get(entity);
-        PositionComponent positionComponent = posm.get(entity);
-        CollisionComponent collisionComponent = cm.get(entity);
+    protected void processEntity(final Entity entity, final float deltaTime) {
+        final PhysicsComponent physicsComponent = pm.get(entity);
+        final PositionComponent positionComponent = posm.get(entity);
+        final CollisionComponent collisionComponent = cm.get(entity);
 
-        Vector2 pos = new Vector2(positionComponent.position);
+        final Vector2 pos = new Vector2(positionComponent.position);
         collisionComponent.entity.box.setCenter(pos.add(collisionComponent.offset));
         collisionComponent.entity.velocity.set(physicsComponent.velocity);
     }
 
-    @Override public void update(float deltaTime) {
+    @Override public void update(final float deltaTime) {
         super.update(deltaTime);
         performanceCounter.start();
         this.collisionDetection.update(deltaTime, this.staticEnvironment);

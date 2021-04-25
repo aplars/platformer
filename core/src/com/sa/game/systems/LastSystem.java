@@ -3,7 +3,6 @@ package com.sa.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.sa.game.components.ComponentMappers;
 import com.sa.game.components.ControlComponent;
 
 public class LastSystem extends IteratingSystem {
@@ -14,11 +13,11 @@ public class LastSystem extends IteratingSystem {
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
+    protected void processEntity(final Entity entity, final float deltaTime) {
     }
 
     @Override
-    public void update(float deltaTime) {
+    public void update(final float deltaTime) {
         super.update(deltaTime);
         currentTime += deltaTime;
     }

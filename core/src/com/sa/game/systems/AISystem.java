@@ -8,15 +8,15 @@ import com.sa.game.components.AIComponent;
 import com.sa.game.components.ControlComponent;
 
 public class AISystem extends IteratingSystem {
-    private ComponentMapper<AIComponent> aiMapper = ComponentMapper.getFor(AIComponent.class);
+    private final ComponentMapper<AIComponent> aiMapper = ComponentMapper.getFor(AIComponent.class);
 
     public AISystem() {
         super(Family.all(AIComponent.class, ControlComponent.class).get());
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        AIComponent ai = aiMapper.get(entity);
+    protected void processEntity(final Entity entity, final float deltaTime) {
+        final AIComponent ai = aiMapper.get(entity);
         ai.deltaTime = deltaTime;
         ai.stateMachine.update();
     }

@@ -4,27 +4,25 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.sa.game.collision.CollisionDetection;
-import com.sa.game.collision.CollisionEntity;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ComponentMappers;
 import com.sa.game.components.ExplodeOnContactComponent;
 import com.sa.game.components.Player1Component;
 import com.sa.game.components.PositionComponent;
 import com.sa.game.components.groups.BoxingGloveGroupComponent;
-import com.sa.game.components.groups.EnemyGroupComponent;
 import com.sa.game.entities.CreateEnteties;
 
 public class ExplodeBoxingGloveOnContactSystem extends IteratingSystem {
     CollisionDetection collisionDetection;
-    public ExplodeBoxingGloveOnContactSystem(CollisionDetection collisionDetection) {
+    public ExplodeBoxingGloveOnContactSystem(final CollisionDetection collisionDetection) {
         super(Family.all(BoxingGloveGroupComponent.class, ExplodeOnContactComponent.class, CollisionComponent.class, PositionComponent.class).get());
         this.collisionDetection = collisionDetection;
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        PositionComponent positionComponent = ComponentMappers.position.get(entity);
-        ExplodeOnContactComponent explodeOnContactComponent = ComponentMappers.explodeOnContact.get(entity);
+    protected void processEntity(final Entity entity, final float deltaTime) {
+        final PositionComponent positionComponent = ComponentMappers.position.get(entity);
+        final ExplodeOnContactComponent explodeOnContactComponent = ComponentMappers.explodeOnContact.get(entity);
 
         boolean isColliding = ComponentMappers.collision.get(entity).entity.collidees.size() > 0;
         //Handle ecplosions collision vs entities
@@ -37,7 +35,7 @@ public class ExplodeBoxingGloveOnContactSystem extends IteratingSystem {
         if (isColliding) {
             //give points to the guilty one
             if (explodeOnContactComponent.theGuiltyEntity != null) {
-                Player1Component player1Component = ComponentMappers.player1
+                final Player1Component player1Component = ComponentMappers.player1
                         .get(explodeOnContactComponent.theGuiltyEntity);
                 if (player1Component != null) {
                     player1Component.score++;

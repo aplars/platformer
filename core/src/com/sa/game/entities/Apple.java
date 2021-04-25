@@ -16,7 +16,7 @@ import com.sa.game.components.PositionComponent;
 import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderDebugInfoComponent;
 import com.sa.game.components.WorldConstantsComponent;
-import com.sa.game.components.groups.ToolGroupComponent;
+import com.sa.game.components.groups.CoinGroupComponent;
 import com.sa.game.gfx.Sprite;
 
 public class Apple {

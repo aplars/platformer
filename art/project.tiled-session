@@ -5,9 +5,9 @@
     },
     "activeFile": "/home/tobias/source/platformer/android/assets/level_1.tmx",
     "expandedProjectPaths": [
-        "/home/tobias/source/platformer/android/assets/templates",
+        "/home/tobias/source/platformer/android/assets",
         ".",
-        "/home/tobias/source/platformer/android/assets"
+        "/home/tobias/source/platformer/android/assets/templates"
     ],
     "file.lastUsedOpenFilter": "Alla filer (*)",
     "fileStates": {
@@ -23,10 +23,10 @@
         },
         "/home/tobias/source/platformer/android/assets/level_1.tmx": {
             "scale": 3,
-            "selectedLayer": 1,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 127.83333333333333,
-                "y": 127.66666666666666
+                "x": 144.5,
+                "y": 154.5
             }
         },
         "/home/tobias/source/platformer/android/assets/level_2.tmx": {
