@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="8" tileheight="8" infinite="0" nextlayerid="9" nextobjectid="71">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="8" tileheight="8" infinite="0" nextlayerid="9" nextobjectid="72">
  <tileset firstgid="1" source="base.tsx"/>
  <objectgroup id="5" name="enemies">
-  <object id="66" name="clown" type="clown" x="33" y="143.666" width="14" height="14"/>
-  <object id="67" name="clown" type="clown" x="137.334" y="112.666" width="14" height="14"/>
+  <object id="66" name="clown" type="clown" x="33" y="143.666" width="16" height="16"/>
+  <object id="67" name="clown" type="clown" x="137.334" y="112.666" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="8" name="objects">
   <object id="69" name="key" type="key" x="65.3337" y="46.3337" width="8" height="8"/>
-  <object id="70" name="apple" type="apple" x="150.667" y="25.6667" width="14" height="14"/>
+  <object id="70" name="apple" type="apple" x="177.667" y="151.666" width="14" height="14"/>
+  <object id="71" name="apple" type="apple" x="223.667" y="152" width="14" height="14"/>
  </objectgroup>
  <objectgroup id="6" name="players">
-  <object id="61" name="player" type="player" x="127.334" y="221.666" width="25" height="25"/>
+  <object id="61" name="player" type="player" x="154.334" y="221.666" width="25" height="25"/>
  </objectgroup>
  <layer id="4" name="base" width="32" height="32">
   <data encoding="csv">
@@ -45,7 +46,7 @@
 69,70,583,584,585,586,587,588,589,590,0,0,0,0,0,0,0,0,0,0,0,0,583,584,585,586,587,588,589,590,21,22,
 117,118,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,69,70,
 165,166,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,117,118,
-213,214,583,584,585,586,587,0,0,0,0,0,585,586,587,583,584,585,586,583,584,585,583,584,585,586,587,588,589,590,165,166
+213,214,583,584,585,586,587,583,584,585,586,587,585,586,0,0,0,0,0,583,584,585,583,584,585,586,587,588,589,590,165,166
 </data>
  </layer>
 </map>

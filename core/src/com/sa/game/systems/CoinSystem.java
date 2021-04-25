@@ -3,6 +3,7 @@ package com.sa.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.sa.game.collision.CollisionDetection;
 import com.sa.game.collision.CollisionEntity;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ComponentMappers;
@@ -10,8 +11,11 @@ import com.sa.game.components.Player1Component;
 import com.sa.game.entities.CoinGroupComponent;
 
 public class CoinSystem extends IteratingSystem {
-    public CoinSystem() {
+    CollisionDetection collisionDetection;
+
+    public CoinSystem(CollisionDetection collisionDetection) {
         super(Family.all(CoinGroupComponent.class, CollisionComponent.class).get());
+        this.collisionDetection = collisionDetection;
     }
 
     @Override
@@ -24,6 +28,7 @@ public class CoinSystem extends IteratingSystem {
             if (player1Component != null) {
                 player1Component.score += coinGroupComponent.points;
                 this.getEngine().removeEntity(entity);
+                this.collisionDetection.remove(collisionComponent.entity);
             }
         }
     }

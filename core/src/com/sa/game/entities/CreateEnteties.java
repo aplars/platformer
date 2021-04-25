@@ -77,7 +77,7 @@ public class CreateEnteties {
         return Apple.create(
                           center,
                           height,
-                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("apple"), Animation.PlayMode.NORMAL),
+                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("apple32x32"), Animation.PlayMode.NORMAL),
                           staticEnvironment,
                           collisionDetection);
     }

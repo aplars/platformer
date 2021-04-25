@@ -23,7 +23,8 @@ import com.sa.game.systems.ControlThrowEntitySystem;
 import com.sa.game.systems.DamageSystem;
 import com.sa.game.systems.DampingSystem;
 import com.sa.game.systems.DroppedSystem;
-import com.sa.game.systems.ExplodeOnContactSystem;
+import com.sa.game.systems.ExplodeBoxingGloveOnContactSystem;
+import com.sa.game.systems.ExplodeEnemyOnContactSystem;
 import com.sa.game.systems.LastSystem;
 import com.sa.game.systems.MoveToEntitySystem;
 import com.sa.game.systems.MovementSystem;
@@ -36,6 +37,7 @@ import com.sa.game.systems.render.RenderSystem;
 import com.sa.game.systems.ResolveCollisionSystem;
 import com.sa.game.systems.ThrownSystem;
 import com.sa.game.systems.WrapEntitySystem;
+import com.sa.game.systems.render.RenderDebugInfoSystem;
 import com.sa.game.systems.render.RenderParticleSystem;
 
 public class GameWorld {
@@ -172,8 +174,9 @@ public class GameWorld {
         updateEngine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
         updateEngine.addSystem(new DamageSystem());
         updateEngine.addSystem(new PickUpEntitySystem(collisionDetection));
-        updateEngine.addSystem(new ExplodeOnContactSystem(collisionDetection));
-        updateEngine.addSystem(new CoinSystem());
+        updateEngine.addSystem(new ExplodeBoxingGloveOnContactSystem(collisionDetection));
+        updateEngine.addSystem(new ExplodeEnemyOnContactSystem(collisionDetection));
+        updateEngine.addSystem(new CoinSystem(collisionDetection));
         updateEngine.addSystem(new ResolveCollisionSystem(performanceCounters.add("resolvecollision")));
         updateEngine.addSystem(new WrapEntitySystem());
         updateEngine.addSystem(new MovementSystem());
@@ -184,7 +187,7 @@ public class GameWorld {
         updateEngine.addSystem(new RenderStarsSystem(renderer));
         updateEngine.addSystem(new RenderScoreSystem(renderer, camera, fontCamera, staticEnvironment));
         updateEngine.addSystem(new LastSystem());
-        //updateEngine.addSystem(new RenderDebugInfoSystem(renderer, camera, fontCamera, staticEnvironment));
+        updateEngine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
 
         return true;
     }

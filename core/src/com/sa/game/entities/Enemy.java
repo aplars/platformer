@@ -43,7 +43,7 @@ public class Enemy {
         worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
 
         Rectangle collisionRectangle = new Rectangle();
-        collisionRectangle.setSize(size, size);
+        collisionRectangle.setSize(size*0.9f, size*0.8f);
         collisionRectangle.setCenter(position.x, position.y);
         CollisionEntity collisionEntity = new CollisionEntity();
         collisionEntity.box.set(collisionRectangle);

@@ -11,58 +11,65 @@ apple
   orig: 64, 64
   offset: 0, 0
   index: -1
-boxingglove
+apple32x32
   rotate: false
   xy: 2, 20
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+boxingglove
+  rotate: false
+  xy: 68, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 clown_idle
   rotate: false
-  xy: 68, 86
+  xy: 102, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 clown_stunned
   rotate: false
-  xy: 102, 86
+  xy: 136, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 clown_walk
   rotate: false
-  xy: 136, 86
+  xy: 170, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 clown_walk
   rotate: false
-  xy: 136, 86
+  xy: 170, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 clown_walk
   rotate: false
-  xy: 170, 86
+  xy: 204, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 clown_walk
   rotate: false
-  xy: 204, 86
+  xy: 238, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 clown_walk
   rotate: false
-  xy: 238, 86
+  xy: 272, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -111,33 +118,26 @@ devodevilrunning
   index: 2
 devodevilrunning
   rotate: false
-  xy: 38, 2
+  xy: 104, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 4
 devodevilstanding
   rotate: false
-  xy: 56, 2
+  xy: 38, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 key
   rotate: false
-  xy: 70, 34
+  xy: 122, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 mrmochihurt
-  rotate: false
-  xy: 272, 86
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 1
-mrmochiidle
   rotate: false
   xy: 306, 86
   size: 32, 32
@@ -150,15 +150,15 @@ mrmochiidle
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 2
-mrmochijumping
+  index: 1
+mrmochiidle
   rotate: false
   xy: 374, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 1
-mrmochirunning
+  index: 2
+mrmochijumping
   rotate: false
   xy: 408, 86
   size: 32, 32
@@ -171,101 +171,108 @@ mrmochirunning
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 2
+  index: 1
 mrmochirunning
   rotate: false
   xy: 476, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 3
+  index: 2
 mrmochirunning
   rotate: false
   xy: 36, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 4
-player
+  index: 3
+mrmochirunning
   rotate: false
   xy: 86, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 1
+  index: 4
 player
   rotate: false
   xy: 120, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 2
+  index: 1
 player
   rotate: false
   xy: 154, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 3
+  index: 2
 player
   rotate: false
   xy: 188, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 4
+  index: 3
 player
   rotate: false
   xy: 222, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 5
+  index: 4
 player
   rotate: false
   xy: 256, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 6
-stars
+  index: 5
+player
   rotate: false
   xy: 290, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 1
+  index: 6
 stars
   rotate: false
   xy: 324, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 2
+  index: 1
 stars
   rotate: false
   xy: 358, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 3
+  index: 2
 stars
   rotate: false
   xy: 392, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 4
+  index: 3
 stars
   rotate: false
   xy: 426, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 5
+  index: 4
 stars
   rotate: false
   xy: 460, 52
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 5
+stars
+  rotate: false
+  xy: 70, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

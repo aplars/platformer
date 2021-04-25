@@ -17,11 +17,14 @@ import com.sa.game.components.PositionComponent;
 import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderDebugInfoComponent;
 import com.sa.game.components.WorldConstantsComponent;
+import com.sa.game.components.groups.BoxingGloveGroupComponent;
 import com.sa.game.gfx.Sprite;
 
 public class BoxingGlove {
     public static Entity create(String name, Vector2 position, Vector2 vel, float size, final Animation<TextureRegion> idleAnimation, Entity parentEntity, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         Entity entity = new Entity();
+
+        BoxingGloveGroupComponent boxingGloveGroupComponent = new BoxingGloveGroupComponent();
 
         WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
         worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
@@ -63,6 +66,7 @@ public class BoxingGlove {
 
         RenderDebugInfoComponent renderDebugInfoComponent = new RenderDebugInfoComponent();
 
+        entity.add(boxingGloveGroupComponent);
         entity.add(worldConstantsComponent);
         entity.add(collisionComponent);
         entity.add(positionComponent);

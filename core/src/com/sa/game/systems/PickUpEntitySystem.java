@@ -16,7 +16,7 @@ import com.sa.game.components.PickUpEntityComponent;
 public class PickUpEntitySystem extends IteratingSystem {
     CollisionDetection collisionDetection;
     public PickUpEntitySystem(CollisionDetection collisionDetection) {
-        super(Family.all(PickUpEntityComponent.class, CollisionComponent.class, ControlComponent.class).get());
+        super(Family.all(PickUpEntityComponent.class, CollisionComponent.class).get());
         this.collisionDetection = collisionDetection;
     }
 
@@ -24,10 +24,6 @@ public class PickUpEntitySystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         CollisionComponent collision = ComponentMappers.collision.get(entity);
         PickUpEntityComponent pickUpEntityComponent = ComponentMappers.pickUp.get(entity);
-        ControlComponent controlComponent = ComponentMappers.control.get(entity);
-
-        //if(!controlComponent.buttonUp)
-        //    return;
 
         if(pickUpEntityComponent != null && pickUpEntityComponent.entity != null) {
             HealthComponent h = ComponentMappers.health.get(pickUpEntityComponent.entity);

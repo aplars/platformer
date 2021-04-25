@@ -10,12 +10,14 @@ import com.sa.game.components.ComponentMappers;
 import com.sa.game.components.ExplodeOnContactComponent;
 import com.sa.game.components.Player1Component;
 import com.sa.game.components.PositionComponent;
+import com.sa.game.components.groups.BoxingGloveGroupComponent;
+import com.sa.game.components.groups.EnemyGroupComponent;
 import com.sa.game.entities.CreateEnteties;
 
-public class ExplodeOnContactSystem extends IteratingSystem {
+public class ExplodeBoxingGloveOnContactSystem extends IteratingSystem {
     CollisionDetection collisionDetection;
-    public ExplodeOnContactSystem(CollisionDetection collisionDetection) {
-        super(Family.all(ExplodeOnContactComponent.class, CollisionComponent.class, PositionComponent.class).get());
+    public ExplodeBoxingGloveOnContactSystem(CollisionDetection collisionDetection) {
+        super(Family.all(BoxingGloveGroupComponent.class, ExplodeOnContactComponent.class, CollisionComponent.class, PositionComponent.class).get());
         this.collisionDetection = collisionDetection;
     }
 
@@ -25,6 +27,11 @@ public class ExplodeOnContactSystem extends IteratingSystem {
         ExplodeOnContactComponent explodeOnContactComponent = ComponentMappers.explodeOnContact.get(entity);
 
         boolean isColliding = ComponentMappers.collision.get(entity).entity.collidees.size() > 0;
+        //Handle ecplosions collision vs entities
+        //for(CollisionEntity entityThatCollidesExplosion : ComponentMappers.collision.get(entity).entity.collidees) {
+        //    this.getEngine().removeEntity((Entity)entityThatCollidesExplosion.userData);
+        //}
+
         isColliding |= ComponentMappers.collision.get(entity).entity.groundCollisionData.didCollide;
         isColliding |= ComponentMappers.collision.get(entity).entity.wallsCollisionData.didCollide;
         if (isColliding) {
