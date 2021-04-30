@@ -32,7 +32,7 @@ public class RenderStarsSystem extends IteratingSystem {
             sprite.size.set(16, 16);
             sprite.textureRegion.setRegion(textureRegion);
             sprite.setCenter(positionComponent.position.x, positionComponent.position.y + 8);
-            renderer.add(sprite);
+            renderer.add(sprite, 3);
         }
     }
 

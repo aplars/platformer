@@ -23,6 +23,7 @@ import com.sa.game.gfx.Sprite;
 public class BoxingGlove {
     public static Entity create(String name, Vector2 position, Vector2 vel, float size, final Animation<TextureRegion> idleAnimation, Entity parentEntity, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         Entity entity = new Entity();
+        entity.flags = EntityType.BoxingGlove.type;
 
         BoxingGloveGroupComponent boxingGloveGroupComponent = new BoxingGloveGroupComponent();
 
@@ -61,6 +62,7 @@ public class BoxingGlove {
 
         RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();
+        renderComponent.sprite.layer = 3;
         renderComponent.sprite.size.set(size, size);
         renderComponent.sprite.textureRegion = idleAnimation.getKeyFrame(0);
 

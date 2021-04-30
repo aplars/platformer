@@ -35,6 +35,7 @@ public class Player {
                                 final Animation<TextureRegion> deadAnimation,
                                 StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         Entity entity = new Entity();
+        entity.flags = EntityType.Player.type;
 
         WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
         worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
@@ -87,6 +88,7 @@ public class Player {
 
         RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();
+        renderComponent.sprite.layer = 3;
         renderComponent.sprite.size.set(size.x, size.y);
         renderComponent.sprite.offset.y = size.y / 4;
 

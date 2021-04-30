@@ -19,7 +19,7 @@ public class ControlPunchSystem extends IteratingSystem {
     AssetManager assetManager;
     CollisionDetection collisionDetection;
     StaticEnvironment staticEnvironment;
-    float currentTime = 0f;
+    //float currentTime = 0f;
 
     public ControlPunchSystem(final AssetManager assetManager, final CollisionDetection collisionDetection, final StaticEnvironment staticEnvironment) {
         super(Family.all(PunchComponent.class,
@@ -53,7 +53,7 @@ public class ControlPunchSystem extends IteratingSystem {
     @Override
     public void update(final float deltaTime) {
         super.update(deltaTime);
-        currentTime += deltaTime;
+        //currentTime += deltaTime;
     }
 
 }

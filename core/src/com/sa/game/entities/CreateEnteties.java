@@ -81,6 +81,17 @@ public class CreateEnteties {
                           collisionDetection);
     }
 
+    public static Entity door(AssetManager assetManager, Vector2 center, float height, CollisionDetection collisionDetection) {
+        assetManager.load("enteties/game.atlas", TextureAtlas.class);
+        assetManager.finishLoadingAsset("enteties/game.atlas");
+        TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
+        return Door.create(
+                            center,
+                            height,
+                            new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("door"), Animation.PlayMode.NORMAL),
+                            collisionDetection);
+    }
+
     public static Entity explosion(Vector2 position) {
         return Explosion.create(position);
     }

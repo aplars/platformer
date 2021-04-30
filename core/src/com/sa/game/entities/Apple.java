@@ -22,6 +22,7 @@ import com.sa.game.gfx.Sprite;
 public class Apple {
     public static Entity create(Vector2 position, float size, final Animation<TextureRegion> idleAnimation, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         Entity entity = new Entity();
+        entity.flags = EntityType.Apple.type;
 
         CoinGroupComponent coinGroupComponent = new CoinGroupComponent();
 
@@ -53,6 +54,7 @@ public class Apple {
 
         RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();
+        renderComponent.sprite.layer = 3;
         renderComponent.sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
         renderComponent.sprite.textureRegion = idleAnimation.getKeyFrame(0);
 

@@ -1,12 +1,9 @@
 package com.sa.game.collision;
 
-import java.util.*;
-
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Sort;
-import com.sa.game.collision.CollisionEntity;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.ListIterator;
+import java.util.Iterator;
 
 public class SweepAndPrune {
 
@@ -14,7 +11,7 @@ public class SweepAndPrune {
         public CollisionEntity a;
         public CollisionEntity b;
 
-        public Pair(CollisionEntity a, CollisionEntity b) {
+        public Pair(final CollisionEntity a, final CollisionEntity b) {
             this.a = a;
             this.b = b;
         }
@@ -26,11 +23,11 @@ public class SweepAndPrune {
     public SweepAndPrune() {
     }
 
-    void add(CollisionEntity entity) {
+    void add(final CollisionEntity entity) {
         axisList.add(entity);
     }
 
-    void remove(CollisionEntity entity) {
+    void remove(final CollisionEntity entity) {
         axisList.remove(entity);
     }
 
@@ -45,7 +42,7 @@ public class SweepAndPrune {
         //Sort the list on min
         axisList.sort(new Comparator<CollisionEntity>(){
                 @Override
-                public int compare(CollisionEntity o1, CollisionEntity o2) {
+                public int compare(final CollisionEntity o1, final CollisionEntity o2) {
                     float o1Ext = 0;
                     float o2Ext = 0;
                     if(o1.velocity.x < 0.0f)
@@ -55,8 +52,9 @@ public class SweepAndPrune {
                     return Float.compare(o1.box.x+o1Ext, o2.box.x + o2Ext);
                 }
             });
-        ArrayList<CollisionEntity> activeList = new ArrayList<>();
-        Iterator<CollisionEntity> axisListIterator = axisList.iterator();
+
+        final ArrayList<CollisionEntity> activeList = new ArrayList<>();
+        final Iterator<CollisionEntity> axisListIterator = axisList.iterator();
         //Add first to active list.
         activeList.add(axisListIterator.next());
 
@@ -64,23 +62,15 @@ public class SweepAndPrune {
         //Add the first
 
         while(axisListIterator.hasNext()) {
-            CollisionEntity axis = axisListIterator.next();
-            ListIterator<CollisionEntity> activeListIterator = activeList.listIterator();
-            boolean addToActive = false;
+            final CollisionEntity axis = axisListIterator.next();
+            final ListIterator<CollisionEntity> activeListIterator = activeList.listIterator();
             while(activeListIterator.hasNext()) {
-                CollisionEntity active = activeListIterator.next();
-                float axisExt = 0f;
-                float activeExt = 0f;
+                final CollisionEntity active = activeListIterator.next();
 
-                if(axis.velocity.x < 0f)
-                    axisExt = axis.velocity.x * dt;
-                if(active.velocity.x > 0f)
-                    activeExt = active.velocity.x * dt;
                 if(axis.box.x < (active.box.x+active.box.width)) {
                     //We have a pair! report it if both operands are active.
                     if(axis.isEnable && active.isEnable) {
                         intersections.add(new Pair(axis, active));
-                        addToActive=true;
                     }
                 }
 
@@ -92,6 +82,5 @@ public class SweepAndPrune {
             }
             activeListIterator.add(axis);
         }
-        //System.out.println();
     }
 }

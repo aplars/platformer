@@ -43,6 +43,8 @@ public class RenderDebugInfoSystem extends IteratingSystem {
         float xMax = collisionComponent.entity.box.x+collisionComponent.entity.box.width;
         float xMin = collisionComponent.entity.box.x;
         Text txt = new Text();
+        txt.font = Text.Font.Medium;
+
         txt.chars = String.format("%d, %d", (int)(xMin/staticEnvironment.tileSizeInPixels), (int)(xMax/staticEnvironment.tileSizeInPixels));
         txt.x = rect.x; //positionComponent.position.x-renderComponent.sprite.size.x/2f;
         txt.y = rect.y; //positionComponent.position.y+renderComponent.sprite.size.y;

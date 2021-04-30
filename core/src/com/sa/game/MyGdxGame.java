@@ -96,7 +96,7 @@ public class MyGdxGame implements ApplicationListener {
 
         gameWorld.preUpdate(dt, controller);
         gameWorld.update(dt);
-        int numSprites = gameWorld.renderer.numberOfSprites();
+        int numSprites = gameWorld.renderer.numberOfSprites(0);
         gameWorld.render(dt);
 
         if(showEditor) {

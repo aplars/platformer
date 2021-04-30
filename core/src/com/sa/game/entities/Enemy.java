@@ -71,6 +71,7 @@ public class Enemy {
 
         RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();
+        renderComponent.sprite.layer = 3;
         renderComponent.sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
         renderComponent.mirror = true;
 

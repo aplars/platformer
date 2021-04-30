@@ -29,7 +29,7 @@ public class StaticEnvironment {
         public Vector2 position = new Vector2();
         public Vector2 size = new Vector2();
 
-        public Entity(String name, Vector2 position, Vector2 size) {
+        public Entity(final String name, final Vector2 position, final Vector2 size) {
             this.name = name;
             this.position.set(position);
             this.size.set(size);
@@ -46,7 +46,7 @@ public class StaticEnvironment {
 
     public StaticEnvironment() {}
 
-    public StaticEnvironment(TiledMap tiledMap, CollisionDetection collisionDetection) {
+    public StaticEnvironment(final TiledMap tiledMap, final CollisionDetection collisionDetection) {
         setTiledLevel(tiledMap, collisionDetection);
     }
 
@@ -60,32 +60,32 @@ public class StaticEnvironment {
         return tiledMap;
     }
 
-    private void setTiledLevel(TiledMap tiledMap, CollisionDetection collisionDetection) {
+    private void setTiledLevel(final TiledMap tiledMap, final CollisionDetection collisionDetection) {
         this.tiledMap = tiledMap;
-        TiledMapTileLayer inLayer =  (TiledMapTileLayer)tiledMap.getLayers().get("base");
+        final TiledMapTileLayer inLayer =  (TiledMapTileLayer)tiledMap.getLayers().get("base");
         tileSizeInPixels = (int)inLayer.getTileWidth();
 
-        TiledMapTileLayer floorLayer = new TiledMapTileLayer(inLayer.getWidth(), inLayer.getHeight(), tileSizeInPixels, tileSizeInPixels);
+        final TiledMapTileLayer floorLayer = new TiledMapTileLayer(inLayer.getWidth(), inLayer.getHeight(), tileSizeInPixels, tileSizeInPixels);
         floorLayer.setName("floor");
         tiledMap.getLayers().add(floorLayer);
-        TiledMapTileLayer wallLayer = new TiledMapTileLayer(inLayer.getWidth(), inLayer.getHeight(), tileSizeInPixels, tileSizeInPixels);
+        final TiledMapTileLayer wallLayer = new TiledMapTileLayer(inLayer.getWidth(), inLayer.getHeight(), tileSizeInPixels, tileSizeInPixels);
         wallLayer.setName("wall");
         tiledMap.getLayers().add(wallLayer);
-        TiledMapTileLayer leftWallLayer = new TiledMapTileLayer(inLayer.getWidth(), inLayer.getHeight(), tileSizeInPixels, tileSizeInPixels);
+        final TiledMapTileLayer leftWallLayer = new TiledMapTileLayer(inLayer.getWidth(), inLayer.getHeight(), tileSizeInPixels, tileSizeInPixels);
         leftWallLayer.setName("leftwall");
         tiledMap.getLayers().add(leftWallLayer);
-        TiledMapTileLayer rightWallLayer = new TiledMapTileLayer(inLayer.getWidth(), inLayer.getHeight(), tileSizeInPixels, tileSizeInPixels);
+        final TiledMapTileLayer rightWallLayer = new TiledMapTileLayer(inLayer.getWidth(), inLayer.getHeight(), tileSizeInPixels, tileSizeInPixels);
         rightWallLayer.setName("rightwall");
         tiledMap.getLayers().add(rightWallLayer);
 
         for(int y = 0; y < inLayer.getHeight(); y++) {
             for(int x = 0; x < inLayer.getWidth(); x++) {
-                Cell incell = inLayer.getCell(x, y);
+                final Cell incell = inLayer.getCell(x, y);
                 if (incell == null)
                     continue;
-                int tileId = incell.getTile().getId();
+                final int tileId = incell.getTile().getId();
 
-                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                final TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
                 cell.setTile(tiledMap.getTileSets().getTileSet(0).getTile(tileId));
 
                 cell.getTile().setId(tileId);
@@ -110,59 +110,22 @@ public class StaticEnvironment {
             }
         }
 
-        for (MapLayer mapLayer : tiledMap.getLayers()) {
-            for (MapObject mapObject : mapLayer.getObjects()) {
+        for (final MapLayer mapLayer : tiledMap.getLayers()) {
+            for (final MapObject mapObject : mapLayer.getObjects()) {
 
                 if (mapObject.isVisible()) {
-                    RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
-                    Vector2 center = new Vector2();
-                    Vector2 size = new Vector2();
+                    final RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
+                    final Vector2 center = new Vector2();
+                    final Vector2 size = new Vector2();
                     entities.add(new Entity(mapObject.getProperties().get("type", String.class),
                             rectangleMapObject.getRectangle().getCenter(center),
                             rectangleMapObject.getRectangle().getSize(size)));
                 }
             }
         }
-
-        /*
-        for(MapObject mapObject : tiledMap.getLayers().get("enemies").getObjects()) {
-            if(mapObject
-               .getProperties().get("type", String.class).equals("clown") && mapObject.isVisible()) {
-                RectangleMapObject rectangleMapObject = (RectangleMapObject)mapObject;
-                Vector2 center = new Vector2();
-                Vector2 size = new Vector2();
-                entities.add(new Entity(mapObject.getProperties().get("type", String.class), rectangleMapObject.getRectangle().getCenter(center), rectangleMapObject.getRectangle().getSize(size)));
-            }
-        }
-
-        for(MapObject mapObject : tiledMap.getLayers().get("players").getObjects()) {
-            if(mapObject
-                    .getProperties().get("type", String.class).equals("player") && mapObject.isVisible()) {
-                RectangleMapObject rectangleMapObject = (RectangleMapObject)mapObject;
-                Vector2 center = new Vector2();
-                Vector2 size = new Vector2();
-                entities.add(new Entity(mapObject.getProperties().get("type", String.class), rectangleMapObject.getRectangle().getCenter(center), rectangleMapObject.getRectangle().getSize(size)));
-            }
-        }
-        for(MapObject mapObject : tiledMap.getLayers().get("objects").getObjects()) {
-            if(mapObject
-               .getProperties().get("type", String.class).equals("key") && mapObject.isVisible()) {
-                RectangleMapObject rectangleMapObject = (RectangleMapObject)mapObject;
-                Vector2 center = new Vector2();
-                Vector2 size = new Vector2();
-                entities.add(new Entity(mapObject.getProperties().get("type", String.class), rectangleMapObject.getRectangle().getCenter(center), rectangleMapObject.getRectangle().getSize(size)));
-            }
-            if(mapObject
-               .getProperties().get("type", String.class).equals("apple") && mapObject.isVisible()) {
-                RectangleMapObject rectangleMapObject = (RectangleMapObject)mapObject;
-                Vector2 center = new Vector2();
-                Vector2 size = new Vector2();
-                entities.add(new Entity(mapObject.getProperties().get("type", String.class), rectangleMapObject.getRectangle().getCenter(center), rectangleMapObject.getRectangle().getSize(size)));
-            }
-            }*/
     }
 
-    public String getLayerName(LayerId t) {
+    public String getLayerName(final LayerId t) {
         if(t == LayerId.Visible) return "base";
         if(t == LayerId.Floor) return "floor";
         else if(t == LayerId.Wall) return "wall";
@@ -172,13 +135,13 @@ public class StaticEnvironment {
         else return "";
     }
 
-    public int getLayerIndex(LayerId t) {
+    public int getLayerIndex(final LayerId t) {
         return getMap().getLayers().getIndex(getLayerName(t));
     }
 
-    public int getTileId(LayerId layer, int x, int y) {
-        TiledMapTileLayer mapLayer = (TiledMapTileLayer)getMap().getLayers().get(getLayerName(layer));
-        TiledMapTileLayer.Cell cell = mapLayer.getCell(x, y);
+    public int getTileId(final LayerId layer, final int x, final int y) {
+        final TiledMapTileLayer mapLayer = (TiledMapTileLayer)getMap().getLayers().get(getLayerName(layer));
+        final TiledMapTileLayer.Cell cell = mapLayer.getCell(x, y);
         int id = 0;
         if(cell != null)
             id = cell.getTile().getId();
@@ -186,17 +149,17 @@ public class StaticEnvironment {
         return id;
     }
 
-    public int getTileIdFromWorldCoordinate(LayerId layer, Vector2 pos) {
-        TiledMapTileLayer mapLayer = (TiledMapTileLayer)getMap().getLayers().get(getLayerName(layer));
-        int x = (int)(pos.x/mapLayer.getTileWidth());
-        int y = (int)(pos.y/mapLayer.getTileHeight());
+    public int getTileIdFromWorldCoordinate(final LayerId layer, final Vector2 pos) {
+        final TiledMapTileLayer mapLayer = (TiledMapTileLayer)getMap().getLayers().get(getLayerName(layer));
+        final int x = (int)(pos.x/mapLayer.getTileWidth());
+        final int y = (int)(pos.y/mapLayer.getTileHeight());
         return getTileId(layer, x, y);
     }
 
-    public GridPoint2 getGridPointFromWorldCoordinate(LayerId layer, Vector2 pos, GridPoint2 gridPnt) {
-        TiledMapTileLayer mapLayer = (TiledMapTileLayer)getMap().getLayers().get(getLayerName(layer));
-        int x = (int)(pos.x/mapLayer.getTileWidth());
-        int y = (int)(pos.y/mapLayer.getTileHeight());
+    public GridPoint2 getGridPointFromWorldCoordinate(final LayerId layer, final Vector2 pos, final GridPoint2 gridPnt) {
+        final TiledMapTileLayer mapLayer = (TiledMapTileLayer)getMap().getLayers().get(getLayerName(layer));
+        final int x = (int)(pos.x/mapLayer.getTileWidth());
+        final int y = (int)(pos.y/mapLayer.getTileHeight());
         gridPnt.set(x, y);
         return gridPnt;
     }
@@ -205,14 +168,14 @@ public class StaticEnvironment {
         if(getMap() == null) return 0;
         if(getMap().getLayers() == null || getMap().getLayers().getCount() <= 0)
             return 0;
-        TiledMapTileLayer layer = (TiledMapTileLayer)getMap().getLayers().get("base");
+        final TiledMapTileLayer layer = (TiledMapTileLayer)getMap().getLayers().get("base");
         return layer.getWidth();
     }
 
     public int getNumTilesY() {
         if(getMap() == null) return 0;
         if(getMap().getLayers() == null || getMap().getLayers().getCount() <= 0) return 0;
-        TiledMapTileLayer layer = (TiledMapTileLayer)getMap().getLayers().get("base");
+        final TiledMapTileLayer layer = (TiledMapTileLayer)getMap().getLayers().get("base");
         return layer.getHeight();
     }
 
@@ -230,7 +193,7 @@ public class StaticEnvironment {
     public float getWorldBoundY() {
         if (getMap().getLayers() == null || getMap().getLayers().getCount() <= 0)
             return 0;
-        TiledMapTileLayer layer = (TiledMapTileLayer) getMap().getLayers().get("base");
+        final TiledMapTileLayer layer = (TiledMapTileLayer) getMap().getLayers().get("base");
 
         return getNumTilesY() * layer.getTileHeight();
     }
@@ -241,7 +204,7 @@ public class StaticEnvironment {
      */
     public float getWorldBoundX() {
         if(getMap().getLayers() == null || getMap().getLayers().getCount() <= 0) return 0;
-        TiledMapTileLayer layer = (TiledMapTileLayer)getMap().getLayers().get("base");
+        final TiledMapTileLayer layer = (TiledMapTileLayer)getMap().getLayers().get("base");
 
         return getNumTilesX()*layer.getTileWidth();
     }

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="8" tileheight="8" infinite="0" nextlayerid="10" nextobjectid="72">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="8" tileheight="8" infinite="0" nextlayerid="10" nextobjectid="73">
  <tileset firstgid="1" source="base.tsx"/>
- <objectgroup id="9" name="test"/>
  <objectgroup id="5" name="enemies">
   <object id="66" name="clown" type="clown" x="33" y="143.666" width="16" height="16"/>
-  <object id="67" name="clown" type="clown" x="137.334" y="112.666" width="16" height="16"/>
+  <object id="67" name="clown" type="clown" x="24.6673" y="200.666" width="16" height="16"/>
  </objectgroup>
+ <objectgroup id="9" name="test"/>
  <objectgroup id="8" name="objects">
   <object id="69" name="key" type="key" x="65.3337" y="46.3337" width="8" height="8"/>
-  <object id="70" name="apple" type="apple" x="177.667" y="151.666" width="14" height="14"/>
-  <object id="71" name="apple" type="apple" x="223.667" y="152" width="14" height="14"/>
+  <object id="70" name="apple" type="apple" x="200.334" y="152.666" width="14" height="14"/>
+  <object id="71" name="apple" type="apple" x="224.667" y="153" width="14" height="14"/>
+  <object id="72" name="door" type="door" x="114.333" y="103.333" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="6" name="players">
   <object id="61" name="player" type="player" x="154.334" y="221.666" width="25" height="25"/>

@@ -11,6 +11,7 @@ public class Sprite {
 
     public Vector2 offset = new Vector2();
 
+    public int layer = 0;
     public void setCenter(float x, float y) {
         position.x = x - size.x / 2f;
         position.y = y - size.y / 2f;

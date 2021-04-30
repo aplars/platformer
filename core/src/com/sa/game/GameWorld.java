@@ -15,7 +15,7 @@ import com.sa.game.entities.CreateEnteties;
 import com.sa.game.gfx.Renderer;
 import com.sa.game.systems.AISystem;
 import com.sa.game.systems.AnimationSystem;
-import com.sa.game.systems.CoinSystem;
+import com.sa.game.systems.PickUpCoinSystem;
 import com.sa.game.systems.CollisionSystem;
 import com.sa.game.systems.control.ControlMovementSystem;
 import com.sa.game.systems.control.ControlPunchSystem;
@@ -31,9 +31,10 @@ import com.sa.game.systems.MovementSystem;
 import com.sa.game.systems.PhysicsSystem;
 import com.sa.game.systems.PickUpEntitySystem;
 import com.sa.game.systems.control.PlayerInputSystem;
-import com.sa.game.systems.render.RenderScoreSystem;
+import com.sa.game.systems.render.RenderScoreBoardSystem;
 import com.sa.game.systems.render.RenderStarsSystem;
 import com.sa.game.systems.render.RenderSystem;
+import com.sa.game.systems.render.RenderScoreSystem;
 import com.sa.game.systems.ResolveCollisionSystem;
 import com.sa.game.systems.ThrownSystem;
 import com.sa.game.systems.WrapEntitySystem;
@@ -53,7 +54,7 @@ public class GameWorld {
 
     int visiblelayers[] = {};
 
-    Engine updateEngine = new Engine();
+    Engine engine = new Engine();
 
     PerformanceCounters performanceCounters;
 
@@ -69,8 +70,9 @@ public class GameWorld {
     }
 
     public void update(final float dt) {
-        updateEngine.update(dt);
+        engine.update(dt);
         camera.update();
+        //System.out.println("**EndFrame**");
     }
 
     public void render(final float dt) {
@@ -119,40 +121,45 @@ public class GameWorld {
         staticEnvironment = new StaticEnvironment(tiledMap, collisionDetection);
         assetManager.finishLoading();
 
-        updateEngine = new Engine();
-        updateEngine.removeAllEntities();
+        engine = new Engine();
+        engine.removeAllEntities();
 
         for(final StaticEnvironment.Entity entity : staticEnvironment.entities) {
             if (entity.name.equals("clown")) {
-                updateEngine.addEntity(CreateEnteties.enemy(assetManager,
+                engine.addEntity(CreateEnteties.enemy(assetManager,
                                                             entity.position,
                                                             entity.size.y,
                                                             staticEnvironment,
                                                             collisionDetection));
             }
-            if(entity.name.equals("player")) {
-                final Entity player = CreateEnteties.player(assetManager,
-                                                      entity.position,
-                                                      entity.size,
-                                                      staticEnvironment,
-                                                      collisionDetection);
-                updateEngine.addEntity(player);
-                //updateEngine.addEntity(CreateEnteties.boxingGlove(assetManager, entity.position, 12, player, staticEnvironment, collisionDetection));
-            }
             if (entity.name.equals("key")) {
 
-                updateEngine.addEntity(CreateEnteties.key(assetManager,
+                engine.addEntity(CreateEnteties.key(assetManager,
                                                           entity.position,
                                                           entity.size.y,
                                                           staticEnvironment,
                                                           collisionDetection));
             }
             if (entity.name.equals("apple")) {
-                updateEngine.addEntity(CreateEnteties.apple(assetManager,
+                engine.addEntity(CreateEnteties.apple(assetManager,
                                                             entity.position,
                                                             entity.size.y,
                                                             staticEnvironment,
                                                             collisionDetection));
+            }
+            if (entity.name.equals("door")) {
+                engine.addEntity(CreateEnteties.door(assetManager,
+                                                     entity.position,
+                                                     entity.size.y,
+                                                     collisionDetection));
+            }
+            if(entity.name.equals("player")) {
+                final Entity player = CreateEnteties.player(assetManager,
+                                                            entity.position,
+                                                            entity.size,
+                                                            staticEnvironment,
+                                                            collisionDetection);
+                engine.addEntity(player);
             }
         }
 
@@ -162,32 +169,33 @@ public class GameWorld {
         while(!assetManager.isFinished())
             assetManager.update();
 
-        updateEngine.addSystem(new PlayerInputSystem());
-        updateEngine.addSystem(new AISystem());
-        updateEngine.addSystem(new ControlMovementSystem(assetManager, collisionDetection, staticEnvironment));
-        updateEngine.addSystem(new ControlPunchSystem(assetManager, collisionDetection, staticEnvironment));
-        updateEngine.addSystem(new ControlThrowEntitySystem());
-        updateEngine.addSystem(new ThrownSystem());
-        updateEngine.addSystem(new DroppedSystem());
-        updateEngine.addSystem(new MoveToEntitySystem());
-        updateEngine.addSystem(new PhysicsSystem());
-        updateEngine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
-        updateEngine.addSystem(new DamageSystem());
-        updateEngine.addSystem(new PickUpEntitySystem(collisionDetection));
-        updateEngine.addSystem(new ExplodeBoxingGloveOnContactSystem(collisionDetection));
-        updateEngine.addSystem(new ExplodeEnemyOnContactSystem(collisionDetection));
-        updateEngine.addSystem(new CoinSystem(collisionDetection));
-        updateEngine.addSystem(new ResolveCollisionSystem(performanceCounters.add("resolvecollision")));
-        updateEngine.addSystem(new WrapEntitySystem());
-        updateEngine.addSystem(new MovementSystem());
-        updateEngine.addSystem(new DampingSystem());
-        updateEngine.addSystem(new AnimationSystem<>());
-        updateEngine.addSystem(new RenderSystem(performanceCounters.add("render"), renderer));
-        updateEngine.addSystem(new RenderParticleSystem(camera));
-        updateEngine.addSystem(new RenderStarsSystem(renderer));
-        updateEngine.addSystem(new RenderScoreSystem(renderer, camera, fontCamera, staticEnvironment));
-        updateEngine.addSystem(new LastSystem());
-        //updateEngine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
+        engine.addSystem(new PlayerInputSystem());
+        engine.addSystem(new AISystem());
+        engine.addSystem(new ControlMovementSystem(assetManager, collisionDetection, staticEnvironment));
+        engine.addSystem(new ControlPunchSystem(assetManager, collisionDetection, staticEnvironment));
+        engine.addSystem(new ControlThrowEntitySystem());
+        engine.addSystem(new ThrownSystem());
+        engine.addSystem(new DroppedSystem());
+        engine.addSystem(new MoveToEntitySystem());
+        engine.addSystem(new PhysicsSystem());
+        engine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
+        engine.addSystem(new DamageSystem());
+        engine.addSystem(new PickUpEntitySystem(collisionDetection));
+        engine.addSystem(new ExplodeBoxingGloveOnContactSystem(collisionDetection));
+        engine.addSystem(new ExplodeEnemyOnContactSystem(collisionDetection));
+        engine.addSystem(new PickUpCoinSystem(collisionDetection));
+        engine.addSystem(new ResolveCollisionSystem(performanceCounters.add("resolvecollision")));
+        engine.addSystem(new WrapEntitySystem());
+        engine.addSystem(new MovementSystem());
+        engine.addSystem(new DampingSystem());
+        engine.addSystem(new AnimationSystem<>());
+        engine.addSystem(new RenderSystem(performanceCounters.add("render"), renderer));
+        engine.addSystem(new RenderParticleSystem(camera));
+        engine.addSystem(new RenderStarsSystem(renderer));
+        engine.addSystem(new RenderScoreSystem(renderer));
+        engine.addSystem(new RenderScoreBoardSystem(renderer, camera, staticEnvironment));
+        engine.addSystem(new LastSystem());
+        //engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
 
         return true;
     }

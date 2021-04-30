@@ -4,8 +4,11 @@ public enum EntityType {
     None(0),
     Player (1),
     Enemy(2),
-    PlayerProjectile(4),
-    Key(8);
+    BoxingGlove(4),
+    Key(8),
+    Door(16),
+    Explosion(32),
+    Apple(64);
 
     public int type = 0;
 
