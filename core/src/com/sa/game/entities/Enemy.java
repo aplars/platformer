@@ -61,6 +61,7 @@ public class Enemy {
         PhysicsComponent physicsComponent = new PhysicsComponent();
         physicsComponent.gravity = -2 * (staticEnvironment.tileSizeInPixels * 5f + 2) / (float) Math.pow(jumpTime, 2f);
 
+
         CollisionComponent collisionComponent = new CollisionComponent();
         collisionComponent.entity = collisionEntity;
 

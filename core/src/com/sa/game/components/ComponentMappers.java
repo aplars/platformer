@@ -2,6 +2,7 @@ package com.sa.game.components;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.sa.game.components.groups.EnemyGroupComponent;
+import com.sa.game.components.groups.KeyGroupComponent;
 import com.sa.game.components.groups.CoinGroupComponent;
 
 public class ComponentMappers {
@@ -26,4 +27,5 @@ public class ComponentMappers {
     public static ComponentMapper<ExplodeOnContactComponent> explodeOnContact = ComponentMapper.getFor(ExplodeOnContactComponent.class);
     public static ComponentMapper<CoinGroupComponent> coinGroup = ComponentMapper.getFor(CoinGroupComponent.class);
     public static ComponentMapper<EnemyGroupComponent> enemyGroup = ComponentMapper.getFor(EnemyGroupComponent.class);
+    public static ComponentMapper<KeyGroupComponent> keyGroup = ComponentMapper.getFor(KeyGroupComponent.class);
 }

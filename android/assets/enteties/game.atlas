@@ -20,7 +20,7 @@ apple32x32
   index: -1
 boxingglove
   rotate: false
-  xy: 200, 86
+  xy: 266, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -34,7 +34,7 @@ clown_idle
   index: -1
 clown_stunned
   rotate: false
-  xy: 234, 86
+  xy: 300, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -55,7 +55,7 @@ clown_walk
   index: 5
 clown_walk
   rotate: false
-  xy: 268, 86
+  xy: 334, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -69,7 +69,7 @@ clown_walk
   index: 3
 clown_walk
   rotate: false
-  xy: 302, 86
+  xy: 368, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -83,7 +83,7 @@ devodevilfalling
   index: -1
 devodevilhurt
   rotate: false
-  xy: 342, 34
+  xy: 478, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -97,35 +97,35 @@ devodeviljumping
   index: -1
 devodevilrunning
   rotate: false
-  xy: 360, 34
+  xy: 38, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 devodevilrunning
   rotate: false
-  xy: 360, 34
+  xy: 38, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 devodevilrunning
   rotate: false
-  xy: 38, 2
+  xy: 56, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 devodevilrunning
   rotate: false
-  xy: 378, 34
+  xy: 74, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 4
 devodevilstanding
   rotate: false
-  xy: 56, 2
+  xy: 92, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -137,16 +137,30 @@ door
   orig: 64, 64
   offset: 0, 0
   index: -1
-elevator64x64
+door_closed
+  rotate: false
+  xy: 68, 54
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+door_open
   rotate: false
   xy: 134, 54
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
+elevator64x64
+  rotate: false
+  xy: 200, 54
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 key
   rotate: false
-  xy: 396, 34
+  xy: 110, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -160,133 +174,133 @@ mrmochihurt
   index: 1
 mrmochiidle
   rotate: false
-  xy: 336, 86
+  xy: 402, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 mrmochiidle
   rotate: false
-  xy: 370, 86
+  xy: 172, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 mrmochijumping
   rotate: false
-  xy: 404, 86
+  xy: 436, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 mrmochirunning
   rotate: false
-  xy: 438, 86
+  xy: 206, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 mrmochirunning
   rotate: false
-  xy: 472, 86
+  xy: 470, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 mrmochirunning
   rotate: false
-  xy: 200, 52
+  xy: 266, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 mrmochirunning
   rotate: false
-  xy: 234, 52
+  xy: 300, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 player
   rotate: false
-  xy: 268, 52
+  xy: 334, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 player
   rotate: false
-  xy: 302, 52
+  xy: 368, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 player
   rotate: false
-  xy: 336, 52
+  xy: 402, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 player
   rotate: false
-  xy: 370, 52
+  xy: 436, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 player
   rotate: false
-  xy: 404, 52
+  xy: 470, 52
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 player
   rotate: false
-  xy: 438, 52
+  xy: 240, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 6
 stars
   rotate: false
-  xy: 472, 52
+  xy: 274, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 stars
   rotate: false
-  xy: 172, 18
+  xy: 308, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 stars
   rotate: false
-  xy: 206, 18
+  xy: 342, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 stars
   rotate: false
-  xy: 240, 18
+  xy: 376, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 stars
   rotate: false
-  xy: 274, 18
+  xy: 410, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 stars
   rotate: false
-  xy: 308, 18
+  xy: 444, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

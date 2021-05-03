@@ -88,7 +88,8 @@ public class CreateEnteties {
         return Door.create(
                             center,
                             height,
-                            new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("door"), Animation.PlayMode.NORMAL),
+                            new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("door_closed"), Animation.PlayMode.NORMAL),
+                            new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("door_open"), Animation.PlayMode.NORMAL),
                             collisionDetection);
     }
 

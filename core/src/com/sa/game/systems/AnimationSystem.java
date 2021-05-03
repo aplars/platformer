@@ -17,8 +17,8 @@ public class AnimationSystem<T> extends IteratingSystem {
         super(Family.all(
                          AIComponent.class,
                          AnimationComponent.class,
-                         RenderComponent.class,
-                         PhysicsComponent.class).get());
+                         RenderComponent.class//,
+                         /*PhysicsComponent.class*/).get());
     }
 
     @Override
@@ -29,11 +29,13 @@ public class AnimationSystem<T> extends IteratingSystem {
         final PhysicsComponent physics = ComponentMappers.physics.get(entity);
 
         render.sprite.textureRegion.setRegion(animation.animations.get(ai.stateMachine.getCurrentState()).getKeyFrame(animation.currentTime));
-        if(physics.velocity.x < 0.0f) {
-            render.sprite.mirrorX = true;
-        }
-        else if(physics.velocity.x > 0) {
-            render.sprite.mirrorX = false;
+
+        if (physics != null) {
+            if (physics.velocity.x < 0.0f) {
+                render.sprite.mirrorX = true;
+            } else if (physics.velocity.x > 0) {
+                render.sprite.mirrorX = false;
+            }
         }
         animation.currentTime += deltaTime;
     }

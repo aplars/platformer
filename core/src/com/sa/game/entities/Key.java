@@ -16,6 +16,7 @@ import com.sa.game.components.PositionComponent;
 import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderDebugInfoComponent;
 import com.sa.game.components.WorldConstantsComponent;
+import com.sa.game.components.groups.KeyGroupComponent;
 import com.sa.game.components.groups.ToolGroupComponent;
 import com.sa.game.gfx.Sprite;
 
@@ -25,6 +26,7 @@ public class Key {
         entity.flags = EntityType.Key.type;
 
         ToolGroupComponent toolGroupComponent = new ToolGroupComponent();
+        KeyGroupComponent keyGroupComponent = new KeyGroupComponent();
 
         WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
         worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
@@ -60,6 +62,7 @@ public class Key {
 
         RenderDebugInfoComponent renderDebugInfoComponent = new RenderDebugInfoComponent();
 
+        entity.add(keyGroupComponent);
         entity.add(toolGroupComponent);
         entity.add(worldConstantsComponent);
         entity.add(positionComponent);
