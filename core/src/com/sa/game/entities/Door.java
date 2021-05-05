@@ -16,6 +16,7 @@ import com.sa.game.components.ControlComponent;
 import com.sa.game.components.PositionComponent;
 import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderDebugInfoComponent;
+import com.sa.game.components.groups.DoorGroupComponent;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.statemachines.*;
 
@@ -24,8 +25,10 @@ public class Door {
         Entity entity = new Entity();
         entity.flags = EntityType.Door.type;
 
+        DoorGroupComponent doorGroupComponent = new DoorGroupComponent();
+
         Rectangle collisionRectangle = new Rectangle();
-        collisionRectangle.setSize(size, size);
+        collisionRectangle.setSize(size/2f, size);
         collisionRectangle.setCenter(position.x, position.y);
         CollisionEntity collisionEntity = new CollisionEntity();
         collisionEntity.box.set(collisionRectangle);
@@ -35,7 +38,6 @@ public class Door {
         collisionDetection.add(collisionEntity);
 
         ControlComponent controlComponent = new ControlComponent();
-
         PositionComponent positionComponent = new PositionComponent();
         positionComponent.position.set(position);
 
@@ -51,11 +53,12 @@ public class Door {
 
         RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();
-        renderComponent.sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
+        renderComponent.sprite.size.set(size, size);
         renderComponent.sprite.textureRegion = doorClosedAnimation.getKeyFrame(0);
 
         RenderDebugInfoComponent renderDebugInfoComponent = new RenderDebugInfoComponent();
 
+        entity.add(doorGroupComponent);
         entity.add(controlComponent);
         entity.add(positionComponent);
         entity.add(collisionComponent);

@@ -9,7 +9,8 @@
                                                     :type "java"
                                                     :request "launch"
                                                     :args ""
-                                                    :cwd "/home/tobias/source/platformer/android/assets"
+                                                    ;:cwd "/home/tobias/source/platformer/android/assets"
+                                                    :cwd "${workspaceFolder}/android/assets"
                                                     :stopOnEntry :json-false
                                                     :host "localhost"
                                                     :request "launch"

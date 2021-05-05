@@ -5,6 +5,7 @@ import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.sa.game.components.ComponentMappers;
 
+
 public enum PlayerAIState implements State<Entity> {
     DEAD() {
         @Override

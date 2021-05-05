@@ -2,7 +2,6 @@ package com.sa.game;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.EnumSet;
 
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -36,8 +35,6 @@ public class StaticEnvironment {
         }
     }
 
-    public EnumMap<LayerId, Integer> LayerIdToIndex = new EnumMap<>(LayerId.class);
-
     public ArrayList<Entity> entities = new ArrayList<>();
 
     public TiledMap tiledMap;
@@ -46,8 +43,8 @@ public class StaticEnvironment {
 
     public StaticEnvironment() {}
 
-    public StaticEnvironment(final TiledMap tiledMap, final CollisionDetection collisionDetection) {
-        setTiledLevel(tiledMap, collisionDetection);
+    public StaticEnvironment(final TiledMap tiledMap) {
+        setTiledLevel(tiledMap);
     }
 
     public void dispose() {
@@ -60,7 +57,13 @@ public class StaticEnvironment {
         return tiledMap;
     }
 
-    private void setTiledLevel(final TiledMap tiledMap, final CollisionDetection collisionDetection) {
+    public void setTiledLevel(final TiledMap tiledMap) {
+        if(this.tiledMap != null)
+            this.tiledMap.dispose();
+        this.tiledMap = null;
+        this.entities.clear();
+        
+
         this.tiledMap = tiledMap;
         final TiledMapTileLayer inLayer =  (TiledMapTileLayer)tiledMap.getLayers().get("base");
         tileSizeInPixels = (int)inLayer.getTileWidth();

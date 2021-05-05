@@ -105,8 +105,8 @@ public class Player {
         entity.add(player1Component);
         entity.add(controlComponent);
         entity.add(physicsComponent);
-        entity.add(positionComponent);
-        entity.add(collisionComponent);
+        //entity.add(positionComponent);
+        //entity.add(collisionComponent);
         entity.add(healthComponent);
         entity.add(pickUpEntityComponent);
         entity.add(punchComponent);

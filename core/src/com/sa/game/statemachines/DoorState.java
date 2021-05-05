@@ -11,19 +11,27 @@ public enum DoorState implements State<Entity> {
         @Override
         public void update(final Entity data) {
         }
+
+        @Override
+        public void enter(final Entity data) {
+
+        }
     },
     CLOSED() {
         @Override
         public void update(final Entity data) {
-            final CollisionComponent collisionComponent = ComponentMappers.collision.get(data);
+            /*final CollisionComponent collisionComponent = ComponentMappers.collision.get(data);
             for(final CollisionEntity collisionEntity : collisionComponent.entity.collidees) {
                 final Entity colEnt = (Entity)collisionEntity.userData;
                 if (ComponentMappers.player1.get(colEnt) != null && ComponentMappers.pickUp.get(colEnt) != null) {
                     final Entity pickUpEnt = ComponentMappers.pickUp.get(colEnt).entity;
-                    if(pickUpEnt != null)
-                        ComponentMappers.ai.get(data).stateMachine.changeState(OPEN);
+                    if (pickUpEnt != null) {
+                        if (ComponentMappers.keyGroup.get(pickUpEnt) != null) {
+                            ComponentMappers.ai.get(data).stateMachine.changeState(OPEN);
+                        }
+                    }
                 }
-            }
+                }*/
         }
     };
 

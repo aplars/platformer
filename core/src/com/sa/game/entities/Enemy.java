@@ -31,7 +31,7 @@ public class Enemy {
                                 final Animation<TextureRegion> idleAnimation,
                                 final Animation<TextureRegion> walkAnimation,
                                 final Animation<TextureRegion> stunnedAnimation,
-                                final Animation<TextureRegion> starsAnimation,
+                                final Animation<TextureRegion> starAnimation,
                                 StaticEnvironment staticEnvironment,
                                 CollisionDetection collisionDetection) {
         Entity entity = new Entity();
@@ -77,7 +77,7 @@ public class Enemy {
         renderComponent.mirror = true;
 
         RenderStarsComponent renderStarsComponent = new RenderStarsComponent();
-        renderStarsComponent.animation = starsAnimation;
+        renderStarsComponent.animation = starAnimation;
 
         DefaultStateMachine<Entity, ClownAIState> stateMachine = new DefaultStateMachine<>(entity, ClownAIState.START);
         AIComponent<ClownAIState> aiComponent = new AIComponent<>(entity, stateMachine);

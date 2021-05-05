@@ -22,7 +22,7 @@ public class SweepAndPrune {
 
     public SweepAndPrune() {
     }
-
+ 
     void add(final CollisionEntity entity) {
         axisList.add(entity);
     }
