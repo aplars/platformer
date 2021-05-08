@@ -3,6 +3,7 @@ package com.sa.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.Vector2;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.collision.CollisionEntity;
 import com.sa.game.components.CollisionComponent;
@@ -36,7 +37,7 @@ public class OpenDoorSystem extends IteratingSystem {
                 this.getEngine().removeEntity(pickUpEntityComponent.entity);
                 pickUpEntityComponent.entity = null;
 
-                CreateEnteties.exit(positionComponent.position, 1f, this.collisionDetection);
+                this.getEngine().addEntity(CreateEnteties.exit(positionComponent.position, new Vector2(1, collisionComponent.entity.box.height), this.collisionDetection));
             }
         }
     }

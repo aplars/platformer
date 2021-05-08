@@ -24,6 +24,7 @@ import com.sa.game.systems.DamageSystem;
 import com.sa.game.systems.DampingSystem;
 import com.sa.game.systems.DelayAISystem;
 import com.sa.game.systems.DroppedSystem;
+import com.sa.game.systems.ExitSystem;
 import com.sa.game.systems.ExplodeBoxingGloveOnContactSystem;
 import com.sa.game.systems.ExplodeEnemyOnContactSystem;
 import com.sa.game.systems.LastSystem;
@@ -199,6 +200,7 @@ public class GameWorld {
             engine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
             engine.addSystem(new DamageSystem());
             engine.addSystem(new PickUpEntitySystem(collisionDetection));
+            engine.addSystem(new ExitSystem());
             engine.addSystem(new ExplodeBoxingGloveOnContactSystem(collisionDetection));
             engine.addSystem(new ExplodeEnemyOnContactSystem(collisionDetection));
             engine.addSystem(new PickUpCoinSystem(collisionDetection));
@@ -214,7 +216,7 @@ public class GameWorld {
             engine.addSystem(new RenderScoreSystem(renderer));
             engine.addSystem(new RenderScoreBoardSystem(renderer, camera, staticEnvironment));
             engine.addSystem(new LastSystem());
-            //engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
+            engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
         }
         return true;
     }
