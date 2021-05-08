@@ -22,6 +22,7 @@ import com.sa.game.systems.control.ControlPunchSystem;
 import com.sa.game.systems.control.ControlThrowEntitySystem;
 import com.sa.game.systems.DamageSystem;
 import com.sa.game.systems.DampingSystem;
+import com.sa.game.systems.DelayAISystem;
 import com.sa.game.systems.DroppedSystem;
 import com.sa.game.systems.ExplodeBoxingGloveOnContactSystem;
 import com.sa.game.systems.ExplodeEnemyOnContactSystem;
@@ -73,6 +74,7 @@ public class GameWorld {
     public void update(final float dt) {
         engine.update(dt);
         camera.update();
+        fontCamera.update();
         //System.out.println("**EndFrame**");
     }
 
@@ -118,11 +120,13 @@ public class GameWorld {
 
         assetManager.clear();
         //assetManager.dispose();
-        
+
+        String level = "level_2.tmx";
+
         assetManager.setLoader(TiledMap.class, new TmxMapLoader());
-        assetManager.load("level_1.tmx", TiledMap.class);
+        assetManager.load(level, TiledMap.class);
         assetManager.finishLoading();
-        final TiledMap tiledMap = assetManager.get("level_1.tmx", TiledMap.class);
+        final TiledMap tiledMap = assetManager.get(level, TiledMap.class);
 
         if(staticEnvironment == null)
             staticEnvironment = new StaticEnvironment(tiledMap);
@@ -138,7 +142,7 @@ public class GameWorld {
         engine.removeAllEntities();
 
         for(final StaticEnvironment.Entity entity : staticEnvironment.entities) {
-            if (entity.name.equals("clown")) {
+            if (entity.name.equals("devo_devil")) {
                 engine.addEntity(CreateEnteties.enemy(assetManager,
                                                             entity.position,
                                                             entity.size.y,
@@ -177,7 +181,6 @@ public class GameWorld {
         }
 
         mapRenderer = new OrthogonalTiledMapRenderer(staticEnvironment.getMap());
-
         assetManager.finishLoading();
         while(!assetManager.isFinished())
             assetManager.update();
@@ -185,7 +188,7 @@ public class GameWorld {
         if (addSystems) {
             engine.addSystem(new PlayerInputSystem());
             engine.addSystem(new AISystem());
-            engine.addSystem(new OpenDoorSystem());
+            engine.addSystem(new OpenDoorSystem(collisionDetection));
             engine.addSystem(new ControlMovementSystem(assetManager, collisionDetection, staticEnvironment));
             engine.addSystem(new ControlPunchSystem(assetManager, collisionDetection, staticEnvironment));
             engine.addSystem(new ControlThrowEntitySystem());
@@ -193,8 +196,7 @@ public class GameWorld {
             engine.addSystem(new DroppedSystem());
             engine.addSystem(new MoveToEntitySystem());
             engine.addSystem(new PhysicsSystem());
-            engine.addSystem(
-                    new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
+            engine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
             engine.addSystem(new DamageSystem());
             engine.addSystem(new PickUpEntitySystem(collisionDetection));
             engine.addSystem(new ExplodeBoxingGloveOnContactSystem(collisionDetection));
@@ -205,13 +207,14 @@ public class GameWorld {
             engine.addSystem(new MovementSystem());
             engine.addSystem(new DampingSystem());
             engine.addSystem(new AnimationSystem<>());
+            engine.addSystem(new DelayAISystem());
             engine.addSystem(new RenderSystem(performanceCounters.add("render"), renderer));
             engine.addSystem(new RenderParticleSystem(camera));
             engine.addSystem(new RenderStarsSystem(renderer));
             engine.addSystem(new RenderScoreSystem(renderer));
             engine.addSystem(new RenderScoreBoardSystem(renderer, camera, staticEnvironment));
             engine.addSystem(new LastSystem());
-            engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
+            //engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
         }
         return true;
     }

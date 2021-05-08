@@ -15,6 +15,7 @@ import com.sa.game.components.AnimationComponent;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ControlComponent;
 import com.sa.game.components.DamageComponent;
+import com.sa.game.components.DelayAIComponent;
 import com.sa.game.components.HealthComponent;
 import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PositionComponent;
@@ -66,6 +67,7 @@ public class Enemy {
         collisionComponent.entity = collisionEntity;
 
         AnimationComponent<ClownAIState> animationComponent = new AnimationComponent<>();
+        animationComponent.animations.put(ClownAIState.START, idleAnimation);
         animationComponent.animations.put(ClownAIState.IDLE, idleAnimation);
         animationComponent.animations.put(ClownAIState.STUNNED, stunnedAnimation);
         animationComponent.animations.put(ClownAIState.WALK, walkAnimation);
@@ -79,6 +81,7 @@ public class Enemy {
         RenderStarsComponent renderStarsComponent = new RenderStarsComponent();
         renderStarsComponent.animation = starAnimation;
 
+        DelayAIComponent delayAIComponent = new DelayAIComponent(2f);
         DefaultStateMachine<Entity, ClownAIState> stateMachine = new DefaultStateMachine<>(entity, ClownAIState.START);
         AIComponent<ClownAIState> aiComponent = new AIComponent<>(entity, stateMachine);
 
@@ -95,6 +98,7 @@ public class Enemy {
         entity.add(controlComponent);
         entity.add(healthComponent);
         entity.add(damageComponent);
+        entity.add(delayAIComponent);
         entity.add(aiComponent);
         entity.add(positionComponent);
         entity.add(physicsComponent);

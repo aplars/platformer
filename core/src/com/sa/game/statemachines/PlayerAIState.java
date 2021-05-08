@@ -31,8 +31,7 @@ public enum PlayerAIState implements State<Entity> {
                 ComponentMappers.ai.get(data).stateMachine.changeState(DEAD);
             }
             if(!ComponentMappers.collision.get(data).entity.groundCollisionData.didCollide) {
-                ComponentMappers.ai.get(data).stateMachine.changeState(JUMP);
-            }
+                ComponentMappers.ai.get(data).stateMachine.changeState(JUMP);            }
             if (Math.abs(ComponentMappers.physics.get(data).velocity.x) <= 0.9f) {
                 ComponentMappers.ai.get(data).stateMachine.changeState(IDLE);
             }

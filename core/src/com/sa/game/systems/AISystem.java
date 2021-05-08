@@ -6,12 +6,13 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.sa.game.components.AIComponent;
 import com.sa.game.components.ControlComponent;
+import com.sa.game.components.DelayAIComponent;
 
 public class AISystem extends IteratingSystem {
     private final ComponentMapper<AIComponent> aiMapper = ComponentMapper.getFor(AIComponent.class);
 
     public AISystem() {
-        super(Family.all(AIComponent.class, ControlComponent.class).get());
+        super(Family.all(AIComponent.class, ControlComponent.class).exclude(DelayAIComponent.class).get());
     }
 
     @Override

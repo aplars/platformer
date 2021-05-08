@@ -96,4 +96,8 @@ public class CreateEnteties {
     public static Entity explosion(Vector2 position) {
         return Explosion.create(position);
     }
+
+    public static Entity exit(Vector2 position, float size, CollisionDetection collisionDetection) {
+        return Exit.create(position, size, collisionDetection);
+    }
 }

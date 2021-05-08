@@ -8,6 +8,7 @@ import com.sa.game.components.groups.CoinGroupComponent;
 public class ComponentMappers {
     public static ComponentMapper<Player1Component> player1 = ComponentMapper.getFor(Player1Component.class);
     public static ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);
+    public static ComponentMapper<DelayAIComponent> delayAi = ComponentMapper.getFor(DelayAIComponent.class);
     public static ComponentMapper<AIComponent> ai = ComponentMapper.getFor(AIComponent.class);
     public static ComponentMapper<ControlComponent> control = ComponentMapper.getFor(ControlComponent.class);
     public static ComponentMapper<CollisionComponent> collision = ComponentMapper.getFor(CollisionComponent.class);
