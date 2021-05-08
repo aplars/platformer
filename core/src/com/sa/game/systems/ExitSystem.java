@@ -3,6 +3,7 @@ package com.sa.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.sa.game.ILoadNextLevel;
 import com.sa.game.collision.CollisionEntity;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ComponentMappers;
@@ -10,10 +11,11 @@ import com.sa.game.components.Player1Component;
 import com.sa.game.components.groups.ExitGroupComponent;
 
 public class ExitSystem extends IteratingSystem {
+    ILoadNextLevel nextLevel;
 
-	public ExitSystem() {
+	public ExitSystem(ILoadNextLevel nextLevel) {
       super(Family.all(ExitGroupComponent.class, CollisionComponent.class).get());
-      //TODO Auto-generated constructor stub
+      this.nextLevel = nextLevel;
 	}
 
 	@Override
@@ -24,7 +26,7 @@ public class ExitSystem extends IteratingSystem {
           //ent is colliding with the exit, check if ent is a player.
           Player1Component player1Component = ComponentMappers.player1.get((Entity)ent.userData);
           if(player1Component != null) {
-              System.out.println("");
+              nextLevel.nextLevel();
           }
       }
   }

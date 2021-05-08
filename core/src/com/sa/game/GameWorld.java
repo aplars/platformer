@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.PerformanceCounters;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.entities.CreateEnteties;
 import com.sa.game.gfx.Renderer;
+import com.sa.game.models.LayersToRenderModel;
 import com.sa.game.systems.AISystem;
 import com.sa.game.systems.AnimationSystem;
 import com.sa.game.systems.PickUpCoinSystem;
@@ -59,6 +60,7 @@ public class GameWorld {
 
     Engine engine = null;
 
+    public boolean loadNextLevel = false; 
     PerformanceCounters performanceCounters;
 
     public GameWorld(final PerformanceCounters performanceCounters) {
@@ -67,9 +69,6 @@ public class GameWorld {
 
     public void setVisibleLayers(final int layers[]) {
         visiblelayers = layers;
-    }
-
-    public void preUpdate(final float dt, final Controller controller) {
     }
 
     public void update(final float dt) {
@@ -112,7 +111,7 @@ public class GameWorld {
         fontCamera.update();
     }
 
-    public boolean loadLevel() {
+    public boolean loadLevel(String level) {
         collisionDetection.clear();
         //staticEnvironment.dispose();
 
@@ -121,8 +120,6 @@ public class GameWorld {
 
         assetManager.clear();
         //assetManager.dispose();
-
-        String level = "level_2.tmx";
 
         assetManager.setLoader(TiledMap.class, new TmxMapLoader());
         assetManager.load(level, TiledMap.class);
@@ -133,6 +130,7 @@ public class GameWorld {
             staticEnvironment = new StaticEnvironment(tiledMap);
         else
             staticEnvironment.setTiledLevel(tiledMap);
+
         assetManager.finishLoading();
 
         boolean addSystems = false;
@@ -145,25 +143,25 @@ public class GameWorld {
         for(final StaticEnvironment.Entity entity : staticEnvironment.entities) {
             if (entity.name.equals("devo_devil")) {
                 engine.addEntity(CreateEnteties.enemy(assetManager,
-                                                            entity.position,
-                                                            entity.size.y,
-                                                            staticEnvironment,
-                                                            collisionDetection));
+                                                      entity.position,
+                                                      entity.size.y,
+                                                      staticEnvironment,
+                                                      collisionDetection));
             }
             if (entity.name.equals("key")) {
 
                 engine.addEntity(CreateEnteties.key(assetManager,
-                                                          entity.position,
-                                                          entity.size.y,
-                                                          staticEnvironment,
-                                                          collisionDetection));
+                                                    entity.position,
+                                                    entity.size.y,
+                                                    staticEnvironment,
+                                                    collisionDetection));
             }
             if (entity.name.equals("apple")) {
                 engine.addEntity(CreateEnteties.apple(assetManager,
-                                                            entity.position,
-                                                            entity.size.y,
-                                                            staticEnvironment,
-                                                            collisionDetection));
+                                                      entity.position,
+                                                      entity.size.y,
+                                                      staticEnvironment,
+                                                      collisionDetection));
             }
             if (entity.name.equals("door")) {
                 engine.addEntity(CreateEnteties.door(assetManager,
@@ -200,7 +198,11 @@ public class GameWorld {
             engine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
             engine.addSystem(new DamageSystem());
             engine.addSystem(new PickUpEntitySystem(collisionDetection));
-            engine.addSystem(new ExitSystem());
+            engine.addSystem(new ExitSystem(new ILoadNextLevel() {
+                public void nextLevel() {
+                    loadNextLevel = true;
+                }
+            }));
             engine.addSystem(new ExplodeBoxingGloveOnContactSystem(collisionDetection));
             engine.addSystem(new ExplodeEnemyOnContactSystem(collisionDetection));
             engine.addSystem(new PickUpCoinSystem(collisionDetection));
@@ -218,6 +220,9 @@ public class GameWorld {
             engine.addSystem(new LastSystem());
             engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
         }
+
+        LayersToRenderModel layersToRenderModel = new LayersToRenderModel(staticEnvironment);
+        setVisibleLayers(layersToRenderModel.getVisibleLayerIndices());
         return true;
     }
 }

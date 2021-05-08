@@ -17,91 +17,46 @@ import com.sa.game.models.EditorModel;
 
 public class MyGdxGame implements ApplicationListener {
     private GameWorld gameWorld;
-
-    public AtomicBoolean reloadLevel = new AtomicBoolean(true);
-    private boolean showEditor = false;
     SpriteBatch batch;
     private BitmapFont font;
     private BitmapFont bigFont;
-
     float dt = 1 / 60f;
-    Controller controller;
-
-    Editor editor;
     EditorModel editorModel;
     PerformanceCounters performanceCounters = new PerformanceCounters();
+    String levels[] = { "level_1.tmx", "level_2.tmx" };
+    int levelIndex = 0;
 
     @Override
     public void create() {
         gameWorld = new GameWorld(performanceCounters);
-
+        gameWorld.loadNextLevel = true;
         batch = new SpriteBatch();
         font = new BitmapFont();
 
         bigFont = new BitmapFont(Gdx.files.internal("skins/score-font/score-font.fnt"),
                                  Gdx.files.internal("skins/score-font/score-font.png"), false);
-
-        com.badlogic.gdx.utils.Array<Controller> theControllers = Controllers.getControllers();
-
-        for (Controller c : theControllers) {
-            System.out.println(c.getName());
-        }
-        if (theControllers.size > 0)
-            controller = theControllers.first();
-        /*
-         * controller.addListener(new ControllerAdapter() {
-         * 
-         * @Override public boolean buttonDown (Controller controller, int buttonIndex)
-         * { System.out.print("button down "); System.out.println(butonIndex); return
-         * true; }
-         * 
-         * @Override public boolean povMoved (Controller controller, int povIndex,
-         * PovDirection value) { System.out.print("pov moved ");
-         * System.out.print(povIndex); System.out.print(" "); System.out.println(value);
-         * return true; }
-         * 
-         * @Override public boolean axisMoved (Controller controller, int axisIndex,
-         * float value) { System.out.print("axis moved "); System.out.print(axisIndex);
-         * System.out.print(" "); System.out.println(value); return true; }
-         * 
-         * });
-         */
     }
+
 
     @Override
     public void render() {
         long startTime = TimeUtils.millis();
 
-        if (reloadLevel.get()) {
-            gameWorld.loadLevel();
-            gameWorld.resize(getAspectRatio());
-
-            editorModel = new EditorModel(gameWorld.staticEnvironment);
-            editor = new Editor(editorModel, performanceCounters);
-
-            reloadLevel.set(false);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
-            reloadLevel.set(true);
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
-            showEditor = ! showEditor;
-        }
-
-        gameWorld.setVisibleLayers(editorModel.getLayersToRenderModel().getVisibleLayerIndices());
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        gameWorld.preUpdate(dt, controller);
-        gameWorld.update(dt);
-        int numSprites = gameWorld.renderer.numberOfSprites(0);
-        gameWorld.render(dt);
-
-        if(showEditor) {
-            editor.render(numSprites);
+        if(gameWorld.loadNextLevel) {
+            gameWorld.loadLevel(levels[levelIndex]);
+            levelIndex = (levelIndex + 1) % levels.length;
+            gameWorld.resize(getAspectRatio());
+            gameWorld.loadNextLevel = false;
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+            gameWorld.loadNextLevel = true;
+        }
+
+        gameWorld.update(dt);
+        gameWorld.render(dt);
 
         long estimatedTime = TimeUtils.millis() - startTime;
         if(estimatedTime < 16) {
@@ -128,8 +83,6 @@ public class MyGdxGame implements ApplicationListener {
     @Override
     public void resize(int width, int height) {
         gameWorld.resize(getAspectRatio());
-        if(editor != null)
-            editor.resize(width, height);
     }
 
     @Override
