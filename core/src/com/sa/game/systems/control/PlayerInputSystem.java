@@ -7,13 +7,14 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.sa.game.components.ControlComponent;
+import com.sa.game.components.DelayControlComponent;
 import com.sa.game.components.Player1Component;
 
 public class PlayerInputSystem extends IteratingSystem{
     private final ComponentMapper<ControlComponent> controlMap = ComponentMapper.getFor(ControlComponent.class);
 
     public PlayerInputSystem() {
-        super(Family.all(ControlComponent.class, Player1Component.class).get());
+        super(Family.all(ControlComponent.class, Player1Component.class).exclude(DelayControlComponent.class).get());
 
     }
 

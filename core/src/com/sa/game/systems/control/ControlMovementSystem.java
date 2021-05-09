@@ -9,6 +9,7 @@ import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ControlComponent;
+import com.sa.game.components.DelayControlComponent;
 import com.sa.game.components.PhysicsComponent;
 
 public class ControlMovementSystem extends IteratingSystem {
@@ -20,7 +21,7 @@ public class ControlMovementSystem extends IteratingSystem {
     StaticEnvironment staticEnvironment;
 
     public ControlMovementSystem(final AssetManager assetManager, final CollisionDetection collisionDetection, final StaticEnvironment staticEnvironment) {
-        super(Family.all(ControlComponent.class, PhysicsComponent.class).get());
+        super(Family.all(ControlComponent.class, PhysicsComponent.class).exclude(DelayControlComponent.class).get());
         this.assetManager = assetManager;
         this.collisionDetection = collisionDetection;
         this.staticEnvironment = staticEnvironment;

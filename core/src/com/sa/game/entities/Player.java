@@ -15,6 +15,7 @@ import com.sa.game.components.AIComponent;
 import com.sa.game.components.AnimationComponent;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ControlComponent;
+import com.sa.game.components.DelayControlComponent;
 import com.sa.game.components.HealthComponent;
 import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PickUpEntityComponent;
@@ -28,7 +29,8 @@ import com.sa.game.gfx.Sprite;
 import com.sa.game.statemachines.PlayerAIState;
 
 public class Player {
-    public static Entity create(Vector2 pos, Vector2 vel, Vector2 size,
+    public static Entity create(float startDelay,
+                                Vector2 pos, Vector2 vel, Vector2 size,
                                 final Animation<TextureRegion> idleAnimation,
                                 final Animation<TextureRegion> walkAnimation,
                                 final Animation<TextureRegion> jumpAnimation,
@@ -53,6 +55,7 @@ public class Player {
 
         Player1Component player1Component = new Player1Component();
 
+        DelayControlComponent delayControlComponent = new DelayControlComponent(startDelay);
         ControlComponent controlComponent = new ControlComponent();
 
         float jumpTime = 0.5f;
@@ -103,6 +106,7 @@ public class Player {
         entity.add(collisionComponent);
         entity.add(positionComponent);
         entity.add(player1Component);
+        entity.add(delayControlComponent);
         entity.add(controlComponent);
         entity.add(physicsComponent);
         //entity.add(positionComponent);

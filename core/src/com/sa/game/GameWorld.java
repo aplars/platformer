@@ -23,7 +23,7 @@ import com.sa.game.systems.control.ControlPunchSystem;
 import com.sa.game.systems.control.ControlThrowEntitySystem;
 import com.sa.game.systems.DamageSystem;
 import com.sa.game.systems.DampingSystem;
-import com.sa.game.systems.DelayAISystem;
+import com.sa.game.systems.DelayControlSystem;
 import com.sa.game.systems.DroppedSystem;
 import com.sa.game.systems.ExitSystem;
 import com.sa.game.systems.ExplodeBoxingGloveOnContactSystem;
@@ -68,10 +68,14 @@ public class GameWorld {
     }
 
     public void setVisibleLayers(final int layers[]) {
+        if (engine == null)
+            return;
         visiblelayers = layers;
     }
 
     public void update(final float dt) {
+        if (engine == null)
+            return;
         engine.update(dt);
         camera.update();
         fontCamera.update();
@@ -79,6 +83,8 @@ public class GameWorld {
     }
 
     public void render(final float dt) {
+        if (engine == null)
+            return;
         if(mapRenderer != null)
             mapRenderer.setView(camera);
 
@@ -89,6 +95,8 @@ public class GameWorld {
     }
 
     public void resize(final float aspectRatio) {
+        if (engine == null)
+            return;
         if(staticEnvironment == null)
             return;
         float w = 0f;
@@ -111,7 +119,7 @@ public class GameWorld {
         fontCamera.update();
     }
 
-    public boolean loadLevel(String level) {
+    public boolean loadLevel(String level, float startDelay) {
         collisionDetection.clear();
         //staticEnvironment.dispose();
 
@@ -143,6 +151,7 @@ public class GameWorld {
         for(final StaticEnvironment.Entity entity : staticEnvironment.entities) {
             if (entity.name.equals("devo_devil")) {
                 engine.addEntity(CreateEnteties.enemy(assetManager,
+                                                      startDelay,
                                                       entity.position,
                                                       entity.size.y,
                                                       staticEnvironment,
@@ -171,6 +180,7 @@ public class GameWorld {
             }
             if(entity.name.equals("player")) {
                 final Entity player = CreateEnteties.player(assetManager,
+                                                            startDelay,
                                                             entity.position,
                                                             entity.size,
                                                             staticEnvironment,
@@ -211,7 +221,7 @@ public class GameWorld {
             engine.addSystem(new MovementSystem());
             engine.addSystem(new DampingSystem());
             engine.addSystem(new AnimationSystem<>());
-            engine.addSystem(new DelayAISystem());
+            engine.addSystem(new DelayControlSystem());
             engine.addSystem(new RenderSystem(performanceCounters.add("render"), renderer));
             engine.addSystem(new RenderParticleSystem(camera));
             engine.addSystem(new RenderStarsSystem(renderer));

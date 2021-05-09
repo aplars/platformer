@@ -4,19 +4,19 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.sa.game.components.ComponentMappers;
-import com.sa.game.components.DelayAIComponent;
+import com.sa.game.components.DelayControlComponent;
 
-public class DelayAISystem extends IteratingSystem{
+public class DelayControlSystem extends IteratingSystem{
 
-	public DelayAISystem() {
-		super(Family.all(DelayAIComponent.class).get());
+	public DelayControlSystem() {
+		super(Family.all(DelayControlComponent.class).get());
 	}
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-        DelayAIComponent delayAIComponent = ComponentMappers.delayAi.get(entity);
+        DelayControlComponent delayAIComponent = ComponentMappers.delayAi.get(entity);
         if(delayAIComponent.delay <= 0f)
-            entity.remove(DelayAIComponent.class);
+            entity.remove(DelayControlComponent.class);
         delayAIComponent.delay -= deltaTime;
 	}
 }

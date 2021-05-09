@@ -11,12 +11,13 @@ import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
 
 public class CreateEnteties {
-    public static Entity enemy(AssetManager assetManager, Vector2 center, float height, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public static Entity enemy(AssetManager assetManager, float startDelay, Vector2 center, float height, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         assetManager.load("enteties/game.atlas", TextureAtlas.class);
         assetManager.finishLoadingAsset("enteties/game.atlas");
         TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
         return Enemy.create(
                 "clown",
+                startDelay,
                 center,
                 height,
                 new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("devodevilstanding"), Animation.PlayMode.LOOP),
@@ -27,20 +28,21 @@ public class CreateEnteties {
                 collisionDetection);
     }
 
-    public static Entity player(AssetManager assetManager, Vector2 pos, Vector2 siz, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public static Entity player(AssetManager assetManager, float startDelay, Vector2 pos, Vector2 siz, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         assetManager.load("enteties/game.atlas", TextureAtlas.class);
         assetManager.finishLoadingAsset("enteties/game.atlas");
         TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
         return Player.create(
-                          pos,
-                          new Vector2(),
-                          siz,
-                          new Animation<TextureRegion>(1 / 60f * 12f, atlas.findRegions("mrmochiidle"), PlayMode.LOOP),
-                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochirunning"), PlayMode.LOOP),
-                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochijumping"), PlayMode.LOOP),
-                          new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochihurt"), PlayMode.LOOP),
-                          staticEnvironment,
-                          collisionDetection);
+                             startDelay,
+                             pos,
+                             new Vector2(),
+                             siz,
+                             new Animation<TextureRegion>(1 / 60f * 12f, atlas.findRegions("mrmochiidle"), PlayMode.LOOP),
+                             new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochirunning"), PlayMode.LOOP),
+                             new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochijumping"), PlayMode.LOOP),
+                             new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochihurt"), PlayMode.LOOP),
+                             staticEnvironment,
+                             collisionDetection);
     }
 
     public static Entity boxingGlove(AssetManager assetManager, Vector2 pos, Vector2 vel, float size, Entity parent, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {

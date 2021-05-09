@@ -15,7 +15,7 @@ import com.sa.game.components.AnimationComponent;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ControlComponent;
 import com.sa.game.components.DamageComponent;
-import com.sa.game.components.DelayAIComponent;
+import com.sa.game.components.DelayControlComponent;
 import com.sa.game.components.HealthComponent;
 import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PositionComponent;
@@ -28,7 +28,7 @@ import com.sa.game.gfx.Sprite;
 import com.sa.game.statemachines.ClownAIState;
 
 public class Enemy {
-    public static Entity create(String name, Vector2 position, float size,
+    public static Entity create(String name, float startDelay, Vector2 position, float size,
                                 final Animation<TextureRegion> idleAnimation,
                                 final Animation<TextureRegion> walkAnimation,
                                 final Animation<TextureRegion> stunnedAnimation,
@@ -81,7 +81,7 @@ public class Enemy {
         RenderStarsComponent renderStarsComponent = new RenderStarsComponent();
         renderStarsComponent.animation = starAnimation;
 
-        DelayAIComponent delayAIComponent = new DelayAIComponent(2f);
+        DelayControlComponent delayAIComponent = new DelayControlComponent(startDelay);
         DefaultStateMachine<Entity, ClownAIState> stateMachine = new DefaultStateMachine<>(entity, ClownAIState.START);
         AIComponent<ClownAIState> aiComponent = new AIComponent<>(entity, stateMachine);
 
