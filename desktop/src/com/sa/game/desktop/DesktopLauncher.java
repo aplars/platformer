@@ -12,8 +12,6 @@ public class DesktopLauncher {
       config.setWindowedMode(1280, 720);
       config.useVsync(true);
       config.setIdleFPS(60);
-
-      //new LwjglApplicatiedon(new MyGdxGame(), config);
       Lwjgl3Application app = new Lwjgl3Application(MyGdxGame.createDesktop(), config);
       app.exit();
       System.exit(0);

@@ -17,6 +17,8 @@ public class GameScreen extends ScreenAdapter{
     SpriteBatch batch;
     private BitmapFont font;
     private BitmapFont bigFont;
+    private BitmapFont sourcecodepro64Font;
+
     float dt = 1 / 60f;
     EditorModel editorModel;
     PerformanceCounters performanceCounters = new PerformanceCounters();
@@ -34,6 +36,8 @@ public class GameScreen extends ScreenAdapter{
 
         bigFont = new BitmapFont(Gdx.files.internal("skins/score-font/score-font.fnt"),
                                  Gdx.files.internal("skins/score-font/score-font.png"), false);
+        sourcecodepro64Font = new BitmapFont(Gdx.files.internal("skins/fonts/sourcecodepro64.fnt"),
+                                             Gdx.files.internal("skins/fonts/sourcecodepro64.png"), false);
     }
 
     int currentLevel = 0;
@@ -52,7 +56,7 @@ public class GameScreen extends ScreenAdapter{
 
         if(gameWorld.loadNextLevel) {
             currentLevel = levelIndex;
-            gameWorld.loadLevel(levels[levelIndex], startDelayTime);
+            gameWorld.loadLevel(levels[levelIndex], gameWorld.nextLevelPlayer1Score, startDelayTime);
             levelIndex = (levelIndex + 1) % levels.length;
             gameWorld.resize(getAspectRatio());
             timeToShowNextLevelText = startDelayTime;
@@ -60,9 +64,9 @@ public class GameScreen extends ScreenAdapter{
         }
 
         if(timeToShowNextLevelText > 0) {
-            String txt = "LEVEL: " + currentLevel;
+            String txt = "LEVEL: " + (currentLevel+1);
             GlyphLayout glyphLayout = new GlyphLayout(); 
-            glyphLayout.setText(bigFont, txt);
+            glyphLayout.setText(sourcecodepro64Font, txt);
             float w = glyphLayout.width; //Get width of Total Text for this font size
             float h = glyphLayout.height; // Get Height of Total Text for this font size
 
@@ -70,10 +74,17 @@ public class GameScreen extends ScreenAdapter{
             t = Math.min(1f, t * 4f);
 
             batch.begin();
-            bigFont.setColor(t, 0, 0, 1f);
-            bigFont.draw(batch, txt, -2f+Gdx.graphics.getWidth()/2f - w/2f, -2f+Gdx.graphics.getHeight()/2f);
-            bigFont.setColor(t, t, t, 1f);
-            bigFont.draw(batch, txt, Gdx.graphics.getWidth()/2f - w/2f, Gdx.graphics.getHeight()/2f);
+            float scale = 1.05f;
+            sourcecodepro64Font.getData().setScale(scale, scale);
+            sourcecodepro64Font.setColor(0, 0, 0, 1f);
+            sourcecodepro64Font.draw(batch, txt, Gdx.graphics.getWidth()/2f - scale*w/2f, Gdx.graphics.getHeight()/2f + scale*h/2f);
+
+            sourcecodepro64Font.getData().setScale(1.0f, 1.0f);
+            sourcecodepro64Font.setColor(t, 0, 0, 1f);
+            sourcecodepro64Font.draw(batch, txt, 2+Gdx.graphics.getWidth()/2f - w/2f, -2+Gdx.graphics.getHeight()/2f + h/2f);
+
+            sourcecodepro64Font.setColor(t, t, t, 1f);
+            sourcecodepro64Font.draw(batch, txt, Gdx.graphics.getWidth()/2f - w/2f, Gdx.graphics.getHeight()/2f + h/2f);
             batch.end();
             timeToShowNextLevelText -= delta;
         }
@@ -90,7 +101,6 @@ public class GameScreen extends ScreenAdapter{
         batch.begin();
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
         batch.end();
-
     }
 
     private float getAspectRatio() {

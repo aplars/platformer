@@ -60,7 +60,11 @@ public class GameWorld {
 
     Engine engine = null;
 
-    public boolean loadNextLevel = false; 
+    public boolean loadNextLevel = false;
+    public int nextLevelPlayer1Score = 0;
+
+    public int player1Score = 0;
+
     PerformanceCounters performanceCounters;
 
     public GameWorld(final PerformanceCounters performanceCounters) {
@@ -119,7 +123,7 @@ public class GameWorld {
         fontCamera.update();
     }
 
-    public boolean loadLevel(String level, float startDelay) {
+    public boolean loadLevel(String level, int player1Score, float startDelay) {
         collisionDetection.clear();
         //staticEnvironment.dispose();
 
@@ -179,13 +183,13 @@ public class GameWorld {
                                                      collisionDetection));
             }
             if(entity.name.equals("player")) {
-                final Entity player = CreateEnteties.player(assetManager,
-                                                            startDelay,
-                                                            entity.position,
-                                                            entity.size,
-                                                            staticEnvironment,
-                                                            collisionDetection);
-                engine.addEntity(player);
+                engine.addEntity(CreateEnteties.player(assetManager,
+                                                       startDelay,
+                                                       player1Score,
+                                                       entity.position,
+                                                       entity.size,
+                                                       staticEnvironment,
+                                                       collisionDetection));
             }
         }
 
@@ -209,8 +213,9 @@ public class GameWorld {
             engine.addSystem(new DamageSystem());
             engine.addSystem(new PickUpEntitySystem(collisionDetection));
             engine.addSystem(new ExitSystem(new ILoadNextLevel() {
-                public void nextLevel() {
+                public void nextLevel(int player1Score) {
                     loadNextLevel = true;
+                    nextLevelPlayer1Score = player1Score;
                 }
             }));
             engine.addSystem(new ExplodeBoxingGloveOnContactSystem(collisionDetection));
@@ -228,7 +233,7 @@ public class GameWorld {
             engine.addSystem(new RenderScoreSystem(renderer));
             engine.addSystem(new RenderScoreBoardSystem(renderer, camera, staticEnvironment));
             engine.addSystem(new LastSystem());
-            engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
+            //engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
         }
 
         LayersToRenderModel layersToRenderModel = new LayersToRenderModel(staticEnvironment);

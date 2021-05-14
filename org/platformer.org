@@ -6,13 +6,11 @@
 *** DONE hadle screen resize and multiple resolution
     CLOSED: [2021-04-18 sön 22:23]
 *** TODO implement touch input for mobile
+*** TODO implement joypad support for desktop
 *** DONE implement tiled loader
     CLOSED: [2021-04-18 sön 22:23]
 *** TODO create background
-*** TODO add door that can be opened with key
-
-
-    
-    
-
-
+*** DONE add door that can be opened with key
+    CLOSED: [2021-05-14 fre 07:
+*** TODO Handle death of player. Three lives unlimited continues/coins
+      

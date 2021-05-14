@@ -17,10 +17,10 @@ public class LayersToRenderModel implements Iterable<LayerToRenderModel> {
 
     HashMap <String, LayerToRenderModel> layers = new HashMap<>();
 
-    public LayersToRenderModel(StaticEnvironment staticEnvironment) {
-        EnumSet<StaticEnvironment.LayerId> theSet = EnumSet.allOf(StaticEnvironment.LayerId.class);
-        for(StaticEnvironment.LayerId layer : theSet) {
-            boolean visibleLayer = layer == LayerId.Visible;
+    public LayersToRenderModel(final StaticEnvironment staticEnvironment) {
+        final EnumSet<StaticEnvironment.LayerId> theSet = EnumSet.allOf(StaticEnvironment.LayerId.class);
+        for(final StaticEnvironment.LayerId layer : theSet) {
+            final boolean visibleLayer = layer == LayerId.Visible;
             add(
                 staticEnvironment.getLayerName(layer),
                 staticEnvironment.getLayerIndex(layer),
@@ -28,35 +28,35 @@ public class LayersToRenderModel implements Iterable<LayerToRenderModel> {
         }
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(final PropertyChangeListener listener) {
         changeSupport.addPropertyChangeListener(listener);
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(final PropertyChangeListener listener) {
         changeSupport.removePropertyChangeListener(listener);
     }
 
-    protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+    protected void firePropertyChange(final String propertyName, final Object oldValue, final Object newValue) {
         changeSupport.firePropertyChange(propertyName, oldValue, newValue);
     }
 
-    private void add(String name, int index, boolean isVisible) {
+    private void add(final String name, final int index, final boolean isVisible) {
         layers.put(name, new LayerToRenderModel(name, index, isVisible));
         firePropertyChange("layers", null, null);
     }
 
-    public LayerToRenderModel get(String layerName) {
+    public LayerToRenderModel get(final String layerName) {
         return layers.get(layerName);
     }
 
     public int[] getVisibleLayerIndices() {
-        List<Integer> vis = new ArrayList<>();
-        for(LayerToRenderModel layer : layers.values()) {
+        final List<Integer> vis = new ArrayList<>();
+        for(final LayerToRenderModel layer : layers.values()) {
             if(layer.isVisible) {
                 vis.add(layer.index);
             }
         }
-        int intArr[] = new int[vis.size()];
+        final int intArr[] = new int[vis.size()];
         for(int i = 0; i < vis.size(); i++) {
             intArr[i] = vis.get(i);
         }

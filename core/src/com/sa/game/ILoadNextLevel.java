@@ -1,5 +1,5 @@
 package com.sa.game;
 
 public interface ILoadNextLevel {
-    void nextLevel();
+    void nextLevel(int player1Score);
 }

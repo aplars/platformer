@@ -42,7 +42,7 @@ public class ControlPunchSystem extends IteratingSystem {
         final PickUpEntityComponent pickUpEntityComponent = ComponentMappers.pickUp.get(entity);
 
         if (controlComponent.buttonB && pickUpEntityComponent.entity == null) {
-            final Vector2 vel = new Vector2(300f * (float) physicsComponent.GetWalkDirectionScalar(), 0f);
+            final Vector2 vel = new Vector2(200f * (float) physicsComponent.GetWalkDirectionScalar(), 0f);
             final Entity boxingGlove = CreateEnteties.boxingGlove(assetManager, positionComponent.position, vel,
                                                                   staticEnvironment.tileSizeInPixels * 3, entity, staticEnvironment, collisionDetection);
             this.getEngine().addEntity(boxingGlove);

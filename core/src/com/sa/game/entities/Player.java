@@ -30,6 +30,7 @@ import com.sa.game.statemachines.PlayerAIState;
 
 public class Player {
     public static Entity create(float startDelay,
+                                int initialScore,
                                 Vector2 pos, Vector2 vel, Vector2 size,
                                 final Animation<TextureRegion> idleAnimation,
                                 final Animation<TextureRegion> walkAnimation,
@@ -54,7 +55,7 @@ public class Player {
         collisionDetection.add(collisionEntity);
 
         Player1Component player1Component = new Player1Component();
-
+        player1Component.score = initialScore;
         DelayControlComponent delayControlComponent = new DelayControlComponent(startDelay);
         ControlComponent controlComponent = new ControlComponent();
 

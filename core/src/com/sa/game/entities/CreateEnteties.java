@@ -28,12 +28,13 @@ public class CreateEnteties {
                 collisionDetection);
     }
 
-    public static Entity player(AssetManager assetManager, float startDelay, Vector2 pos, Vector2 siz, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public static Entity player(AssetManager assetManager, float startDelay, int playerScore, Vector2 pos, Vector2 siz, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         assetManager.load("enteties/game.atlas", TextureAtlas.class);
         assetManager.finishLoadingAsset("enteties/game.atlas");
         TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
         return Player.create(
                              startDelay,
+                             playerScore,
                              pos,
                              new Vector2(),
                              siz,
