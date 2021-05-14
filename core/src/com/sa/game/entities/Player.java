@@ -26,7 +26,7 @@ import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderDebugInfoComponent;
 import com.sa.game.components.WorldConstantsComponent;
 import com.sa.game.gfx.Sprite;
-import com.sa.game.statemachines.PlayerAIState;
+import com.sa.game.statemachines.PlayerStates;
 
 public class Player {
     public static Entity create(float startDelay,
@@ -80,14 +80,14 @@ public class Player {
 
         PunchComponent punchComponent = new PunchComponent();
 
-        AnimationComponent<PlayerAIState> animationComponent = new AnimationComponent<>();
-        animationComponent.animations.put(PlayerAIState.IDLE, idleAnimation);
-        animationComponent.animations.put(PlayerAIState.WALK, walkAnimation);
-        animationComponent.animations.put(PlayerAIState.JUMP, jumpAnimation);
-        animationComponent.animations.put(PlayerAIState.DEAD, deadAnimation);
+        AnimationComponent<PlayerStates> animationComponent = new AnimationComponent<>();
+        animationComponent.animations.put(PlayerStates.IDLE, idleAnimation);
+        animationComponent.animations.put(PlayerStates.WALK, walkAnimation);
+        animationComponent.animations.put(PlayerStates.JUMP, jumpAnimation);
+        animationComponent.animations.put(PlayerStates.DEAD, deadAnimation);
 
-        DefaultStateMachine<Entity, PlayerAIState> stateMachine = new DefaultStateMachine<>(entity, PlayerAIState.IDLE);
-        AIComponent<PlayerAIState> aiComponent = new AIComponent<>(entity, stateMachine);
+        DefaultStateMachine<Entity, PlayerStates> stateMachine = new DefaultStateMachine<>(entity, PlayerStates.IDLE);
+        AIComponent<PlayerStates> aiComponent = new AIComponent<>(entity, stateMachine);
 
 
         RenderComponent renderComponent = new RenderComponent();

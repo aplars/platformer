@@ -25,7 +25,7 @@ import com.sa.game.components.RenderStarsComponent;
 import com.sa.game.components.WorldConstantsComponent;
 import com.sa.game.components.groups.EnemyGroupComponent;
 import com.sa.game.gfx.Sprite;
-import com.sa.game.statemachines.ClownAIState;
+import com.sa.game.statemachines.DevoDevilStates;
 
 public class Enemy {
     public static Entity create(String name, float startDelay, Vector2 position, float size,
@@ -66,11 +66,11 @@ public class Enemy {
         CollisionComponent collisionComponent = new CollisionComponent();
         collisionComponent.entity = collisionEntity;
 
-        AnimationComponent<ClownAIState> animationComponent = new AnimationComponent<>();
-        animationComponent.animations.put(ClownAIState.START, idleAnimation);
-        animationComponent.animations.put(ClownAIState.IDLE, idleAnimation);
-        animationComponent.animations.put(ClownAIState.STUNNED, stunnedAnimation);
-        animationComponent.animations.put(ClownAIState.WALK, walkAnimation);
+        AnimationComponent<DevoDevilStates> animationComponent = new AnimationComponent<>();
+        animationComponent.animations.put(DevoDevilStates.START, idleAnimation);
+        animationComponent.animations.put(DevoDevilStates.IDLE, idleAnimation);
+        animationComponent.animations.put(DevoDevilStates.STUNNED, stunnedAnimation);
+        animationComponent.animations.put(DevoDevilStates.WALK, walkAnimation);
 
         RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();
@@ -82,8 +82,8 @@ public class Enemy {
         renderStarsComponent.animation = starAnimation;
 
         DelayControlComponent delayAIComponent = new DelayControlComponent(startDelay);
-        DefaultStateMachine<Entity, ClownAIState> stateMachine = new DefaultStateMachine<>(entity, ClownAIState.START);
-        AIComponent<ClownAIState> aiComponent = new AIComponent<>(entity, stateMachine);
+        DefaultStateMachine<Entity, DevoDevilStates> stateMachine = new DefaultStateMachine<>(entity, DevoDevilStates.START);
+        AIComponent<DevoDevilStates> aiComponent = new AIComponent<>(entity, stateMachine);
 
         HealthComponent healthComponent = new HealthComponent();
 

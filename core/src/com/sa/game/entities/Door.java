@@ -44,12 +44,12 @@ public class Door {
         CollisionComponent collisionComponent = new CollisionComponent();
         collisionComponent.entity = collisionEntity;
 
-        AnimationComponent<DoorState> animationComponent = new AnimationComponent<>();
-        animationComponent.animations.put(DoorState.CLOSED, doorClosedAnimation);
-        animationComponent.animations.put(DoorState.OPEN, doorOpenAnimation);
+        AnimationComponent<DoorStates> animationComponent = new AnimationComponent<>();
+        animationComponent.animations.put(DoorStates.CLOSED, doorClosedAnimation);
+        animationComponent.animations.put(DoorStates.OPEN, doorOpenAnimation);
 
-        DefaultStateMachine<Entity, DoorState> stateMachine = new DefaultStateMachine<>(entity, DoorState.CLOSED);
-        AIComponent<DoorState> aiComponent = new AIComponent<>(entity, stateMachine);
+        DefaultStateMachine<Entity, DoorStates> stateMachine = new DefaultStateMachine<>(entity, DoorStates.CLOSED);
+        AIComponent<DoorStates> aiComponent = new AIComponent<>(entity, stateMachine);
 
         RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();

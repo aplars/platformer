@@ -10,6 +10,7 @@ public class ComponentMappers {
     public static ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);
     public static ComponentMapper<DelayControlComponent> delayAi = ComponentMapper.getFor(DelayControlComponent.class);
     public static ComponentMapper<AIComponent> ai = ComponentMapper.getFor(AIComponent.class);
+    public static ComponentMapper<AnimationComponent> animation = ComponentMapper.getFor(AnimationComponent.class);
     public static ComponentMapper<ControlComponent> control = ComponentMapper.getFor(ControlComponent.class);
     public static ComponentMapper<CollisionComponent> collision = ComponentMapper.getFor(CollisionComponent.class);
     public static ComponentMapper<PhysicsComponent> physics = ComponentMapper.getFor(PhysicsComponent.class);
