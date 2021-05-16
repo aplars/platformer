@@ -28,7 +28,7 @@ import com.sa.game.gfx.Sprite;
 import com.sa.game.statemachines.DevoDevilStates;
 
 public class Enemy {
-    public static Entity create(String name, float startDelay, Vector2 position, float size,
+    public static Entity create(String name, float startDelay, Vector2 position, float size, boolean isFlipped,
                                 final Animation<TextureRegion> idleAnimation,
                                 final Animation<TextureRegion> walkAnimation,
                                 final Animation<TextureRegion> stunnedAnimation,
@@ -67,7 +67,8 @@ public class Enemy {
         collisionComponent.entity = collisionEntity;
 
         AnimationComponent<DevoDevilStates> animationComponent = new AnimationComponent<>();
-        animationComponent.animations.put(DevoDevilStates.START, idleAnimation);
+        animationComponent.animations.put(DevoDevilStates.START_LEFT, idleAnimation);
+        animationComponent.animations.put(DevoDevilStates.START_RIGHT, idleAnimation);
         animationComponent.animations.put(DevoDevilStates.IDLE, idleAnimation);
         animationComponent.animations.put(DevoDevilStates.STUNNED, stunnedAnimation);
         animationComponent.animations.put(DevoDevilStates.WALK, walkAnimation);
@@ -76,13 +77,18 @@ public class Enemy {
         renderComponent.sprite = new Sprite();
         renderComponent.sprite.layer = 3;
         renderComponent.sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
-        renderComponent.mirror = true;
+        renderComponent.sprite.mirrorX = false;
+        if(isFlipped)
+            renderComponent.sprite.mirrorX = true;
 
         RenderStarsComponent renderStarsComponent = new RenderStarsComponent();
         renderStarsComponent.animation = starAnimation;
 
         DelayControlComponent delayAIComponent = new DelayControlComponent(startDelay);
-        DefaultStateMachine<Entity, DevoDevilStates> stateMachine = new DefaultStateMachine<>(entity, DevoDevilStates.START);
+        DevoDevilStates startState = DevoDevilStates.START_RIGHT;
+        if(isFlipped)
+            startState = DevoDevilStates.START_LEFT;
+        DefaultStateMachine<Entity, DevoDevilStates> stateMachine = new DefaultStateMachine<>(entity, startState);
         AIComponent<DevoDevilStates> aiComponent = new AIComponent<>(entity, stateMachine);
 
         HealthComponent healthComponent = new HealthComponent();

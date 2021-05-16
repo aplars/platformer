@@ -18,7 +18,7 @@ import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderDebugInfoComponent;
 import com.sa.game.components.groups.DoorGroupComponent;
 import com.sa.game.gfx.Sprite;
-import com.sa.game.statemachines.*;
+import com.sa.game.statemachines.DoorStates;
 
 public class Door {
     public static Entity create(Vector2 position, float size, final Animation<TextureRegion> doorClosedAnimation, final Animation<TextureRegion> doorOpenAnimation, CollisionDetection collisionDetection) {

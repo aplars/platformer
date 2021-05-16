@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.sa.game.collision.CollisionDetection;
@@ -27,11 +28,12 @@ public class StaticEnvironment {
         public String name;
         public Vector2 position = new Vector2();
         public Vector2 size = new Vector2();
-
-        public Entity(final String name, final Vector2 position, final Vector2 size) {
+        public boolean isFlipped = false;
+        public Entity(final String name, final Vector2 position, final Vector2 size, final boolean isFlipped) {
             this.name = name;
             this.position.set(position);
             this.size.set(size);
+            this.isFlipped = isFlipped;
         }
     }
 
@@ -117,13 +119,39 @@ public class StaticEnvironment {
             for (final MapObject mapObject : mapLayer.getObjects()) {
 
                 if (mapObject.isVisible()) {
-                    final RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
-                    final Vector2 center = new Vector2();
-                    final Vector2 size = new Vector2();
-                    entities.add(new Entity(mapObject.getProperties().get("type", String.class),
-                            rectangleMapObject.getRectangle().getCenter(center),
-                            rectangleMapObject.getRectangle().getSize(size)));
+                    if(mapObject instanceof TiledMapTileMapObject) {
+                        final TiledMapTileMapObject tiledMapTileMapObject = (TiledMapTileMapObject)mapObject;
+                        final Vector2 center = new Vector2();
+                        final Vector2 size = new Vector2();
+
+                        float hf = tiledMapTileMapObject.getProperties().get("height", 0f, float.class);
+                        float wf = tiledMapTileMapObject.getProperties().get("width", 0f, float.class);
+                        int w = (int)wf;
+                        int h = (int)hf;
+                        size.set(
+                                w,
+                                h);
+                        center.set(
+                                tiledMapTileMapObject.getX()+w/2,
+                                tiledMapTileMapObject.getY()+h/2
+                        );
+                        entities.add(new Entity(mapObject.getProperties().get("type", String.class),
+                                center,
+                                size,
+                                tiledMapTileMapObject.isFlipHorizontally()));
+                    }
+                    else {
+                        final RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
+                        final Vector2 center = new Vector2();
+                        final Vector2 size = new Vector2();
+                        entities.add(new Entity(mapObject.getProperties().get("type", String.class),
+                                rectangleMapObject.getRectangle().getCenter(center),
+                                rectangleMapObject.getRectangle().getSize(size), false));
+                    }
                 }
+            }
+            for(int i = 0; i < mapLayer.getObjects().getCount(); i++) {
+                mapLayer.getObjects().remove(i);
             }
         }
     }

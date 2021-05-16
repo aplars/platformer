@@ -16,13 +16,11 @@ public class ControlMovementSystem extends IteratingSystem {
     private final ComponentMapper<ControlComponent> controlMap = ComponentMapper.getFor(ControlComponent.class);
     private final ComponentMapper<PhysicsComponent> physicsMap = ComponentMapper.getFor(PhysicsComponent.class);
     private final ComponentMapper<CollisionComponent> collisionMap = ComponentMapper.getFor(CollisionComponent.class);
-    AssetManager assetManager;
     CollisionDetection collisionDetection;
     StaticEnvironment staticEnvironment;
 
-    public ControlMovementSystem(final AssetManager assetManager, final CollisionDetection collisionDetection, final StaticEnvironment staticEnvironment) {
+    public ControlMovementSystem(final CollisionDetection collisionDetection, final StaticEnvironment staticEnvironment) {
         super(Family.all(ControlComponent.class, PhysicsComponent.class).exclude(DelayControlComponent.class).get());
-        this.assetManager = assetManager;
         this.collisionDetection = collisionDetection;
         this.staticEnvironment = staticEnvironment;
     }

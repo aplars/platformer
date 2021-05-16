@@ -7,6 +7,7 @@ import com.sa.game.ILoadNextLevel;
 import com.sa.game.collision.CollisionEntity;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ComponentMappers;
+import com.sa.game.components.HealthComponent;
 import com.sa.game.components.Player1Component;
 import com.sa.game.components.groups.ExitGroupComponent;
 
@@ -25,8 +26,9 @@ public class ExitSystem extends IteratingSystem {
         for(CollisionEntity ent : collisionComponent.entity.collidees) {
             //ent is colliding with the exit, check if ent is a player.
             Player1Component player1Component = ComponentMappers.player1.get((Entity)ent.userData);
-            if(player1Component != null) {
-                nextLevel.nextLevel(player1Component.score);
+            HealthComponent healthComponent = ComponentMappers.health.get((Entity) ent.userData);
+            if(player1Component != null && healthComponent != null) {
+                nextLevel.nextLevel(player1Component.score, healthComponent.lives);
             }
         }
     }

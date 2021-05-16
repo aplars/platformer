@@ -31,7 +31,8 @@ import com.sa.game.statemachines.PlayerStates;
 public class Player {
     public static Entity create(float startDelay,
                                 int initialScore,
-                                Vector2 pos, Vector2 vel, Vector2 size,
+                                int lives,
+                                Vector2 pos, Vector2 vel, Vector2 size, boolean isFlipped,
                                 final Animation<TextureRegion> idleAnimation,
                                 final Animation<TextureRegion> walkAnimation,
                                 final Animation<TextureRegion> jumpAnimation,
@@ -56,6 +57,8 @@ public class Player {
 
         Player1Component player1Component = new Player1Component();
         player1Component.score = initialScore;
+        player1Component.initialPosition.set(pos);
+
         DelayControlComponent delayControlComponent = new DelayControlComponent(startDelay);
         ControlComponent controlComponent = new ControlComponent();
 
@@ -75,6 +78,7 @@ public class Player {
         HealthComponent healthComponent = new HealthComponent();
         healthComponent.isStunned = false;
         healthComponent.health = 1;
+        healthComponent.lives = lives;
 
         PickUpEntityComponent pickUpEntityComponent = new PickUpEntityComponent();
 
@@ -85,6 +89,8 @@ public class Player {
         animationComponent.animations.put(PlayerStates.WALK, walkAnimation);
         animationComponent.animations.put(PlayerStates.JUMP, jumpAnimation);
         animationComponent.animations.put(PlayerStates.DEAD, deadAnimation);
+        animationComponent.animations.put(PlayerStates.RESPAWN, deadAnimation);
+        animationComponent.animations.put(PlayerStates.REMOVEFROMGAME, deadAnimation);
 
         DefaultStateMachine<Entity, PlayerStates> stateMachine = new DefaultStateMachine<>(entity, PlayerStates.IDLE);
         AIComponent<PlayerStates> aiComponent = new AIComponent<>(entity, stateMachine);
@@ -95,6 +101,8 @@ public class Player {
         renderComponent.sprite.layer = 3;
         renderComponent.sprite.size.set(size.x, size.y);
         renderComponent.sprite.offset.y = size.y / 4;
+        if(isFlipped)
+            renderComponent.sprite.mirrorX = true;
 
         RenderDebugInfoComponent renderDebugInfoComponent = new RenderDebugInfoComponent();
         // WeaponComponent weaponComponent = new WeaponComponent();

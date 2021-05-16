@@ -1,6 +1,6 @@
 
 game.png
-size: 512,128
+size: 1024,128
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -20,7 +20,7 @@ apple32x32
   index: -1
 boxingglove
   rotate: false
-  xy: 266, 86
+  xy: 332, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -34,7 +34,7 @@ clown_idle
   index: -1
 clown_stunned
   rotate: false
-  xy: 300, 86
+  xy: 366, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -55,7 +55,7 @@ clown_walk
   index: 5
 clown_walk
   rotate: false
-  xy: 334, 86
+  xy: 400, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -69,7 +69,7 @@ clown_walk
   index: 3
 clown_walk
   rotate: false
-  xy: 368, 86
+  xy: 434, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -83,49 +83,49 @@ devodevilfalling
   index: -1
 devodevilhurt
   rotate: false
-  xy: 478, 34
+  xy: 332, 68
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 devodeviljumping
   rotate: false
-  xy: 20, 2
+  xy: 308, 36
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 devodevilrunning
   rotate: false
-  xy: 38, 2
+  xy: 978, 102
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 devodevilrunning
   rotate: false
-  xy: 38, 2
+  xy: 978, 102
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 devodevilrunning
   rotate: false
-  xy: 56, 2
+  xy: 20, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 devodevilrunning
   rotate: false
-  xy: 74, 2
+  xy: 350, 68
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 4
 devodevilstanding
   rotate: false
-  xy: 92, 2
+  xy: 996, 102
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -139,28 +139,35 @@ door
   index: -1
 door_closed
   rotate: false
-  xy: 68, 54
+  xy: 134, 54
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 door_open
   rotate: false
-  xy: 134, 54
+  xy: 200, 54
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 elevator64x64
   rotate: false
-  xy: 200, 54
+  xy: 266, 54
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
+heart
+  rotate: false
+  xy: 38, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 key
   rotate: false
-  xy: 110, 2
+  xy: 368, 68
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -174,7 +181,7 @@ mrmochihurt
   index: 1
 mrmochiidle
   rotate: false
-  xy: 402, 86
+  xy: 468, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -188,7 +195,7 @@ mrmochiidle
   index: 2
 mrmochijumping
   rotate: false
-  xy: 436, 86
+  xy: 502, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -202,105 +209,105 @@ mrmochirunning
   index: 1
 mrmochirunning
   rotate: false
-  xy: 470, 86
+  xy: 536, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 mrmochirunning
   rotate: false
-  xy: 266, 52
+  xy: 240, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 mrmochirunning
   rotate: false
-  xy: 300, 52
+  xy: 570, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 player
   rotate: false
-  xy: 334, 52
+  xy: 274, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 player
   rotate: false
-  xy: 368, 52
+  xy: 604, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 player
   rotate: false
-  xy: 402, 52
+  xy: 638, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 player
   rotate: false
-  xy: 436, 52
+  xy: 672, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 player
   rotate: false
-  xy: 470, 52
+  xy: 706, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 player
   rotate: false
-  xy: 240, 18
+  xy: 740, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 6
 stars
   rotate: false
-  xy: 274, 18
+  xy: 774, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 stars
   rotate: false
-  xy: 308, 18
+  xy: 808, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 stars
   rotate: false
-  xy: 342, 18
+  xy: 842, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 stars
   rotate: false
-  xy: 376, 18
+  xy: 876, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 stars
   rotate: false
-  xy: 410, 18
+  xy: 910, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 stars
   rotate: false
-  xy: 444, 18
+  xy: 944, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

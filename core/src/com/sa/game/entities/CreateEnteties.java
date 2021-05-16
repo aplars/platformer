@@ -11,7 +11,7 @@ import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
 
 public class CreateEnteties {
-    public static Entity enemy(AssetManager assetManager, float startDelay, Vector2 center, float height, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public static Entity enemy(AssetManager assetManager, float startDelay, Vector2 center, float height, boolean isFlipped, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         assetManager.load("enteties/game.atlas", TextureAtlas.class);
         assetManager.finishLoadingAsset("enteties/game.atlas");
         TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
@@ -20,6 +20,7 @@ public class CreateEnteties {
                 startDelay,
                 center,
                 height,
+                isFlipped,
                 new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("devodevilstanding"), Animation.PlayMode.LOOP),
                 new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("devodevilrunning"), Animation.PlayMode.LOOP),
                 new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("devodevilstanding"), Animation.PlayMode.NORMAL),
@@ -28,16 +29,18 @@ public class CreateEnteties {
                 collisionDetection);
     }
 
-    public static Entity player(AssetManager assetManager, float startDelay, int playerScore, Vector2 pos, Vector2 siz, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public static Entity player(AssetManager assetManager, float startDelay, int playerScore, int lives, Vector2 pos, Vector2 siz, boolean isFlipped, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         assetManager.load("enteties/game.atlas", TextureAtlas.class);
         assetManager.finishLoadingAsset("enteties/game.atlas");
         TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
         return Player.create(
                              startDelay,
                              playerScore,
+                             lives,
                              pos,
                              new Vector2(),
                              siz,
+                             isFlipped,
                              new Animation<TextureRegion>(1 / 60f * 12f, atlas.findRegions("mrmochiidle"), PlayMode.LOOP),
                              new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochirunning"), PlayMode.LOOP),
                              new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochijumping"), PlayMode.LOOP),

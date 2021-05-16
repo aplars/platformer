@@ -13,11 +13,11 @@ import com.sa.game.GameWorld;
 import com.sa.game.models.EditorModel;
 
 public class GameScreen extends ScreenAdapter{
-    private GameWorld gameWorld;
+    private final GameWorld gameWorld;
     SpriteBatch batch;
-    private BitmapFont font;
-    private BitmapFont bigFont;
-    private BitmapFont sourcecodepro64Font;
+    private final BitmapFont font;
+    private final BitmapFont bigFont;
+    private final BitmapFont sourcecodepro64Font;
 
     float dt = 1 / 60f;
     EditorModel editorModel;
@@ -33,30 +33,32 @@ public class GameScreen extends ScreenAdapter{
         gameWorld.loadNextLevel = true;
         batch = new SpriteBatch();
         font = new BitmapFont();
-
         bigFont = new BitmapFont(Gdx.files.internal("skins/score-font/score-font.fnt"),
                                  Gdx.files.internal("skins/score-font/score-font.png"), false);
         sourcecodepro64Font = new BitmapFont(Gdx.files.internal("skins/fonts/sourcecodepro64.fnt"),
                                              Gdx.files.internal("skins/fonts/sourcecodepro64.png"), false);
+
     }
 
     int currentLevel = 0;
     @Override
     public void render(final float delta) {
-        long startTime = TimeUtils.millis();
+        final long startTime = TimeUtils.millis();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             gameWorld.loadNextLevel = true;
+            gameWorld.nextLevelPlayer1Lives = 3;
+            gameWorld.nextLevelPlayer1Score = 0;
         }
         gameWorld.update(dt);
         gameWorld.render(dt);
 
         if(gameWorld.loadNextLevel) {
             currentLevel = levelIndex;
-            gameWorld.loadLevel(levels[levelIndex], gameWorld.nextLevelPlayer1Score, startDelayTime);
+            gameWorld.loadLevel(levels[levelIndex], gameWorld.nextLevelPlayer1Score, gameWorld.nextLevelPlayer1Lives, startDelayTime);
             levelIndex = (levelIndex + 1) % levels.length;
             gameWorld.resize(getAspectRatio());
             timeToShowNextLevelText = startDelayTime;
@@ -64,17 +66,17 @@ public class GameScreen extends ScreenAdapter{
         }
 
         if(timeToShowNextLevelText > 0) {
-            String txt = "LEVEL: " + (currentLevel+1);
-            GlyphLayout glyphLayout = new GlyphLayout(); 
+            final String txt = "LEVEL: " + (currentLevel+1);
+            final GlyphLayout glyphLayout = new GlyphLayout(); 
             glyphLayout.setText(sourcecodepro64Font, txt);
-            float w = glyphLayout.width; //Get width of Total Text for this font size
-            float h = glyphLayout.height; // Get Height of Total Text for this font size
+            final float w = glyphLayout.width; //Get width of Total Text for this font size
+            final float h = glyphLayout.height; // Get Height of Total Text for this font size
 
             float t = 1f - (timeToShowNextLevelText/startDelayTime);
             t = Math.min(1f, t * 4f);
 
             batch.begin();
-            float scale = 1.05f;
+            final float scale = 1.05f;
             sourcecodepro64Font.getData().setScale(scale, scale);
             sourcecodepro64Font.setColor(0, 0, 0, 1f);
             sourcecodepro64Font.draw(batch, txt, Gdx.graphics.getWidth()/2f - scale*w/2f, Gdx.graphics.getHeight()/2f + scale*h/2f);
@@ -89,11 +91,11 @@ public class GameScreen extends ScreenAdapter{
             timeToShowNextLevelText -= delta;
         }
 
-        long estimatedTime = TimeUtils.millis() - startTime;
+        final long estimatedTime = TimeUtils.millis() - startTime;
         if(estimatedTime < 16) {
             try {
                 Thread.sleep(16-estimatedTime);
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 e.printStackTrace();
             }
         }
