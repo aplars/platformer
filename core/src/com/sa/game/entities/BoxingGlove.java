@@ -50,7 +50,7 @@ public class BoxingGlove {
 
         PhysicsComponent physicsComponent = new PhysicsComponent();
         physicsComponent.gravity = 0;
-        physicsComponent.airResistance = 1;
+        physicsComponent.airResistance.set(1, 1);
         physicsComponent.friction = 1;
         physicsComponent.velocity.set(vel);
 

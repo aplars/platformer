@@ -42,6 +42,7 @@ import com.sa.game.systems.render.RenderSystem;
 import com.sa.game.systems.render.RenderScoreSystem;
 import com.sa.game.systems.ResolveCollisionSystem;
 import com.sa.game.systems.RespawnPlayer1System;
+import com.sa.game.systems.SensorSystem;
 import com.sa.game.systems.ThrownSystem;
 import com.sa.game.systems.WrapEntitySystem;
 import com.sa.game.systems.render.RenderDebugInfoSystem;
@@ -227,6 +228,7 @@ public class GameWorld {
             engine.addSystem(new MoveToEntitySystem());
             engine.addSystem(new PhysicsSystem());
             engine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
+            engine.addSystem(new SensorSystem());
             engine.addSystem(new DamageSystem());
             engine.addSystem(new PickUpEntitySystem(collisionDetection));
             engine.addSystem(new ExitSystem(new ILoadNextLevel() {

@@ -34,7 +34,7 @@ public class ThrownSystem extends IteratingSystem{
            physicsComponent.velocity.x = -300;
 
        physicsComponent.friction = 1f;
-       physicsComponent.airResistance = 1f;
+       physicsComponent.airResistance.set(1f, 0.98f);
 
        entity.add(new ExplodeOnContactComponent(thrownComponent.parent));
 

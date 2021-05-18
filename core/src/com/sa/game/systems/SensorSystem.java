@@ -25,6 +25,6 @@ public class SensorSystem extends IteratingSystem {
         sensorComponent.wallCollisionRight = collisionComponent.entity.wallsCollisionData.didCollide &&
             physicsComponent.velocity.x > 0f;
 
-        sensorComponent.staticEnvironment.getTileIdFromWorldCoordinate(null, null);
+        //sensorComponent.staticEnvironment.getTileIdFromWorldCoordinate(null, null);
     }
 }

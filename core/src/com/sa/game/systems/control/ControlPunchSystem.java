@@ -3,6 +3,7 @@ package com.sa.game.systems.control;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.Vector2;
 import com.sa.game.StaticEnvironment;
@@ -13,6 +14,7 @@ import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PickUpEntityComponent;
 import com.sa.game.components.PositionComponent;
 import com.sa.game.components.PunchComponent;
+import com.sa.game.components.groups.BoxingGloveGroupComponent;
 import com.sa.game.entities.CreateEnteties;
 
 public class ControlPunchSystem extends IteratingSystem {
@@ -41,10 +43,15 @@ public class ControlPunchSystem extends IteratingSystem {
         final PhysicsComponent physicsComponent = ComponentMappers.physics.get(entity);
         final PickUpEntityComponent pickUpEntityComponent = ComponentMappers.pickUp.get(entity);
 
+        ImmutableArray<Entity> ents = this.getEngine().getEntitiesFor(Family.all(BoxingGloveGroupComponent.class).get());
+        if (ents.size() > 0)
+            return;
+
         if (controlComponent.buttonB && pickUpEntityComponent.entity == null) {
             final Vector2 vel = new Vector2(200f * (float) physicsComponent.GetWalkDirectionScalar(), 0f);
             final Entity boxingGlove = CreateEnteties.boxingGlove(assetManager, positionComponent.position, vel,
                                                                   staticEnvironment.tileSizeInPixels * 3, entity, staticEnvironment, collisionDetection);
+
             this.getEngine().addEntity(boxingGlove);
 
         }

@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.sa.game.components.ComponentMappers;
+import com.sa.game.components.SensorComponent;
 
 public enum DevoDevilStates implements State<Entity> {
     STUNNED() {
@@ -17,17 +18,19 @@ public enum DevoDevilStates implements State<Entity> {
     },
     WALK() {
         @Override public void update(final Entity data) {
+            SensorComponent sensorComponent = ComponentMappers.sensor.get(data);
+            boolean didCollide = sensorComponent.wallCollisionLeft || sensorComponent.wallCollisionRight;
 
             if(ComponentMappers.health.get(data).isStunned) {
                 ComponentMappers.ai.get(data).stateMachine.changeState(STUNNED);
                 ComponentMappers.control.get(data).buttonLeft = false;
                 ComponentMappers.control.get(data).buttonRight = false;
             }
-            if(ComponentMappers.control.get(data).buttonRight == true && ComponentMappers.collision.get(data).entity.wallsCollisionData.didCollide) {
+            if(ComponentMappers.control.get(data).buttonRight == true && didCollide /*ComponentMappers.collision.get(data).entity.wallsCollisionData.didCollide*/) {
                 ComponentMappers.control.get(data).buttonLeft = true;
                 ComponentMappers.control.get(data).buttonRight = false;
             }
-            else if(ComponentMappers.control.get(data).buttonLeft == true && ComponentMappers.collision.get(data).entity.wallsCollisionData.didCollide) {
+            else if(ComponentMappers.control.get(data).buttonLeft == true && didCollide /*ComponentMappers.collision.get(data).entity.wallsCollisionData.didCollide*/) {
                 ComponentMappers.control.get(data).buttonLeft = false;
                 ComponentMappers.control.get(data).buttonRight = true;
             }

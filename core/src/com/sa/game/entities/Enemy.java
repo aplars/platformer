@@ -22,6 +22,7 @@ import com.sa.game.components.PositionComponent;
 import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderDebugInfoComponent;
 import com.sa.game.components.RenderStarsComponent;
+import com.sa.game.components.SensorComponent;
 import com.sa.game.components.WorldConstantsComponent;
 import com.sa.game.components.groups.EnemyGroupComponent;
 import com.sa.game.gfx.Sprite;
@@ -66,6 +67,8 @@ public class Enemy {
         CollisionComponent collisionComponent = new CollisionComponent();
         collisionComponent.entity = collisionEntity;
 
+        SensorComponent sensorComponent = new SensorComponent();
+
         AnimationComponent<DevoDevilStates> animationComponent = new AnimationComponent<>();
         animationComponent.animations.put(DevoDevilStates.START_LEFT, idleAnimation);
         animationComponent.animations.put(DevoDevilStates.START_RIGHT, idleAnimation);
@@ -109,6 +112,7 @@ public class Enemy {
         entity.add(positionComponent);
         entity.add(physicsComponent);
         entity.add(collisionComponent);
+        entity.add(sensorComponent);
         entity.add(positionComponent);
         entity.add(physicsComponent);
         entity.add(collisionComponent);

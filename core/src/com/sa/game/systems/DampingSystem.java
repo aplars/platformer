@@ -24,7 +24,10 @@ public class DampingSystem extends IteratingSystem {
           if(collisionComponent.entity.groundCollisionData.didCollide)
               physicsComponent.velocity.x *= physicsComponent.friction;
           else
-              physicsComponent.velocity.x *= physicsComponent.airResistance;
+              physicsComponent.velocity.x *= physicsComponent.airResistance.x;
+
+          //apply air resitance to y
+          physicsComponent.velocity.y *= physicsComponent.airResistance.y;
       }
   }
 }
