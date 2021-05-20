@@ -29,54 +29,60 @@ import com.sa.game.gfx.Sprite;
 import com.sa.game.statemachines.DevoDevilStates;
 
 public class Enemy {
-    public static Entity create(String name, float startDelay, Vector2 position, float size, boolean isFlipped,
+    public static Entity create(final String name, final float startDelay, final Vector2 position, final float size, final boolean isFlipped,
                                 final Animation<TextureRegion> idleAnimation,
                                 final Animation<TextureRegion> walkAnimation,
                                 final Animation<TextureRegion> stunnedAnimation,
+                                final Animation<TextureRegion> jumpAnimation,
                                 final Animation<TextureRegion> starAnimation,
-                                StaticEnvironment staticEnvironment,
-                                CollisionDetection collisionDetection) {
-        Entity entity = new Entity();
+                                final StaticEnvironment staticEnvironment,
+                                final CollisionDetection collisionDetection) {
+        final Entity entity = new Entity();
         entity.flags = EntityType.Enemy.type;
 
-        EnemyGroupComponent enemyGroupComponent = new EnemyGroupComponent();
+        final EnemyGroupComponent enemyGroupComponent = new EnemyGroupComponent();
 
-        WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
+        final WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
         worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
 
-        Rectangle collisionRectangle = new Rectangle();
+        final Rectangle collisionRectangle = new Rectangle();
         collisionRectangle.setSize(size*0.9f, size*0.8f);
         collisionRectangle.setCenter(position.x, position.y);
-        CollisionEntity collisionEntity = new CollisionEntity();
+        final CollisionEntity collisionEntity = new CollisionEntity();
         collisionEntity.box.set(collisionRectangle);
         collisionEntity.velocity.set(0, 0);
         collisionEntity.userData = entity;
         collisionEntity.filter.category = CollisionFilter.ENEMY;
         collisionDetection.add(collisionEntity);
 
-        ControlComponent controlComponent = new ControlComponent();
+        final ControlComponent controlComponent = new ControlComponent();
 
-        PositionComponent positionComponent = new PositionComponent();
+        final PositionComponent positionComponent = new PositionComponent();
         positionComponent.position.set(position);
 
-        float jumpTime = 0.5f;
-        PhysicsComponent physicsComponent = new PhysicsComponent();
-        physicsComponent.gravity = -2 * (staticEnvironment.tileSizeInPixels * 5f + 2) / (float) Math.pow(jumpTime, 2f);
+        final float jumpTime = 0.25f;
+        final PhysicsComponent physicsComponent = new PhysicsComponent();
+        physicsComponent.gravity = -(staticEnvironment.tileSizeInPixels*5f+2)/(2f*jumpTime*jumpTime);
+        physicsComponent.jumpTime = jumpTime;
+        physicsComponent.airResistance.set(0.85f, 1f);
+
+        //physicsComponent.gravity = -2 * (staticEnvironment.tileSizeInPixels * 5f + 2) / (float) Math.pow(jumpTime, 2f);
 
 
-        CollisionComponent collisionComponent = new CollisionComponent();
+        final CollisionComponent collisionComponent = new CollisionComponent();
         collisionComponent.entity = collisionEntity;
 
-        SensorComponent sensorComponent = new SensorComponent();
+        final SensorComponent sensorComponent = new SensorComponent();
 
-        AnimationComponent<DevoDevilStates> animationComponent = new AnimationComponent<>();
+        final AnimationComponent<DevoDevilStates> animationComponent = new AnimationComponent<>();
         animationComponent.animations.put(DevoDevilStates.START_LEFT, idleAnimation);
         animationComponent.animations.put(DevoDevilStates.START_RIGHT, idleAnimation);
         animationComponent.animations.put(DevoDevilStates.IDLE, idleAnimation);
         animationComponent.animations.put(DevoDevilStates.STUNNED, stunnedAnimation);
         animationComponent.animations.put(DevoDevilStates.WALK, walkAnimation);
+        animationComponent.animations.put(DevoDevilStates.JUMP, jumpAnimation);
 
-        RenderComponent renderComponent = new RenderComponent();
+        final RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();
         renderComponent.sprite.layer = 3;
         renderComponent.sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
@@ -84,19 +90,19 @@ public class Enemy {
         if(isFlipped)
             renderComponent.sprite.mirrorX = true;
 
-        RenderStarsComponent renderStarsComponent = new RenderStarsComponent();
+        final RenderStarsComponent renderStarsComponent = new RenderStarsComponent();
         renderStarsComponent.animation = starAnimation;
 
-        DelayControlComponent delayAIComponent = new DelayControlComponent(startDelay);
+        final DelayControlComponent delayAIComponent = new DelayControlComponent(startDelay);
         DevoDevilStates startState = DevoDevilStates.START_RIGHT;
         if(isFlipped)
             startState = DevoDevilStates.START_LEFT;
-        DefaultStateMachine<Entity, DevoDevilStates> stateMachine = new DefaultStateMachine<>(entity, startState);
-        AIComponent<DevoDevilStates> aiComponent = new AIComponent<>(entity, stateMachine);
+        final DefaultStateMachine<Entity, DevoDevilStates> stateMachine = new DefaultStateMachine<>(entity, startState);
+        final AIComponent<DevoDevilStates> aiComponent = new AIComponent<>(entity, stateMachine);
 
-        HealthComponent healthComponent = new HealthComponent();
+        final HealthComponent healthComponent = new HealthComponent();
 
-        DamageComponent damageComponent = new DamageComponent();
+        final DamageComponent damageComponent = new DamageComponent();
         damageComponent.stun = false;
         damageComponent.damage = 1;
 

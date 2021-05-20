@@ -1,5 +1,8 @@
 package com.sa.game.systems;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -18,6 +21,13 @@ public class AISystem extends IteratingSystem {
     @Override
     protected void processEntity(final Entity entity, final float deltaTime) {
         final AIComponent ai = aiMapper.get(entity);
+
+        HashMap<String, Float> timers =  ai.countDownTimers;
+        if (timers != null) {
+            for (Map.Entry<String, Float> e : timers.entrySet()) {
+                e.setValue(e.getValue() - deltaTime);
+            }
+        }
         ai.deltaTime = deltaTime;
         ai.stateMachine.update();
     }

@@ -24,6 +24,7 @@ public class CreateEnteties {
                 new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("devodevilstanding"), Animation.PlayMode.LOOP),
                 new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("devodevilrunning"), Animation.PlayMode.LOOP),
                 new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("devodevilstanding"), Animation.PlayMode.NORMAL),
+                new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("devodeviljumping"), Animation.PlayMode.NORMAL),
                 new Animation<TextureRegion>(1 / 60f * 12f, atlas.findRegions("stars"), Animation.PlayMode.LOOP),
                 staticEnvironment,
                 collisionDetection);

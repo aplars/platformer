@@ -87,7 +87,6 @@ public class GameWorld {
         engine.update(dt);
         camera.update();
         fontCamera.update();
-        //System.out.println("**EndFrame**");
     }
 
     public void render(final float dt) {
@@ -228,7 +227,7 @@ public class GameWorld {
             engine.addSystem(new MoveToEntitySystem());
             engine.addSystem(new PhysicsSystem());
             engine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
-            engine.addSystem(new SensorSystem());
+            engine.addSystem(new SensorSystem(staticEnvironment));
             engine.addSystem(new DamageSystem());
             engine.addSystem(new PickUpEntitySystem(collisionDetection));
             engine.addSystem(new ExitSystem(new ILoadNextLevel() {
@@ -256,7 +255,7 @@ public class GameWorld {
             engine.addSystem(new RenderScoreSystem(renderer));
             engine.addSystem(new RenderScoreBoardSystem(assetManager, renderer, camera, staticEnvironment));
             engine.addSystem(new LastSystem());
-            //engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
+            engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
         }
 
         LayersToRenderModel layersToRenderModel = new LayersToRenderModel(staticEnvironment);

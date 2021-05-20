@@ -62,12 +62,12 @@ public class Player {
         DelayControlComponent delayControlComponent = new DelayControlComponent(startDelay);
         ControlComponent controlComponent = new ControlComponent();
 
-        float jumpTime = 0.5f;
         PhysicsComponent physicsComponent = new PhysicsComponent();
-        physicsComponent.gravity = -2*(staticEnvironment.tileSizeInPixels*5f+2)/(float)Math.pow(jumpTime, 2f);
+        float jumpTime = 0.25f;
+        physicsComponent.gravity = -(staticEnvironment.tileSizeInPixels*5f+2)/(2f*jumpTime*jumpTime);
         physicsComponent.velocity.set(vel);
         physicsComponent.jumpTime = jumpTime;
-        //physicsComponent.airResistance.set(0.85f, 0.95f);
+        physicsComponent.airResistance.set(0.85f, 1f);
 
         PositionComponent positionComponent = new PositionComponent();
         positionComponent.position.set(pos.x, pos.y);

@@ -32,7 +32,7 @@ public class ControlMovementSystem extends IteratingSystem {
         final CollisionComponent collision = collisionMap.get(entity);
 
         final float jumpTime = physics.jumpTime;;
-        final float jumpImpulse = 2f*(staticEnvironment.tileSizeInPixels*5f+2)/jumpTime;
+        final float jumpImpulse = (float)Math.sqrt(2f*(staticEnvironment.tileSizeInPixels*5f+2f)*(-physics.gravity));
         final float moveForce = 30 * staticEnvironment.tileSizeInPixels * physics.mass;
 
         if(control.buttonA && collision.entity.groundCollisionData.didCollide) {
