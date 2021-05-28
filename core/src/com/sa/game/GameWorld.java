@@ -46,7 +46,7 @@ import com.sa.game.systems.render.RenderScoreBoardSystem;
 import com.sa.game.systems.render.RenderScoreSystem;
 import com.sa.game.systems.render.RenderStarsSystem;
 import com.sa.game.systems.render.RenderSystem;
-
+//testar för att visa kajsa
 public class GameWorld {
     //game entities
     StaticEnvironment staticEnvironment = new StaticEnvironment();
