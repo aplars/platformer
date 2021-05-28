@@ -68,7 +68,9 @@ public class Player {
         physicsComponent.velocity.set(vel);
         physicsComponent.jumpTime = jumpTime;
         physicsComponent.airResistance.set(0.85f, 1f);
-
+        physicsComponent.walkDirection = WalkDirection.Right;
+        if(isFlipped)
+            physicsComponent.walkDirection = WalkDirection.Left;
         PositionComponent positionComponent = new PositionComponent();
         positionComponent.position.set(pos.x, pos.y);
 
@@ -77,7 +79,7 @@ public class Player {
         //collisionComponent.offset.y = -size.y / 4;
 
         HealthComponent healthComponent = new HealthComponent();
-        healthComponent.isStunned = false;
+        healthComponent.stun = 1;
         healthComponent.health = 1;
         healthComponent.lives = lives;
 

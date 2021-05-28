@@ -2,11 +2,10 @@ package com.sa.game;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -17,36 +16,36 @@ import com.sa.game.gfx.Renderer;
 import com.sa.game.models.LayersToRenderModel;
 import com.sa.game.systems.AISystem;
 import com.sa.game.systems.AnimationSystem;
-import com.sa.game.systems.PickUpCoinSystem;
 import com.sa.game.systems.CollisionSystem;
-import com.sa.game.systems.control.ControlMovementSystem;
-import com.sa.game.systems.control.ControlPunchSystem;
-import com.sa.game.systems.control.ControlThrowEntitySystem;
 import com.sa.game.systems.DamageSystem;
-import com.sa.game.systems.DampingSystem;
 import com.sa.game.systems.DelayControlSystem;
 import com.sa.game.systems.DroppedSystem;
 import com.sa.game.systems.ExitSystem;
-import com.sa.game.systems.ExplodeBoxingGloveOnContactSystem;
-import com.sa.game.systems.ExplodeEnemyOnContactSystem;
+import com.sa.game.systems.explode.ExplodeBoxingGloveOnContactSystem;
+import com.sa.game.systems.explode.ExplodeEnemyOnContactSystem;
 import com.sa.game.systems.LastSystem;
-import com.sa.game.systems.MoveToEntitySystem;
-import com.sa.game.systems.MovementSystem;
+import com.sa.game.systems.movement.MoveToEntitySystem;
 import com.sa.game.systems.OpenDoorSystem;
-import com.sa.game.systems.PhysicsSystem;
+import com.sa.game.systems.movement.PhysicsSystem;
+import com.sa.game.systems.PickUpCoinSystem;
 import com.sa.game.systems.PickUpEntitySystem;
-import com.sa.game.systems.control.PlayerInputSystem;
-import com.sa.game.systems.render.RenderScoreBoardSystem;
-import com.sa.game.systems.render.RenderStarsSystem;
-import com.sa.game.systems.render.RenderSystem;
-import com.sa.game.systems.render.RenderScoreSystem;
-import com.sa.game.systems.ResolveCollisionSystem;
+import com.sa.game.systems.movement.ResolveCollisionSystem;
 import com.sa.game.systems.RespawnPlayer1System;
 import com.sa.game.systems.SensorSystem;
 import com.sa.game.systems.ThrownSystem;
 import com.sa.game.systems.WrapEntitySystem;
+import com.sa.game.systems.control.ControlMovementSystem;
+import com.sa.game.systems.control.ControlPunchSystem;
+import com.sa.game.systems.control.ControlThrowEntitySystem;
+import com.sa.game.systems.control.PlayerInputSystem;
+import com.sa.game.systems.movement.DampingSystem;
+import com.sa.game.systems.movement.MovementSystem;
 import com.sa.game.systems.render.RenderDebugInfoSystem;
 import com.sa.game.systems.render.RenderParticleSystem;
+import com.sa.game.systems.render.RenderScoreBoardSystem;
+import com.sa.game.systems.render.RenderScoreSystem;
+import com.sa.game.systems.render.RenderStarsSystem;
+import com.sa.game.systems.render.RenderSystem;
 
 public class GameWorld {
     //game entities
@@ -155,6 +154,18 @@ public class GameWorld {
         }
         engine.removeAllEntities();
 
+        engine.addEntityListener(new EntityListener(){
+                @Override
+                public void entityAdded(Entity entity) {
+                }
+
+                @Override
+                public void entityRemoved(Entity entity) {
+                }
+
+            });
+
+
         for(final StaticEnvironment.Entity entity : staticEnvironment.entities) {
             if (entity.name.equals("devo_devil")) {
                 engine.addEntity(CreateEnteties.enemy(assetManager,
@@ -228,8 +239,8 @@ public class GameWorld {
             engine.addSystem(new PhysicsSystem());
             engine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
             engine.addSystem(new SensorSystem(staticEnvironment));
-            engine.addSystem(new DamageSystem());
             engine.addSystem(new PickUpEntitySystem(collisionDetection));
+            engine.addSystem(new DamageSystem());
             engine.addSystem(new ExitSystem(new ILoadNextLevel() {
                     public void nextLevel(int player1Score, int player1Lives) {
                     loadNextLevel = true;

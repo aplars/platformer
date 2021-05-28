@@ -49,12 +49,12 @@ public class Apple {
         CollisionComponent collisionComponent = new CollisionComponent();
         collisionComponent.entity = collisionEntity;
 
-        HealthComponent healthComponent = new HealthComponent();
-        healthComponent.isStunned = false;
+        //HealthComponent healthComponent = new HealthComponent();
+        //healthComponent.stun = 1;
 
         RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();
-        renderComponent.sprite.layer = 3;
+        renderComponent.sprite.layer = 1;//3;
         renderComponent.sprite.size.set(collisionEntity.box.width, collisionEntity.box.height);
         renderComponent.sprite.textureRegion = idleAnimation.getKeyFrame(0);
 
@@ -65,7 +65,7 @@ public class Apple {
         entity.add(positionComponent);
         entity.add(physicsComponent);
         entity.add(collisionComponent);
-        entity.add(healthComponent);
+        //entity.add(healthComponent);
         entity.add(renderComponent);
         entity.add(renderDebugInfoComponent);
 

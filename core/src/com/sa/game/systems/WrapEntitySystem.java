@@ -13,9 +13,9 @@ public class WrapEntitySystem extends IteratingSystem {
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        WorldConstantsComponent worldConstantsComponent = ComponentMappers.worldConstats.get(entity);
-        PositionComponent positionComponent = ComponentMappers.position.get(entity);
+    protected void processEntity(final Entity entity, final float deltaTime) {
+        final WorldConstantsComponent worldConstantsComponent = ComponentMappers.worldConstats.get(entity);
+        final PositionComponent positionComponent = ComponentMappers.position.get(entity);
         if(worldConstantsComponent != null && positionComponent.position.y < 0)
             positionComponent.position.y = worldConstantsComponent.height;
     }

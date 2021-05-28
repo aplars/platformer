@@ -57,7 +57,7 @@ public class BoxingGlove {
         ExplodeOnContactComponent explodeOnContactComponent = new ExplodeOnContactComponent(null);
 
         DamageComponent damageComponent = new DamageComponent();
-        damageComponent.stun = true;
+        damageComponent.stun = 1;
         damageComponent.stunTime = 5f;
 
         RenderComponent renderComponent = new RenderComponent();

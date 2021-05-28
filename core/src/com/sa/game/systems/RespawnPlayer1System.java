@@ -19,7 +19,7 @@ public class RespawnPlayer1System extends IteratingSystem {
     CollisionDetection collisionDetection;
     StaticEnvironment staticEnvironment;
 
-    public RespawnPlayer1System(AssetManager assetManager, CollisionDetection collisionDetection, StaticEnvironment staticEnvironment) {
+    public RespawnPlayer1System(final AssetManager assetManager, final CollisionDetection collisionDetection, final StaticEnvironment staticEnvironment) {
         super(Family.all(Player1Component.class, AIComponent.class, HealthComponent.class, RenderComponent.class).get());
         this.assetManager = assetManager;
         this.collisionDetection = collisionDetection;
@@ -27,11 +27,11 @@ public class RespawnPlayer1System extends IteratingSystem {
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        Player1Component player1Component = ComponentMappers.player1.get(entity);
-        AIComponent aiComponent = ComponentMappers.ai.get(entity);
-        HealthComponent healthComponent = ComponentMappers.health.get(entity);
-        RenderComponent renderComponent = ComponentMappers.render.get(entity);
+    protected void processEntity(final Entity entity, final float deltaTime) {
+        final Player1Component player1Component = ComponentMappers.player1.get(entity);
+        final AIComponent aiComponent = ComponentMappers.ai.get(entity);
+        final HealthComponent healthComponent = ComponentMappers.health.get(entity);
+        final RenderComponent renderComponent = ComponentMappers.render.get(entity);
 
         if (aiComponent.stateMachine.getCurrentState() == PlayerStates.RESPAWN) {
             this.getEngine().addEntity(CreateEnteties.player(assetManager,

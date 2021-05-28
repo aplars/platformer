@@ -27,7 +27,7 @@ public class RenderStarsSystem extends IteratingSystem {
 
         TextureRegion textureRegion = renderStarsComponent.animation.getKeyFrame(time);
 
-        if (healthComponent.isStunned) {
+        if (healthComponent.isStunned()) {
             Sprite sprite = new Sprite();
             sprite.size.set(16, 16);
             sprite.textureRegion.setRegion(textureRegion);

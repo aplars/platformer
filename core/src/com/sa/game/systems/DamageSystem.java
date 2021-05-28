@@ -7,9 +7,11 @@ import com.sa.game.collision.CollisionEntity;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ComponentMappers;
 import com.sa.game.components.DamageComponent;
+import com.sa.game.components.DelayControlComponent;
 import com.sa.game.components.HealthComponent;
 
 
+///The entity gives damage to colliding entities.
 public class DamageSystem extends IteratingSystem {
     public DamageSystem()
     {
@@ -22,19 +24,22 @@ public class DamageSystem extends IteratingSystem {
         final HealthComponent health = ComponentMappers.health.get(entity);
         final CollisionComponent collision = ComponentMappers.collision.get(entity);
 
-        for(final CollisionEntity colEnt : collision.entity.collidees) {
-            final Entity colledee = (Entity)colEnt.userData;
-            final HealthComponent colledeeHealth = ComponentMappers.health.get(colledee);
+        for(final CollisionEntity collidee : collision.entity.collidees) {
+            final Entity colledeeEntity = (Entity)collidee.userData;
+            final HealthComponent colledeeHealthComponent = ComponentMappers.health.get(colledeeEntity);
 
-            if (colledeeHealth != null && damage.stun) {
-                colledeeHealth.isStunned = damage.stun;
-                colledeeHealth.stunTime = damage.stunTime;
+            if (colledeeHealthComponent != null && damage.stun > 0) {
+                colledeeHealthComponent.stun -= damage.stun;
+                colledeeHealthComponent.stunTime = damage.stunTime;
+                damage.stun = 0;
+                //colledeeEntity.add(new DelayControlComponent(1f));
             }
 
-            if(health == null || !health.isStunned)
-                if(colledeeHealth != null && colledeeHealth.health > 0) {
-                    colledeeHealth.health -= damage.damage;
+            if (health == null || !health.isStunned()) {
+                if (colledeeHealthComponent != null && colledeeHealthComponent.health > 0) {
+                    colledeeHealthComponent.health -= damage.damage;
                 }
+            }
         }
     }
 }

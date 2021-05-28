@@ -12,7 +12,13 @@ import com.sa.game.components.ControlComponent;
 import com.sa.game.components.HealthComponent;
 import com.sa.game.components.MoveToEntityComponent;
 import com.sa.game.components.PickUpEntityComponent;
+import com.sa.game.components.SensorComponent;
 
+/**
+ * The processed entity picks up stunned entities when colliding with them.
+ * The picked up entity gets its collision detection fully disabled and it is set to follow the entity.
+ *
+ */
 public class PickUpEntitySystem extends IteratingSystem {
     CollisionDetection collisionDetection;
     public PickUpEntitySystem(CollisionDetection collisionDetection) {
@@ -35,7 +41,7 @@ public class PickUpEntitySystem extends IteratingSystem {
             Entity collideeEnt = (Entity)collidee.userData;
             HealthComponent health = ComponentMappers.health.get(collideeEnt);
 
-            if(health != null && health.isStunned) {
+            if(health != null && health.isStunned() && collidee.groundCollisionData.didCollide) {
                 if(!ComponentMappers.moveToEntity.has(collideeEnt) || !ComponentMappers.moveToEntity.get(collideeEnt).isEnable) {
                     if(pickUpEntityComponent.entity == null) {
                         collideeEnt.add(new MoveToEntityComponent(entity, new Vector2(0, collision.entity.box.height), 130f));

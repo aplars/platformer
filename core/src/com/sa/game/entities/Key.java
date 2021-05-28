@@ -52,7 +52,7 @@ public class Key {
         collisionComponent.entity = collisionEntity;
 
         HealthComponent healthComponent = new HealthComponent();
-        healthComponent.isStunned = true;
+        healthComponent.stun = 0; //0 because we always want to pick up the key. No need to hit it first.
 
         RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();

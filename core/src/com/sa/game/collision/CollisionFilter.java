@@ -1,5 +1,7 @@
 package com.sa.game.collision;
 
+import java.util.HashSet;
+
 public class CollisionFilter {
     public static short PLAYER = 0x0001;
     public static short PLAYER_PROJECTILE = 0x0002;
@@ -10,4 +12,6 @@ public class CollisionFilter {
     public static short OBJECT = 0x0040;
     public short category = Short.MAX_VALUE;
     public short mask = Short.MAX_VALUE;
+
+    public HashSet<CollisionEntity> disabled = new HashSet<>();
 }

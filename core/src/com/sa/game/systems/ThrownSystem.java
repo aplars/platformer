@@ -26,7 +26,8 @@ public class ThrownSystem extends IteratingSystem{
 
        collisionComponent.entity.isEnable = true;
        collisionComponent.entity.filter.mask &= ~CollisionFilter.PLAYER; // Disable collision vs player 
-       collisionComponent.entity.filter.mask &= ~CollisionFilter.OBJECT; // Disable collision vs player
+       collisionComponent.entity.filter.mask &= ~CollisionFilter.OBJECT; // Disable collision vs objects
+       collisionComponent.entity.filter.mask |= CollisionFilter.ENEMY; //Enable collision vs enemy
 
        if (thrownComponent.direction == WalkDirection.Right) 
            physicsComponent.velocity.x = 300;

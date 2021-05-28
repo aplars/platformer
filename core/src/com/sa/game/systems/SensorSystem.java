@@ -16,15 +16,15 @@ import com.sa.game.entities.WalkDirection;
 
 public class SensorSystem extends IteratingSystem {
     StaticEnvironment staticEnvironment;
-    public SensorSystem(StaticEnvironment staticEnvironment) {
+    public SensorSystem(final StaticEnvironment staticEnvironment) {
         super(Family.all(SensorComponent.class, CollisionComponent.class, PhysicsComponent.class).get());
         this.staticEnvironment = staticEnvironment;
     }
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        SensorComponent sensorComponent = ComponentMappers.sensor.get(entity);
-        CollisionComponent collisionComponent = ComponentMappers.collision.get(entity);
-        PhysicsComponent physicsComponent = ComponentMappers.physics.get(entity);
+    protected void processEntity(final Entity entity, final float deltaTime) {
+        final SensorComponent sensorComponent = ComponentMappers.sensor.get(entity);
+        final CollisionComponent collisionComponent = ComponentMappers.collision.get(entity);
+        final PhysicsComponent physicsComponent = ComponentMappers.physics.get(entity);
 
         sensorComponent.isOnground = collisionComponent.entity.groundCollisionData.didCollide;
         sensorComponent.wallCollisionLeft = collisionComponent.entity.wallsCollisionData.didCollide &&
@@ -32,15 +32,15 @@ public class SensorSystem extends IteratingSystem {
         sensorComponent.wallCollisionRight = collisionComponent.entity.wallsCollisionData.didCollide &&
             physicsComponent.velocity.x > 0f;
 
-        Vector2 feetPos = new Vector2(collisionComponent.entity.box.x + collisionComponent.entity.box.width/2f, collisionComponent.entity.box.y);
-        int dir = 0;
+        final Vector2 feetPos = new Vector2(collisionComponent.entity.box.x + collisionComponent.entity.box.width/2f, collisionComponent.entity.box.y);
+        final int dir = 0;
         /*if(physicsComponent.walkDirection == WalkDirection.Left)
             dir = -1;
         else if (physicsComponent.walkDirection == WalkDirection.Right)
             dir = 1;*/
         GridPoint2 gridPoint2 = new GridPoint2();
         gridPoint2 = staticEnvironment.getGridPointFromWorldCoordinate(LayerId.Floor, feetPos, gridPoint2);
-        int tileId = staticEnvironment.getTileId(LayerId.Floor, gridPoint2.x+dir, gridPoint2.y-1);
+        final int tileId = staticEnvironment.getTileId(LayerId.Floor, gridPoint2.x+dir, gridPoint2.y-1);
 
         sensorComponent.groundOnNextTile = true;
         if (tileId == 0) {

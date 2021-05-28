@@ -11,6 +11,16 @@ public class CollisionDetection {
     final ArrayList<CollisionEntity> entities = new ArrayList<>();
     SweepAndPrune sap = new SweepAndPrune();
 
+    public static void disableCollisionBetweenEntities(final CollisionEntity entityA, final CollisionEntity entityB) {
+        entityA.filter.disabled.add(entityB);
+        entityB.filter.disabled.add(entityA);
+    }
+
+    public static void enableCollisionBetweenEntities(final CollisionEntity entityA, final CollisionEntity entityB) {
+        entityA.filter.disabled.remove(entityB);
+        entityB.filter.disabled.remove(entityA);
+    }
+
     public void add(final CollisionEntity entity) {
         entities.add(entity);
         sap.add(entity);
@@ -47,16 +57,16 @@ public class CollisionDetection {
             bVel.x*=dt;
             bVel.y*=dt;
 
-            final int aa = colPair.a.filter.category & colPair.b.filter.mask;
-            final int bb = colPair.b.filter.category & colPair.a.filter.mask;
-            if(aa == 0  || bb == 0)
-                continue;
+            final int aa = colPair.b.filter.category & colPair.a.filter.mask;
+            final int bb = colPair.a.filter.category & colPair.b.filter.mask;
+            //if(aa == 0  || bb == 0)
+            //    continue;
 
             final RectangleCollisionData data = IntersectionTests.rectangleRectangle(a.box, aVel, b.box, bVel);
             if(data.didCollide) {
-                if(aa != 0)
+                if(aa != 0 && !a.filter.disabled.contains(b))
                     a.collidees.add(b);
-                if(bb != 0)
+                if(bb != 0 && !b.filter.disabled.contains(a))
                     b.collidees.add(a);
             }
         }

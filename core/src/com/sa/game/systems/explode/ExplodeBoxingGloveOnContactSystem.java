@@ -1,4 +1,4 @@
-package com.sa.game.systems;
+package com.sa.game.systems.explode;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -23,20 +23,12 @@ public class ExplodeBoxingGloveOnContactSystem extends IteratingSystem {
     protected void processEntity(final Entity entity, final float deltaTime) {
         final PositionComponent positionComponent = ComponentMappers.position.get(entity);
         final ExplodeOnContactComponent explodeOnContactComponent = ComponentMappers.explodeOnContact.get(entity);
+        final boolean isColliding = (ComponentMappers.collision.get(entity).entity.collidees.size() > 0) | ComponentMappers.collision.get(entity).entity.groundCollisionData.didCollide | ComponentMappers.collision.get(entity).entity.wallsCollisionData.didCollide;
 
-        boolean isColliding = ComponentMappers.collision.get(entity).entity.collidees.size() > 0;
-        //Handle ecplosions collision vs entities
-        //for(CollisionEntity entityThatCollidesExplosion : ComponentMappers.collision.get(entity).entity.collidees) {
-        //    this.getEngine().removeEntity((Entity)entityThatCollidesExplosion.userData);
-        //}
-
-        isColliding |= ComponentMappers.collision.get(entity).entity.groundCollisionData.didCollide;
-        isColliding |= ComponentMappers.collision.get(entity).entity.wallsCollisionData.didCollide;
         if (isColliding) {
             //give points to the guilty one
             if (explodeOnContactComponent.theGuiltyEntity != null) {
-                final Player1Component player1Component = ComponentMappers.player1
-                        .get(explodeOnContactComponent.theGuiltyEntity);
+                final Player1Component player1Component = ComponentMappers.player1.get(explodeOnContactComponent.theGuiltyEntity);
                 if (player1Component != null) {
                     player1Component.score++;
                 }

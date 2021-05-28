@@ -51,8 +51,10 @@ public class Enemy {
         final CollisionEntity collisionEntity = new CollisionEntity();
         collisionEntity.box.set(collisionRectangle);
         collisionEntity.velocity.set(0, 0);
+
         collisionEntity.userData = entity;
         collisionEntity.filter.category = CollisionFilter.ENEMY;
+        collisionEntity.filter.mask &= ~CollisionFilter.ENEMY;
         collisionDetection.add(collisionEntity);
 
         final ControlComponent controlComponent = new ControlComponent();
@@ -65,7 +67,9 @@ public class Enemy {
         physicsComponent.gravity = -(staticEnvironment.tileSizeInPixels*5f+2)/(2f*jumpTime*jumpTime);
         physicsComponent.jumpTime = jumpTime;
         physicsComponent.airResistance.set(0.85f, 1f);
-
+        physicsComponent.walkDirection = WalkDirection.Right;
+        if(isFlipped)
+            physicsComponent.walkDirection = WalkDirection.Left;
         //physicsComponent.gravity = -2 * (staticEnvironment.tileSizeInPixels * 5f + 2) / (float) Math.pow(jumpTime, 2f);
 
 
@@ -101,9 +105,10 @@ public class Enemy {
         final AIComponent<DevoDevilStates> aiComponent = new AIComponent<>(entity, stateMachine);
 
         final HealthComponent healthComponent = new HealthComponent();
+        healthComponent.stun = 3;
 
         final DamageComponent damageComponent = new DamageComponent();
-        damageComponent.stun = false;
+        damageComponent.stun = 1;
         damageComponent.damage = 1;
 
         final RenderDebugInfoComponent renderDebugInfoComponent = new RenderDebugInfoComponent();

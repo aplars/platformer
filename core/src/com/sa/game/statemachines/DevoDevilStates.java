@@ -13,7 +13,7 @@ public enum DevoDevilStates implements State<Entity> {
         @Override public void update(final Entity data) {
             ComponentMappers.health.get(data).stunTime -= ComponentMappers.ai.get(data).deltaTime;
             if (ComponentMappers.health.get(data).stunTime < 0f) {
-                ComponentMappers.health.get(data).isStunned = false;
+                ComponentMappers.health.get(data).stun = 3;
                 ComponentMappers.ai.get(data).stateMachine.changeState(WALK);
                 if(MathUtils.random.nextInt(2) == 0) {
                     DevoDevilStates.left(data);
@@ -56,7 +56,7 @@ public enum DevoDevilStates implements State<Entity> {
                 if(num < 3)
                     aiComponent.stateMachine.changeState(JUMP);
             }
-            if(ComponentMappers.health.get(data).isStunned) {
+            if(ComponentMappers.health.get(data).isStunned()) {
                 ComponentMappers.ai.get(data).stateMachine.changeState(STUNNED);
                 ComponentMappers.control.get(data).buttonLeft = false;
                 ComponentMappers.control.get(data).buttonRight = false;
