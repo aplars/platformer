@@ -11,6 +11,9 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.PerformanceCounters;
 import com.sa.game.collision.CollisionDetection;
+import com.sa.game.collision.CollisionEntity;
+import com.sa.game.components.CollisionComponent;
+import com.sa.game.components.ComponentMappers;
 import com.sa.game.entities.CreateEnteties;
 import com.sa.game.gfx.Renderer;
 import com.sa.game.models.LayersToRenderModel;
@@ -161,6 +164,9 @@ public class GameWorld {
 
                 @Override
                 public void entityRemoved(Entity entity) {
+                    CollisionComponent collisionComponent = ComponentMappers.collision.get(entity);
+                    if(collisionComponent != null && collisionComponent.entity != null)
+                        collisionDetection.remove(collisionComponent.entity);
                 }
 
             });

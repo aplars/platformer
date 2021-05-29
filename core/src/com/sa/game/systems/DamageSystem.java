@@ -28,6 +28,7 @@ public class DamageSystem extends IteratingSystem {
             final Entity colledeeEntity = (Entity)collidee.userData;
             final HealthComponent colledeeHealthComponent = ComponentMappers.health.get(colledeeEntity);
 
+            //Stun the collidee if this entity can stun.
             if (colledeeHealthComponent != null && damage.stun > 0) {
                 colledeeHealthComponent.stun -= damage.stun;
                 colledeeHealthComponent.stunTime = damage.stunTime;
@@ -35,6 +36,7 @@ public class DamageSystem extends IteratingSystem {
                 //colledeeEntity.add(new DelayControlComponent(1f));
             }
 
+            //Take health from collidee if entity is not stunned.
             if (health == null || !health.isStunned()) {
                 if (colledeeHealthComponent != null && colledeeHealthComponent.health > 0) {
                     colledeeHealthComponent.health -= damage.damage;

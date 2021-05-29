@@ -33,7 +33,7 @@ public class ExplodeBoxingGloveOnContactSystem extends IteratingSystem {
                     player1Component.score++;
                 }
             }
-            this.collisionDetection.remove(ComponentMappers.collision.get(entity).entity);
+            //this.collisionDetection.remove(ComponentMappers.collision.get(entity).entity);
             this.getEngine().removeEntity(entity);
             this.getEngine().addEntity(CreateEnteties.explosion(positionComponent.position));
         }

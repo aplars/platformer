@@ -38,7 +38,7 @@ public class PickUpCoinSystem extends IteratingSystem {
             if (player1Component != null) {
                 coinGroupComponent.thief = (Entity) collisionEntity.userData;
                 entity.remove(RenderComponent.class);
-                this.collisionDetection.remove(collisionComponent.entity);
+                //this.collisionDetection.remove(collisionComponent.entity);
             }
         }
     }

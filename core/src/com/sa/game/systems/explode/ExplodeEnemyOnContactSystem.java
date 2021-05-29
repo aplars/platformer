@@ -35,7 +35,7 @@ public class ExplodeEnemyOnContactSystem extends IteratingSystem {
                     player1Component.score++;
                 }
                 this.getEngine().removeEntity((Entity)entityThatCollidesExplosion.userData);
-                collisionDetection.remove(entityThatCollidesExplosion);
+                //collisionDetection.remove(entityThatCollidesExplosion);
             }
         }
 
@@ -50,7 +50,7 @@ public class ExplodeEnemyOnContactSystem extends IteratingSystem {
                     player1Component.score++;
                 }
             }
-            this.collisionDetection.remove(ComponentMappers.collision.get(entity).entity);
+            //this.collisionDetection.remove(ComponentMappers.collision.get(entity).entity);
             this.getEngine().removeEntity(entity);
             this.getEngine().addEntity(CreateEnteties.explosion(positionComponent.position));
         }
