@@ -16,7 +16,7 @@ public class Exit {
         Entity entity = new Entity();
 
         ExitGroupComponent exitGroupComponent = new ExitGroupComponent();
-
+        
         Rectangle collisionRectangle = new Rectangle();
         collisionRectangle.setSize(size.x, size.y);
         collisionRectangle.setCenter(position.x, position.y);

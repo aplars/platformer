@@ -173,15 +173,6 @@ public class GameWorld {
 
 
         for(final StaticEnvironment.Entity entity : staticEnvironment.entities) {
-            if (entity.name.equals("devo_devil")) {
-                engine.addEntity(CreateEnteties.enemy(assetManager,
-                                                      startDelay,
-                                                      entity.position,
-                                                      entity.size.y,
-                                                      false,
-                                                      staticEnvironment,
-                                                      collisionDetection));
-            }
             if (entity.name.equals("devodevil")) {
                 engine.addEntity(CreateEnteties.enemy(assetManager,
                         startDelay,
@@ -190,6 +181,7 @@ public class GameWorld {
                         entity.isFlipped,
                         staticEnvironment,
                         collisionDetection));
+
             }
             if (entity.name.equals("key")) {
 
@@ -230,7 +222,6 @@ public class GameWorld {
         assetManager.finishLoading();
         while(!assetManager.isFinished())
             assetManager.update();
-
 
         if (addSystems) {
             engine.addSystem(new PlayerInputSystem());

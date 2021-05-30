@@ -5,10 +5,10 @@
     },
     "activeFile": "/home/tobias/source/platformer/android/assets/level_1.tmx",
     "expandedProjectPaths": [
-        "/home/tobias/source/platformer/android/assets/enteties",
-        "/home/tobias/source/platformer/android/assets/skins/gdx-holo",
         "/home/tobias/source/platformer/android/assets",
-        "/home/tobias/source/platformer/android/assets/templates"
+        "/home/tobias/source/platformer/android/assets/enteties",
+        "/home/tobias/source/platformer/android/assets/templates",
+        "/home/tobias/source/platformer/android/assets/skins/gdx-holo"
     ],
     "file.lastUsedOpenFilter": "Alla filer (*)",
     "fileStates": {
