@@ -23,6 +23,7 @@ public class ExitSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         CollisionComponent collisionComponent = ComponentMappers.collision.get(entity);
 
+        //Check if entity exits to the next level.
         for(CollisionEntity ent : collisionComponent.entity.collidees) {
             //ent is colliding with the exit, check if ent is a player.
             Player1Component player1Component = ComponentMappers.player1.get((Entity)ent.userData);

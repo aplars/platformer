@@ -1,11 +1,9 @@
 package com.sa.game.collision;
 
-import com.badlogic.gdx.math.Vector2;
-import com.sa.game.StaticEnvironment;
-
 import java.util.ArrayList;
 
-import javax.print.attribute.standard.ColorSupported;
+import com.badlogic.gdx.math.Vector2;
+import com.sa.game.StaticEnvironment;
 
 public class CollisionDetection {
     final ArrayList<CollisionEntity> entities = new ArrayList<>();

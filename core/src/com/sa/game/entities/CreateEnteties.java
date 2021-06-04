@@ -11,12 +11,12 @@ import com.sa.game.StaticEnvironment;
 import com.sa.game.collision.CollisionDetection;
 
 public class CreateEnteties {
-    public static Entity enemy(AssetManager assetManager, float startDelay, Vector2 center, float height, boolean isFlipped, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public static Entity devoDevil(AssetManager assetManager, float startDelay, Vector2 center, float height, boolean isFlipped, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         assetManager.load("enteties/game.atlas", TextureAtlas.class);
         assetManager.finishLoadingAsset("enteties/game.atlas");
         TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
-        return Enemy.create(
-                "clown",
+        return DevoDevil.create(
+                "devodevil",
                 startDelay,
                 center,
                 height,
@@ -26,6 +26,20 @@ public class CreateEnteties {
                 new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("devodevilstanding"), Animation.PlayMode.NORMAL),
                 new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("devodeviljumping"), Animation.PlayMode.NORMAL),
                 new Animation<TextureRegion>(1 / 60f * 12f, atlas.findRegions("stars"), Animation.PlayMode.LOOP),
+                staticEnvironment,
+                collisionDetection);
+    }
+
+        public static Entity chiChi(AssetManager assetManager, float startDelay, Vector2 center, float height, boolean isFlipped, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+        assetManager.load("enteties/game.atlas", TextureAtlas.class);
+        assetManager.finishLoadingAsset("enteties/game.atlas");
+        TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
+        return ChiChi.create(
+                startDelay,
+                center,
+                height,
+                isFlipped,
+                new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("chichiflappingwings"), Animation.PlayMode.LOOP),
                 staticEnvironment,
                 collisionDetection);
     }

@@ -28,7 +28,7 @@ import com.sa.game.components.groups.EnemyGroupComponent;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.statemachines.DevoDevilStates;
 
-public class Enemy {
+public class DevoDevil {
     public static Entity create(final String name, final float startDelay, final Vector2 position, final float size, final boolean isFlipped,
                                 final Animation<TextureRegion> idleAnimation,
                                 final Animation<TextureRegion> walkAnimation,
@@ -84,7 +84,9 @@ public class Enemy {
         animationComponent.animations.put(DevoDevilStates.IDLE, idleAnimation);
         animationComponent.animations.put(DevoDevilStates.STUNNED, stunnedAnimation);
         animationComponent.animations.put(DevoDevilStates.WALK, walkAnimation);
+        animationComponent.animations.put(DevoDevilStates.TURNAROUND, walkAnimation);
         animationComponent.animations.put(DevoDevilStates.JUMP, jumpAnimation);
+        animationComponent.animations.put(DevoDevilStates.CONTINUE, jumpAnimation);
 
         final RenderComponent renderComponent = new RenderComponent();
         renderComponent.sprite = new Sprite();

@@ -10,9 +10,7 @@ import com.sa.game.StaticEnvironment.LayerId;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ComponentMappers;
 import com.sa.game.components.PhysicsComponent;
-import com.sa.game.components.PositionComponent;
 import com.sa.game.components.SensorComponent;
-import com.sa.game.entities.WalkDirection;
 
 public class SensorSystem extends IteratingSystem {
     StaticEnvironment staticEnvironment;
@@ -45,6 +43,25 @@ public class SensorSystem extends IteratingSystem {
         sensorComponent.groundOnNextTile = true;
         if (tileId == 0) {
             sensorComponent.groundOnNextTile = false;
+        }
+
+        sensorComponent.groundOnLeft = true;
+        final int tileIdLeft = staticEnvironment.getTileId(LayerId.Floor, gridPoint2.x-1, gridPoint2.y-1);
+        if(tileIdLeft == 0)
+            sensorComponent.groundOnLeft = false;
+        sensorComponent.groundOnRight = true;
+        final int tileIdRight = staticEnvironment.getTileId(LayerId.Floor, gridPoint2.x+1, gridPoint2.y-1);
+        if(tileIdRight == 0)
+            sensorComponent.groundOnRight = false;
+
+        sensorComponent.isOnTop = false;
+        sensorComponent.isOnBottom = false;
+
+        if(gridPoint2.y >= staticEnvironment.getNumTilesY()) {
+            sensorComponent.isOnTop = true;
+        }
+        if(gridPoint2.y <= 0) {
+            sensorComponent.isOnBottom = true;
         }
     }
 }

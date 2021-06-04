@@ -44,5 +44,11 @@ public class ControlMovementSystem extends IteratingSystem {
         if(control.buttonRight) {
             physics.force.add(moveForce, 0f);
         }
+        if(control.buttonUp) {
+            physics.force.add(0f, moveForce);
+        }
+        if(control.buttonDown) {
+            physics.force.add(0f, -moveForce);
+        }
     }
 }

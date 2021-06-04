@@ -3,8 +3,10 @@ package com.sa.game;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -69,12 +71,19 @@ public class GameWorld {
     public int nextLevelPlayer1Score = 0;
     public int nextLevelPlayer1Lives = 3;
 
+    public boolean playersAreDead = false;
+    public int deadPlayer1Score = 0;
+
     public int player1Score = 0;
 
+    Controller controllerA;
+    Controller controllerB;
     PerformanceCounters performanceCounters;
 
-    public GameWorld(final PerformanceCounters performanceCounters) {
+    public GameWorld(Controller controllerA, Controller controllerB, final PerformanceCounters performanceCounters) {
         this.performanceCounters = performanceCounters;
+        this.controllerA = controllerA;
+        this.controllerB = controllerB;
     }
 
     public void setVisibleLayers(final int layers[]) {
@@ -174,13 +183,23 @@ public class GameWorld {
 
         for(final StaticEnvironment.Entity entity : staticEnvironment.entities) {
             if (entity.name.equals("devodevil")) {
-                engine.addEntity(CreateEnteties.enemy(assetManager,
+                engine.addEntity(CreateEnteties.devoDevil(assetManager,
                         startDelay,
                         entity.position,
                         entity.size.y,
                         entity.isFlipped,
                         staticEnvironment,
                         collisionDetection));
+
+            }
+            if (entity.name.equals("chichi")) {
+                engine.addEntity(CreateEnteties.chiChi(assetManager,
+                                                          startDelay,
+                                                          entity.position,
+                                                          entity.size.y,
+                                                          entity.isFlipped,
+                                                          staticEnvironment,
+                                                          collisionDetection));
 
             }
             if (entity.name.equals("key")) {
@@ -224,12 +243,12 @@ public class GameWorld {
             assetManager.update();
 
         if (addSystems) {
-            engine.addSystem(new PlayerInputSystem());
+            engine.addSystem(new PlayerInputSystem(controllerA));
             engine.addSystem(new AISystem());
             engine.addSystem(new OpenDoorSystem(collisionDetection));
             engine.addSystem(new ControlMovementSystem(collisionDetection, staticEnvironment));
-            engine.addSystem(new ControlPunchSystem(assetManager, collisionDetection, staticEnvironment));
             engine.addSystem(new ControlThrowEntitySystem());
+            engine.addSystem(new ControlPunchSystem(assetManager, collisionDetection, staticEnvironment));
             engine.addSystem(new ThrownSystem());
             engine.addSystem(new DroppedSystem());
             engine.addSystem(new MoveToEntitySystem());
@@ -240,18 +259,19 @@ public class GameWorld {
             engine.addSystem(new DamageSystem());
             engine.addSystem(new ExitSystem(new ILoadNextLevel() {
                     public void nextLevel(int player1Score, int player1Lives) {
-                    loadNextLevel = true;
-                    nextLevelPlayer1Score = player1Score;
-                    nextLevelPlayer1Lives = player1Lives;
-                }
+                        loadNextLevel = true;
+                        nextLevelPlayer1Score = player1Score;
+                        nextLevelPlayer1Lives = player1Lives;
+                    }
+
+                    public void toGameOverScreen(int player1Score) {
+                    }
             }));
             engine.addSystem(new ExplodeBoxingGloveOnContactSystem(collisionDetection));
             engine.addSystem(new ExplodeEnemyOnContactSystem(collisionDetection));
             engine.addSystem(new PickUpCoinSystem(collisionDetection));
             engine.addSystem(new ResolveCollisionSystem(performanceCounters.add("resolvecollision")));
-
             engine.addSystem(new RespawnPlayer1System(assetManager, collisionDetection, staticEnvironment));
-
             engine.addSystem(new WrapEntitySystem());
             engine.addSystem(new MovementSystem());
             engine.addSystem(new DampingSystem());
@@ -262,7 +282,12 @@ public class GameWorld {
             engine.addSystem(new RenderStarsSystem(renderer));
             engine.addSystem(new RenderScoreSystem(renderer));
             engine.addSystem(new RenderScoreBoardSystem(assetManager, renderer, camera, staticEnvironment));
-            engine.addSystem(new LastSystem());
+            engine.addSystem(new LastSystem(new IGotoGameOverScreen(){
+                    public void gameOverScreen(int player1Score) {
+                        playersAreDead = true;
+                        deadPlayer1Score = player1Score;
+                    }
+                }));
             engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
         }
 

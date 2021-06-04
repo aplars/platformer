@@ -1,8 +1,10 @@
 package com.sa.game.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -28,8 +30,16 @@ public class GameScreen extends ScreenAdapter{
     float timeToShowNextLevelText = 0f;
 
     float startDelayTime = 4f;
-    public GameScreen() {
-        gameWorld = new GameWorld(performanceCounters);
+
+    Game game;
+    Controller controllerA;
+    Controller controllerB;
+
+    public GameScreen(Game game, Controller controllerA, Controller controllerB) {
+        this.game = game;
+        this.controllerA = controllerA;
+        this.controllerB = controllerB;
+        gameWorld = new GameWorld(controllerA, controllerB, performanceCounters);
         gameWorld.loadNextLevel = true;
         batch = new SpriteBatch();
         font = new BitmapFont();
@@ -43,6 +53,9 @@ public class GameScreen extends ScreenAdapter{
     int currentLevel = 0;
     @Override
     public void render(final float delta) {
+        if(gameWorld.playersAreDead) {
+            this.game.setScreen(new TitleScreen(game, controllerA, controllerB));
+        }
         final long startTime = TimeUtils.millis();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);

@@ -11,6 +11,9 @@ public class SensorComponent implements Component {
     public boolean wallCollisionRight = false;
 
     public boolean groundOnNextTile = true;
-    //public boolean groundOnLeft = false;
-    //public boolean groundOnRight = false;
+    public boolean groundOnLeft = true;
+    public boolean groundOnRight = true;
+
+    public boolean isOnTop = false;
+    public boolean isOnBottom = false;
 }

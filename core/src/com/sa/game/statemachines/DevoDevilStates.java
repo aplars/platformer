@@ -6,6 +6,8 @@ import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.math.MathUtils;
 import com.sa.game.components.AIComponent;
 import com.sa.game.components.ComponentMappers;
+import com.sa.game.components.ControlComponent;
+import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.SensorComponent;
 
 public enum DevoDevilStates implements State<Entity> {
@@ -39,6 +41,35 @@ public enum DevoDevilStates implements State<Entity> {
             ComponentMappers.ai.get(data).countDownTimers.put("timetothink", .5f);
         }
     },
+    TURNAROUND() {
+        @Override public void update(final Entity data) {
+            AIComponent aiComponent = ComponentMappers.ai.get(data);
+            SensorComponent sensorComponent = ComponentMappers.sensor.get(data);
+            PhysicsComponent physicsComponent = ComponentMappers.physics.get(data);
+            ControlComponent controlComponent = ComponentMappers.control.get(data);
+
+            if(sensorComponent.groundOnNextTile)
+                aiComponent.stateMachine.changeState(aiComponent.stateMachine.getPreviousState());
+        }
+        @Override public void enter(final Entity data) {
+            SensorComponent sensorComponent = ComponentMappers.sensor.get(data);
+            if(ComponentMappers.control.get(data).buttonLeft && !sensorComponent.groundOnLeft)
+                right(data);
+            if(ComponentMappers.control.get(data).buttonRight && !sensorComponent.groundOnRight)
+                left(data);
+        }
+    },
+    CONTINUE() {
+        @Override public void update(final Entity data) {
+            AIComponent aiComponent = ComponentMappers.ai.get(data);
+            SensorComponent sensorComponent = ComponentMappers.sensor.get(data);
+            PhysicsComponent physicsComponent = ComponentMappers.physics.get(data);
+            ControlComponent controlComponent = ComponentMappers.control.get(data);
+
+            if(sensorComponent.groundOnNextTile)
+                aiComponent.stateMachine.changeState(aiComponent.stateMachine.getPreviousState());
+        }
+    },
     WALK() {
         @Override public void update(final Entity data) {
             SensorComponent sensorComponent = ComponentMappers.sensor.get(data);
@@ -53,8 +84,15 @@ public enum DevoDevilStates implements State<Entity> {
             if(sensorComponent.isOnground && !sensorComponent.groundOnNextTile && !didCollideWall)
             {
                 int num = MathUtils.random.nextInt(100);
-                if(num < 3)
+                if (num < 25) {
                     aiComponent.stateMachine.changeState(JUMP);
+                }
+                else if(num < 50){
+                    aiComponent.stateMachine.changeState(TURNAROUND);
+                }
+                else {
+                    aiComponent.stateMachine.changeState(CONTINUE);
+                }
             }
             if(ComponentMappers.health.get(data).isStunned()) {
                 ComponentMappers.ai.get(data).stateMachine.changeState(STUNNED);
@@ -111,6 +149,10 @@ public enum DevoDevilStates implements State<Entity> {
         ComponentMappers.control.get(data).buttonRight = true;
     }
 
+    private static void turnAround(final Entity data) {
+        ComponentMappers.control.get(data).buttonLeft = !ComponentMappers.control.get(data).buttonLeft;
+        ComponentMappers.control.get(data).buttonRight = !ComponentMappers.control.get(data).buttonRight;
+    }
     DevoDevilStates() {}
 
     @Override

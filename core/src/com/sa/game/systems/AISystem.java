@@ -15,7 +15,7 @@ public class AISystem extends IteratingSystem {
     private final ComponentMapper<AIComponent> aiMapper = ComponentMapper.getFor(AIComponent.class);
 
     public AISystem() {
-        super(Family.all(AIComponent.class, ControlComponent.class).exclude(DelayControlComponent.class).get());
+        super(Family.all(AIComponent.class, ControlComponent.class)./*exclude(DelayControlComponent.class).*/get());
     }
 
     @Override

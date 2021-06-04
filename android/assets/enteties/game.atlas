@@ -25,6 +25,27 @@ boxingglove
   orig: 32, 32
   offset: 0, 0
   index: 1
+chichiflappingwings
+  rotate: false
+  xy: 2, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+chichiflappingwings
+  rotate: false
+  xy: 332, 68
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
+chichiflappingwings
+  rotate: false
+  xy: 308, 36
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
 clown_idle
   rotate: false
   xy: 36, 20
@@ -76,56 +97,56 @@ clown_walk
   index: 4
 devodevilfalling
   rotate: false
-  xy: 2, 2
+  xy: 978, 102
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 devodevilhurt
   rotate: false
-  xy: 332, 68
+  xy: 20, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 devodeviljumping
   rotate: false
-  xy: 308, 36
+  xy: 350, 68
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 devodevilrunning
   rotate: false
-  xy: 978, 102
+  xy: 996, 102
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 devodevilrunning
   rotate: false
-  xy: 978, 102
+  xy: 996, 102
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 devodevilrunning
   rotate: false
-  xy: 20, 2
+  xy: 38, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 devodevilrunning
   rotate: false
-  xy: 350, 68
+  xy: 368, 68
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 4
 devodevilstanding
   rotate: false
-  xy: 996, 102
+  xy: 56, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -160,14 +181,14 @@ elevator64x64
   index: -1
 heart
   rotate: false
-  xy: 38, 2
+  xy: 386, 68
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 key
   rotate: false
-  xy: 368, 68
+  xy: 74, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
