@@ -20,17 +20,17 @@
   <image source="chichi.png" width="16" height="16"/>
  </tileset>
  <objectgroup id="5" name="enemies">
-  <object id="92" name="devodevil" type="devodevil" gid="2305" x="122.333" y="102.333" width="16" height="16" visible="0"/>
+  <object id="92" name="devodevil" type="devodevil" gid="2305" x="122.333" y="102.333" width="16" height="16"/>
   <object id="93" name="devodevil" type="devodevil" gid="2147485953" x="121.333" y="199.667" width="16" height="16"/>
-  <object id="94" name="devodevil" type="devodevil" gid="2305" x="20" y="167.333" width="16" height="16" visible="0"/>
-  <object id="100" name="chichi" type="chichi" gid="2310" x="119" y="181.334" width="16" height="16" visible="0"/>
+  <object id="94" name="devodevil" type="devodevil" gid="2305" x="20" y="167.333" width="16" height="16"/>
+  <object id="100" name="chichi" type="chichi" gid="2310" x="119" y="181.334" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="9" name="test"/>
  <objectgroup id="8" name="objects">
-  <object id="95" name="door" type="door" gid="2306" x="114" y="135.333" width="32" height="32" visible="0"/>
-  <object id="96" name="apple" type="apple" gid="2307" x="199" y="167" width="14" height="14" visible="0"/>
-  <object id="97" name="apple" type="apple" gid="2307" x="222.333" y="167.333" width="14" height="14" visible="0"/>
-  <object id="98" name="key" type="key" gid="2308" x="53.6667" y="167" width="8" height="8" visible="0"/>
+  <object id="95" name="door" type="door" gid="2306" x="114" y="135.333" width="32" height="32"/>
+  <object id="96" name="apple" type="apple" gid="2307" x="199" y="167" width="14" height="14"/>
+  <object id="97" name="apple" type="apple" gid="2307" x="222.333" y="167.333" width="14" height="14"/>
+  <object id="98" name="key" type="key" gid="2308" x="53.6667" y="167" width="8" height="8"/>
  </objectgroup>
  <objectgroup id="6" name="players">
   <object id="99" name="player" type="player" gid="2147485957" x="178.333" y="247.667" width="25" height="25"/>

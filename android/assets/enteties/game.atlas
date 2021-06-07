@@ -179,16 +179,44 @@ elevator64x64
   orig: 64, 64
   offset: 0, 0
   index: -1
-heart
+gethit
   rotate: false
   xy: 386, 68
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+gethit
+  rotate: false
+  xy: 74, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
+gethit
+  rotate: false
+  xy: 404, 68
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
+gethit
+  rotate: false
+  xy: 92, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 4
+heart
+  rotate: false
+  xy: 422, 68
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 key
   rotate: false
-  xy: 74, 2
+  xy: 110, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

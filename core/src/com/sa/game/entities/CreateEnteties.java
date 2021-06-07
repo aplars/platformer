@@ -40,6 +40,7 @@ public class CreateEnteties {
                 height,
                 isFlipped,
                 new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("chichiflappingwings"), Animation.PlayMode.LOOP),
+                new Animation<TextureRegion>(1 / 60f * 12f, atlas.findRegions("stars"), Animation.PlayMode.LOOP),
                 staticEnvironment,
                 collisionDetection);
     }

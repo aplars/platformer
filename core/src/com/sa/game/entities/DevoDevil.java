@@ -62,9 +62,9 @@ public class DevoDevil {
         final PositionComponent positionComponent = new PositionComponent();
         positionComponent.position.set(position);
 
-        final float jumpTime = 0.25f;
         final PhysicsComponent physicsComponent = new PhysicsComponent();
-        physicsComponent.gravity = -(staticEnvironment.tileSizeInPixels*5f+2)/(2f*jumpTime*jumpTime);
+        final float jumpTime = 0.25f;
+        physicsComponent.gravity = -(staticEnvironment.tileSizeInPixels*5f)/(2f*jumpTime*jumpTime);
         physicsComponent.jumpTime = jumpTime;
         physicsComponent.airResistance.set(0.85f, 1f);
         physicsComponent.walkDirection = WalkDirection.Right;
@@ -99,7 +99,7 @@ public class DevoDevil {
         final RenderStarsComponent renderStarsComponent = new RenderStarsComponent();
         renderStarsComponent.animation = starAnimation;
 
-        final DelayControlComponent delayAIComponent = new DelayControlComponent(startDelay);
+        final DelayControlComponent delayControlComponent = new DelayControlComponent(startDelay);
         DevoDevilStates startState = DevoDevilStates.START_RIGHT;
         if(isFlipped)
             startState = DevoDevilStates.START_LEFT;
@@ -120,7 +120,7 @@ public class DevoDevil {
         entity.add(controlComponent);
         entity.add(healthComponent);
         entity.add(damageComponent);
-        entity.add(delayAIComponent);
+        entity.add(delayControlComponent);
         entity.add(aiComponent);
         entity.add(positionComponent);
         entity.add(physicsComponent);

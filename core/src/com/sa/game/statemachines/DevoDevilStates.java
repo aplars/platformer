@@ -30,7 +30,7 @@ public enum DevoDevilStates implements State<Entity> {
     JUMP() {
         @Override
         public void update(final Entity data) {
-            AIComponent aiComponent = ComponentMappers.ai.get(data);
+            final AIComponent aiComponent = ComponentMappers.ai.get(data);
             if(ComponentMappers.sensor.get(data).isOnground) {
                 aiComponent.stateMachine.changeState(WALK);
             }
@@ -43,16 +43,16 @@ public enum DevoDevilStates implements State<Entity> {
     },
     TURNAROUND() {
         @Override public void update(final Entity data) {
-            AIComponent aiComponent = ComponentMappers.ai.get(data);
-            SensorComponent sensorComponent = ComponentMappers.sensor.get(data);
-            PhysicsComponent physicsComponent = ComponentMappers.physics.get(data);
-            ControlComponent controlComponent = ComponentMappers.control.get(data);
+            final AIComponent aiComponent = ComponentMappers.ai.get(data);
+            final SensorComponent sensorComponent = ComponentMappers.sensor.get(data);
+            final PhysicsComponent physicsComponent = ComponentMappers.physics.get(data);
+            final ControlComponent controlComponent = ComponentMappers.control.get(data);
 
             if(sensorComponent.groundOnNextTile)
                 aiComponent.stateMachine.changeState(aiComponent.stateMachine.getPreviousState());
         }
         @Override public void enter(final Entity data) {
-            SensorComponent sensorComponent = ComponentMappers.sensor.get(data);
+            final SensorComponent sensorComponent = ComponentMappers.sensor.get(data);
             if(ComponentMappers.control.get(data).buttonLeft && !sensorComponent.groundOnLeft)
                 right(data);
             if(ComponentMappers.control.get(data).buttonRight && !sensorComponent.groundOnRight)
@@ -61,10 +61,10 @@ public enum DevoDevilStates implements State<Entity> {
     },
     CONTINUE() {
         @Override public void update(final Entity data) {
-            AIComponent aiComponent = ComponentMappers.ai.get(data);
-            SensorComponent sensorComponent = ComponentMappers.sensor.get(data);
-            PhysicsComponent physicsComponent = ComponentMappers.physics.get(data);
-            ControlComponent controlComponent = ComponentMappers.control.get(data);
+            final AIComponent aiComponent = ComponentMappers.ai.get(data);
+            final SensorComponent sensorComponent = ComponentMappers.sensor.get(data);
+            final PhysicsComponent physicsComponent = ComponentMappers.physics.get(data);
+            final ControlComponent controlComponent = ComponentMappers.control.get(data);
 
             if(sensorComponent.groundOnNextTile)
                 aiComponent.stateMachine.changeState(aiComponent.stateMachine.getPreviousState());
@@ -72,18 +72,18 @@ public enum DevoDevilStates implements State<Entity> {
     },
     WALK() {
         @Override public void update(final Entity data) {
-            SensorComponent sensorComponent = ComponentMappers.sensor.get(data);
-            boolean didCollideWall = sensorComponent.wallCollisionLeft || sensorComponent.wallCollisionRight;
+            final SensorComponent sensorComponent = ComponentMappers.sensor.get(data);
+            final boolean didCollideWall = sensorComponent.wallCollisionLeft || sensorComponent.wallCollisionRight;
 
-            AIComponent aiComponent = ComponentMappers.ai.get(data);
+            final AIComponent aiComponent = ComponentMappers.ai.get(data);
 
-            Float timetothink = (Float)aiComponent.countDownTimers.get("timetothink");
+            final Float timetothink = (Float)aiComponent.countDownTimers.get("timetothink");
             if(timetothink <= 0) {
                 //aiComponent.stateMachine.changeState(JUMP);
             }
             if(sensorComponent.isOnground && !sensorComponent.groundOnNextTile && !didCollideWall)
             {
-                int num = MathUtils.random.nextInt(100);
+                final int num = MathUtils.random.nextInt(100);
                 if (num < 25) {
                     aiComponent.stateMachine.changeState(JUMP);
                 }
@@ -108,7 +108,7 @@ public enum DevoDevilStates implements State<Entity> {
         }
         @Override public void enter(final Entity data) {
             //ComponentMappers.control.get(data).buttonLeft = true;
-            AIComponent aiComponent = ComponentMappers.ai.get(data);
+            final AIComponent<DevoDevilStates> aiComponent = ComponentMappers.ai.get(data);
             aiComponent.countDownTimers.put("timetothink", (float)MathUtils.random.nextInt(10));
             ComponentMappers.control.get(data).buttonA = false;
         }
@@ -134,6 +134,7 @@ public enum DevoDevilStates implements State<Entity> {
             DevoDevilStates.left(data);
             ComponentMappers.ai.get(data).stateMachine.changeState(WALK);
         }
+
         @Override public void enter(final Entity data) {
             DevoDevilStates.left(data);
         }

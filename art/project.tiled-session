@@ -5,11 +5,11 @@
     },
     "activeFile": "/home/tobias/source/platformer/android/assets/level_1.tmx",
     "expandedProjectPaths": [
-        "/home/tobias/source/platformer/android/assets/skins/gdx-holo",
         "/home/tobias/source/platformer/android/assets/templates",
+        "/home/tobias/source/platformer/android/assets/skins/gdx-holo",
+        "/home/tobias/source/platformer/android/assets",
         ".",
-        "/home/tobias/source/platformer/android/assets/enteties",
-        "/home/tobias/source/platformer/android/assets"
+        "/home/tobias/source/platformer/android/assets/enteties"
     ],
     "file.lastUsedOpenFilter": "Alla filer (*)",
     "fileStates": {
@@ -39,8 +39,8 @@
             "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 127.16666666666664,
-                "y": 107.33333333333333
+                "x": 130.5,
+                "y": 110.33333333333333
             }
         },
         "/home/tobias/source/platformer/android/assets/level_1.tmx#Pekka": {

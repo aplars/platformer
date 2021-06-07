@@ -13,7 +13,7 @@ public class Explosion {
         PositionComponent positionComponent = new PositionComponent();
         positionComponent.position.set(position);
 
-        ParticleEffectComponent particleEffectComponent = new ParticleEffectComponent(null);
+        ParticleEffectComponent particleEffectComponent = new ParticleEffectComponent("particlesystems.party");
 
         entity.add(positionComponent);
         entity.add(particleEffectComponent);

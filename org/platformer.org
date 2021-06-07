@@ -12,5 +12,7 @@
 *** TODO create background
 *** DONE add door that can be opened with key
     CLOSED: [2021-05-14 fre 07:
-*** TODO Handle death of player. Three lives unlimited continues/coins
+*** TODO Handle death of player. Three lives unlimited continues/coin
+    
+    
       

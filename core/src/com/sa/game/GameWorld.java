@@ -24,6 +24,7 @@ import com.sa.game.systems.AnimationSystem;
 import com.sa.game.systems.CollisionSystem;
 import com.sa.game.systems.DamageSystem;
 import com.sa.game.systems.DelayControlSystem;
+import com.sa.game.systems.DeleteEntitySystem;
 import com.sa.game.systems.DroppedSystem;
 import com.sa.game.systems.ExitSystem;
 import com.sa.game.systems.explode.ExplodeBoxingGloveOnContactSystem;
@@ -51,6 +52,8 @@ import com.sa.game.systems.render.RenderScoreBoardSystem;
 import com.sa.game.systems.render.RenderScoreSystem;
 import com.sa.game.systems.render.RenderStarsSystem;
 import com.sa.game.systems.render.RenderSystem;
+import com.sa.game.systems.render.RenderSpriteInWhiteColorSystem;;
+
 //testar för att visa kajsa
 public class GameWorld {
     //game entities
@@ -256,7 +259,7 @@ public class GameWorld {
             engine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
             engine.addSystem(new SensorSystem(staticEnvironment));
             engine.addSystem(new PickUpEntitySystem(collisionDetection));
-            engine.addSystem(new DamageSystem());
+            engine.addSystem(new DamageSystem(assetManager));
             engine.addSystem(new ExitSystem(new ILoadNextLevel() {
                     public void nextLevel(int player1Score, int player1Lives) {
                         loadNextLevel = true;
@@ -277,18 +280,20 @@ public class GameWorld {
             engine.addSystem(new DampingSystem());
             engine.addSystem(new AnimationSystem<>());
             engine.addSystem(new DelayControlSystem());
+            engine.addSystem(new RenderSpriteInWhiteColorSystem());
             engine.addSystem(new RenderSystem(performanceCounters.add("render"), renderer));
             engine.addSystem(new RenderParticleSystem(camera));
             engine.addSystem(new RenderStarsSystem(renderer));
             engine.addSystem(new RenderScoreSystem(renderer));
             engine.addSystem(new RenderScoreBoardSystem(assetManager, renderer, camera, staticEnvironment));
+            engine.addSystem(new DeleteEntitySystem());
             engine.addSystem(new LastSystem(new IGotoGameOverScreen(){
                     public void gameOverScreen(int player1Score) {
                         playersAreDead = true;
                         deadPlayer1Score = player1Score;
                     }
                 }));
-            engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
+            //engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
         }
 
         LayersToRenderModel layersToRenderModel = new LayersToRenderModel(staticEnvironment);

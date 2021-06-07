@@ -31,9 +31,10 @@ import com.sa.game.statemachines.DevoDevilStates;
 
 public class ChiChi {
     static Entity create(final float startDelay, final Vector2 position, final float size, boolean isFlipped,
-                  final Animation<TextureRegion> flapingWingsAnimation,
-                  final StaticEnvironment staticEnvironment,
-                  final CollisionDetection collisionDetection) {
+                         final Animation<TextureRegion> flapingWingsAnimation,
+                         final Animation<TextureRegion> starAnimation,
+                         final StaticEnvironment staticEnvironment,
+                         final CollisionDetection collisionDetection) {
 
         Entity entity = new Entity();
         entity.flags = EntityType.Enemy.type;
@@ -73,6 +74,10 @@ public class ChiChi {
         collisionComponent.entity = collisionEntity;
 
         final SensorComponent sensorComponent = new SensorComponent();
+        sensorComponent.staticEnvironment = staticEnvironment;
+
+        final RenderStarsComponent renderStarsComponent = new RenderStarsComponent();
+        renderStarsComponent.animation = starAnimation;
 
         final AnimationComponent<ChiChiStates> animationComponent = new AnimationComponent<>();
         animationComponent.animations.put(ChiChiStates.START_LEFT, flapingWingsAnimation);
@@ -96,6 +101,7 @@ public class ChiChi {
 
         final HealthComponent healthComponent = new HealthComponent();
         healthComponent.stun = 3;
+        healthComponent.stun = 2;
 
         final DamageComponent damageComponent = new DamageComponent();
         damageComponent.stun = 1;
@@ -117,6 +123,7 @@ public class ChiChi {
         entity.add(positionComponent);
         entity.add(physicsComponent);
         entity.add(collisionComponent);
+        entity.add(renderStarsComponent);
         entity.add(animationComponent);
         entity.add(renderComponent);
         entity.add(renderDebugInfoComponent);

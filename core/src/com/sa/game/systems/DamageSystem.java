@@ -3,19 +3,28 @@ package com.sa.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.math.Vector2;
 import com.sa.game.collision.CollisionEntity;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ComponentMappers;
 import com.sa.game.components.DamageComponent;
 import com.sa.game.components.DelayControlComponent;
 import com.sa.game.components.HealthComponent;
+import com.sa.game.components.PhysicsComponent;
+import com.sa.game.components.PositionComponent;
+import com.sa.game.components.RenderSpriteInWhiteColorComponent;
+import com.sa.game.entities.CreateEnteties;
 
 
 ///The entity gives damage to colliding entities.
 public class DamageSystem extends IteratingSystem {
-    public DamageSystem()
+    AssetManager assetManager;
+
+    public DamageSystem(AssetManager assetManager)
     {
         super(Family.all(DamageComponent.class, CollisionComponent.class).get());
+        this.assetManager = assetManager;
     }
 
     @Override
@@ -27,13 +36,18 @@ public class DamageSystem extends IteratingSystem {
         for(final CollisionEntity collidee : collision.entity.collidees) {
             final Entity colledeeEntity = (Entity)collidee.userData;
             final HealthComponent colledeeHealthComponent = ComponentMappers.health.get(colledeeEntity);
+            final PositionComponent collideePositionComponent = ComponentMappers.position.get(colledeeEntity);
+            final PhysicsComponent collideePhysicsComponent = ComponentMappers.physics.get(colledeeEntity);
 
             //Stun the collidee if this entity can stun.
-            if (colledeeHealthComponent != null && damage.stun > 0) {
+            if (colledeeHealthComponent != null && damage.stun > 0 && colledeeHealthComponent.stun > 0) {
                 colledeeHealthComponent.stun -= damage.stun;
                 colledeeHealthComponent.stunTime = damage.stunTime;
                 damage.stun = 0;
                 //colledeeEntity.add(new DelayControlComponent(1f));
+                //Entity flash = CreateEnteties.getHitFlash(assetManager, collideePositionComponent.position, vel, 16);
+                //this.getEngine().addEntity(flash);
+                colledeeEntity.add(new RenderSpriteInWhiteColorComponent(0.1f));
             }
 
             //Take health from collidee if entity is not stunned.

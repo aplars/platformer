@@ -9,9 +9,9 @@ public class ParticleEffectComponent implements Component {
     public ParticleEffect particleEffect;
     public Vector2 position = new Vector2();
 
-    public ParticleEffectComponent(String effectPath) {
+    public ParticleEffectComponent(String effect) {
         particleEffect = new ParticleEffect();
-        particleEffect.load(Gdx.files.internal("particlesystems.party"),Gdx.files.internal(""));
+        particleEffect.load(Gdx.files.internal(effect),Gdx.files.internal(""));
         //particleEffect.getEmitters().first().setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
         particleEffect.getEmitters().first().setContinuous(false);
 
