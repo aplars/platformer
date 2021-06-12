@@ -24,6 +24,7 @@ public class SensorSystem extends IteratingSystem {
         final CollisionComponent collisionComponent = ComponentMappers.collision.get(entity);
         final PhysicsComponent physicsComponent = ComponentMappers.physics.get(entity);
 
+        sensorComponent.roofCollision = collisionComponent.entity.roofCollisionData.didCollide;
         sensorComponent.isOnground = collisionComponent.entity.groundCollisionData.didCollide;
         sensorComponent.wallCollisionLeft = collisionComponent.entity.wallsCollisionData.didCollide &&
                 physicsComponent.velocity.x < 0f;
@@ -38,10 +39,10 @@ public class SensorSystem extends IteratingSystem {
             dir = 1;*/
         GridPoint2 gridPoint2 = new GridPoint2();
         gridPoint2 = staticEnvironment.getGridPointFromWorldCoordinate(LayerId.Floor, feetPos, gridPoint2);
-        final int tileId = staticEnvironment.getTileId(LayerId.Floor, gridPoint2.x+dir, gridPoint2.y-1);
 
+        final int tileIdFloor = staticEnvironment.getTileId(LayerId.Floor, gridPoint2.x+dir, gridPoint2.y-1);
         sensorComponent.groundOnNextTile = true;
-        if (tileId == 0) {
+        if (tileIdFloor == 0) {
             sensorComponent.groundOnNextTile = false;
         }
 

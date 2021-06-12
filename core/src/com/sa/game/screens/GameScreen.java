@@ -10,11 +10,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.PerformanceCounters;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.sa.game.GameWorld;
 import com.sa.game.models.EditorModel;
 
-public class GameScreen extends ScreenAdapter{
+public class GameScreen extends ScreenAdapter {
     private final GameWorld gameWorld;
     SpriteBatch batch;
     private final BitmapFont font;
@@ -47,7 +49,8 @@ public class GameScreen extends ScreenAdapter{
                                  Gdx.files.internal("skins/score-font/score-font.png"), false);
         sourcecodepro64Font = new BitmapFont(Gdx.files.internal("skins/fonts/sourcecodepro64.fnt"),
                                              Gdx.files.internal("skins/fonts/sourcecodepro64.png"), false);
-
+        ScalingViewport scalingViewport = new ScalingViewport(Scaling.fill, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        scalingViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     int currentLevel = 0;
@@ -73,11 +76,11 @@ public class GameScreen extends ScreenAdapter{
             currentLevel = levelIndex;
             gameWorld.loadLevel(levels[levelIndex], gameWorld.nextLevelPlayer1Score, gameWorld.nextLevelPlayer1Lives, startDelayTime);
             levelIndex = (levelIndex + 1) % levels.length;
-            gameWorld.resize(getAspectRatio());
+
+            //gameWorld.resize(getAspectRatio(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
             timeToShowNextLevelText = startDelayTime;
             gameWorld.loadNextLevel = false;
         }
-
         if(timeToShowNextLevelText > 0) {
             final String txt = "LEVEL: " + (currentLevel+1);
             final GlyphLayout glyphLayout = new GlyphLayout(); 
@@ -118,16 +121,8 @@ public class GameScreen extends ScreenAdapter{
         batch.end();
     }
 
-    private float getAspectRatio() {
-        if (Gdx.graphics.getHeight() > Gdx.graphics.getWidth()) {
-            return Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth();
-        } else {
-            return Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
-        }
-    }
-
     @Override
     public void resize(final int width, final int height) {
-        gameWorld.resize(getAspectRatio());
+        gameWorld.resize();
     }
 }

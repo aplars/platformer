@@ -5,8 +5,8 @@
     },
     "activeFile": "/home/tobias/source/platformer/android/assets/level_1.tmx",
     "expandedProjectPaths": [
-        "/home/tobias/source/platformer/android/assets/templates",
         "/home/tobias/source/platformer/android/assets/skins/gdx-holo",
+        "/home/tobias/source/platformer/android/assets/templates",
         "/home/tobias/source/platformer/android/assets",
         ".",
         "/home/tobias/source/platformer/android/assets/enteties"
@@ -39,8 +39,8 @@
             "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 130.5,
-                "y": 110.33333333333333
+                "x": 130.16666666666666,
+                "y": 134
             }
         },
         "/home/tobias/source/platformer/android/assets/level_1.tmx#Pekka": {
@@ -83,8 +83,8 @@
             "scale": 3.1468749999999996,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 127.90466732869913,
-                "y": 127.90466732869913
+                "x": 128.0635551142006,
+                "y": 128.06355511420062
             }
         },
         "/home/tobias/source/platformer/android/assets/level_2.tmx#apple32x32": {

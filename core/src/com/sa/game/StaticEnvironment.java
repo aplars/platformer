@@ -17,6 +17,7 @@ import com.sa.game.collision.CollisionDetection;
 public class StaticEnvironment {
     public enum LayerId {
         Visible,
+        Roof,
         Floor,
         Wall,
         LeftWall,
@@ -70,6 +71,9 @@ public class StaticEnvironment {
         final TiledMapTileLayer inLayer =  (TiledMapTileLayer)tiledMap.getLayers().get("base");
         tileSizeInPixels = (int)inLayer.getTileWidth();
 
+        final TiledMapTileLayer roofLayer = new TiledMapTileLayer(inLayer.getWidth(), inLayer.getHeight(), tileSizeInPixels, tileSizeInPixels);
+        roofLayer.setName("roof");
+        tiledMap.getLayers().add(roofLayer);
         final TiledMapTileLayer floorLayer = new TiledMapTileLayer(inLayer.getWidth(), inLayer.getHeight(), tileSizeInPixels, tileSizeInPixels);
         floorLayer.setName("floor");
         tiledMap.getLayers().add(floorLayer);
@@ -94,8 +98,11 @@ public class StaticEnvironment {
                 cell.setTile(tiledMap.getTileSets().getTileSet(0).getTile(tileId));
 
                 cell.getTile().setId(tileId);
+
                 if(y < inLayer.getHeight()-1 && inLayer.getCell(x, y+1) == null)
                     floorLayer.setCell(x, y, cell);
+                if(y > 0 && inLayer.getCell(x, y-1) == null)
+                    roofLayer.setCell(x, y, cell);
 
                 boolean emptyLeft = false;
                 if(x > 0 && inLayer.getCell(x-1, y) == null)
@@ -158,7 +165,8 @@ public class StaticEnvironment {
 
     public String getLayerName(final LayerId t) {
         if(t == LayerId.Visible) return "base";
-        if(t == LayerId.Floor) return "floor";
+        if(t == LayerId.Roof) return "roof";
+        else if(t == LayerId.Floor) return "floor";
         else if(t == LayerId.Wall) return "wall";
         else if(t == LayerId.LeftWall) return "leftwall";
         else if(t == LayerId.RightWall) return "rightwall";

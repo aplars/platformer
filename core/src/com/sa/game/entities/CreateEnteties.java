@@ -57,10 +57,10 @@ public class CreateEnteties {
                              new Vector2(),
                              siz,
                              isFlipped,
-                             new Animation<TextureRegion>(1 / 60f * 12f, atlas.findRegions("mrmochiidle"), PlayMode.LOOP),
-                             new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochirunning"), PlayMode.LOOP),
-                             new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochijumping"), PlayMode.LOOP),
-                             new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrmochihurt"), PlayMode.LOOP),
+                             new Animation<TextureRegion>(1 / 60f * 12f, atlas.findRegions("mrhatidle"), PlayMode.LOOP),
+                             new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrhatrunning"), PlayMode.LOOP),
+                             new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrhatjumping"), PlayMode.LOOP),
+                             new Animation<TextureRegion>(1 / 60f * 6f, atlas.findRegions("mrhathurt"), PlayMode.LOOP),
                              staticEnvironment,
                              collisionDetection);
     }

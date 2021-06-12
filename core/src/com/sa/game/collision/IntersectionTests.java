@@ -7,6 +7,44 @@ import com.badlogic.gdx.math.Vector2;
 import com.sa.game.StaticEnvironment;
 
 public class IntersectionTests {
+        public static void rectangleRoof(final float dt, final Rectangle rectangle, final Vector2 velocity, final StaticEnvironment staticEnvironment, RoofCollisionData roofCollisionData) {
+        Rectangle destRectangle = new Rectangle();
+        destRectangle.set(rectangle);
+        Vector2 center = new Vector2();
+        rectangle.getCenter(center);
+        center.add(0f, velocity.y*dt);
+        destRectangle.setCenter(center);
+
+        int minx = (int)(destRectangle.x/staticEnvironment.tileSizeInPixels);
+        int miny = (int)(destRectangle.y/staticEnvironment.tileSizeInPixels);
+        int maxx = (int)((destRectangle.x+destRectangle.width)/staticEnvironment.tileSizeInPixels);
+        int maxy = (int)((destRectangle.y+destRectangle.height)/staticEnvironment.tileSizeInPixels);
+
+        int srcMaxY = (int)((rectangle.y+rectangle.height)/staticEnvironment.tileSizeInPixels);
+
+        boolean didCollide = false;
+        float moveY = 0.0f;
+        float moveX = 0.0f;
+        boolean breakLoop = false;
+        for(int y = miny; y <= maxy; y++) {
+            if(breakLoop)
+                break;
+            for(int x = minx; x <= maxx; x++) {
+                if(staticEnvironment.getTileId(StaticEnvironment.LayerId.Roof, x, y) != 0) {
+                    if(maxy != srcMaxY && srcMaxY < y){
+                        didCollide = true;
+                        moveY = ((y-1) * staticEnvironment.tileSizeInPixels+0.001f)-(rectangle.y);
+                        breakLoop = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        roofCollisionData.set(didCollide, moveX, moveY);
+    }
+
+
     public static void rectangleGround(final float dt, final Rectangle rectangle, final Vector2 velocity, final StaticEnvironment staticEnvironment, FloorCollisionData floorCollisionData) {
         Rectangle destRectangle = new Rectangle();
         destRectangle.set(rectangle);

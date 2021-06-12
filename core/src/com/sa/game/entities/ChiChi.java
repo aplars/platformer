@@ -27,7 +27,6 @@ import com.sa.game.components.WorldConstantsComponent;
 import com.sa.game.components.groups.EnemyGroupComponent;
 import com.sa.game.gfx.Sprite;
 import com.sa.game.statemachines.ChiChiStates;
-import com.sa.game.statemachines.DevoDevilStates;
 
 public class ChiChi {
     static Entity create(final float startDelay, final Vector2 position, final float size, boolean isFlipped,

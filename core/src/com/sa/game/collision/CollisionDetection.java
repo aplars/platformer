@@ -71,6 +71,7 @@ public class CollisionDetection {
         //Check collision against static scene parts
         for(final CollisionEntity collisionEntity : entities) {
             if (collisionEntity.isEnable) {
+                IntersectionTests.rectangleRoof(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment, collisionEntity.roofCollisionData);
                 IntersectionTests.rectangleGround(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment, collisionEntity.groundCollisionData);
                 IntersectionTests.rectangleWalls(dt, collisionEntity.box, collisionEntity.velocity, staticEnvironment, collisionEntity.wallsCollisionData);
 
@@ -83,6 +84,7 @@ public class CollisionDetection {
                 }
             }
             else {
+                collisionEntity.roofCollisionData.didCollide = false;
                 collisionEntity.wallsCollisionData.didCollide = false;
                 collisionEntity.groundCollisionData.didCollide = false;
             }

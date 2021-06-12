@@ -40,7 +40,7 @@ public enum ChiChiStates implements State<Entity> {
             SensorComponent sensorComponent = ComponentMappers.sensor.get(entity);
             boolean didCollideWall = sensorComponent.wallCollisionLeft || sensorComponent.wallCollisionRight;
             boolean didCollideGround = sensorComponent.isOnground;
-
+            boolean didCollideRoof = sensorComponent.roofCollision;
             if(ComponentMappers.health.get(entity).isStunned()) {
                 ComponentMappers.ai.get(entity).stateMachine.changeState(STUNNED);
                 ComponentMappers.control.get(entity).buttonLeft = false;
@@ -59,6 +59,10 @@ public enum ChiChiStates implements State<Entity> {
             if (ComponentMappers.sensor.get(entity).isOnTop && ComponentMappers.control.get(entity).buttonUp) {
                 down(entity);
             }
+            if(ComponentMappers.control.get(entity).buttonUp == true && didCollideRoof /*ComponentMappers.collision.get(data).entity.wallsCollisionData.didCollide*/) {
+                down(entity);
+            }
+
             if(ComponentMappers.control.get(entity).buttonRight == true && didCollideWall /*ComponentMappers.collision.get(data).entity.wallsCollisionData.didCollide*/) {
                 left(entity);
             }

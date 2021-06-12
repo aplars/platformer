@@ -3,7 +3,6 @@ package com.sa.game;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
@@ -12,8 +11,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.PerformanceCounters;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.sa.game.collision.CollisionDetection;
-import com.sa.game.collision.CollisionEntity;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ComponentMappers;
 import com.sa.game.entities.CreateEnteties;
@@ -27,15 +26,10 @@ import com.sa.game.systems.DelayControlSystem;
 import com.sa.game.systems.DeleteEntitySystem;
 import com.sa.game.systems.DroppedSystem;
 import com.sa.game.systems.ExitSystem;
-import com.sa.game.systems.explode.ExplodeBoxingGloveOnContactSystem;
-import com.sa.game.systems.explode.ExplodeEnemyOnContactSystem;
 import com.sa.game.systems.LastSystem;
-import com.sa.game.systems.movement.MoveToEntitySystem;
 import com.sa.game.systems.OpenDoorSystem;
-import com.sa.game.systems.movement.PhysicsSystem;
 import com.sa.game.systems.PickUpCoinSystem;
 import com.sa.game.systems.PickUpEntitySystem;
-import com.sa.game.systems.movement.ResolveCollisionSystem;
 import com.sa.game.systems.RespawnPlayer1System;
 import com.sa.game.systems.SensorSystem;
 import com.sa.game.systems.ThrownSystem;
@@ -44,17 +38,20 @@ import com.sa.game.systems.control.ControlMovementSystem;
 import com.sa.game.systems.control.ControlPunchSystem;
 import com.sa.game.systems.control.ControlThrowEntitySystem;
 import com.sa.game.systems.control.PlayerInputSystem;
+import com.sa.game.systems.explode.ExplodeBoxingGloveOnContactSystem;
+import com.sa.game.systems.explode.ExplodeEnemyOnContactSystem;
 import com.sa.game.systems.movement.DampingSystem;
+import com.sa.game.systems.movement.MoveToEntitySystem;
 import com.sa.game.systems.movement.MovementSystem;
-import com.sa.game.systems.render.RenderDebugInfoSystem;
+import com.sa.game.systems.movement.PhysicsSystem;
+import com.sa.game.systems.movement.ResolveCollisionSystem;
 import com.sa.game.systems.render.RenderParticleSystem;
 import com.sa.game.systems.render.RenderScoreBoardSystem;
 import com.sa.game.systems.render.RenderScoreSystem;
+import com.sa.game.systems.render.RenderSpriteInWhiteColorSystem;
 import com.sa.game.systems.render.RenderStarsSystem;
 import com.sa.game.systems.render.RenderSystem;
-import com.sa.game.systems.render.RenderSpriteInWhiteColorSystem;;
 
-//testar för att visa kajsa
 public class GameWorld {
     //game entities
     StaticEnvironment staticEnvironment = new StaticEnvironment();
@@ -65,7 +62,7 @@ public class GameWorld {
     CollisionDetection collisionDetection = new CollisionDetection();
     AssetManager assetManager = null;//new AssetManager();
     OrthogonalTiledMapRenderer mapRenderer;
-
+    ScalingViewport scalingViewport;
     int visiblelayers[] = {};
 
     Engine engine = null;
@@ -83,7 +80,7 @@ public class GameWorld {
     Controller controllerB;
     PerformanceCounters performanceCounters;
 
-    public GameWorld(Controller controllerA, Controller controllerB, final PerformanceCounters performanceCounters) {
+    public GameWorld(final Controller controllerA, final Controller controllerB, final PerformanceCounters performanceCounters) {
         this.performanceCounters = performanceCounters;
         this.controllerA = controllerA;
         this.controllerB = controllerB;
@@ -106,20 +103,31 @@ public class GameWorld {
     public void render(final float dt) {
         if (engine == null)
             return;
+
+        resize();
         if(mapRenderer != null)
             mapRenderer.setView(camera);
 
         if(mapRenderer != null)
             mapRenderer.render(visiblelayers);
-
         renderer.render(camera, fontCamera);
     }
 
-    public void resize(final float aspectRatio) {
+    private float getAspectRatio() {
+        if (Gdx.graphics.getHeight() > Gdx.graphics.getWidth()) {
+            return Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth();
+        } else {
+            return Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
+        }
+    }
+
+    public void resize() {
+        final float aspectRatio = getAspectRatio();
         if (engine == null)
             return;
         if(staticEnvironment == null)
             return;
+
         float w = 0f;
         if(Gdx.graphics.getHeight() > Gdx.graphics.getWidth()) {
             camera.setToOrtho(false,
@@ -128,6 +136,8 @@ public class GameWorld {
             w = staticEnvironment.getWidth();
         }
         else {
+            camera.viewportHeight = Gdx.graphics.getHeight();
+            camera.viewportWidth = Gdx.graphics.getWidth();
             camera.setToOrtho(false,
                               (staticEnvironment.getWidth())*aspectRatio,
                               (staticEnvironment.getWidth()));
@@ -140,7 +150,7 @@ public class GameWorld {
         fontCamera.update();
     }
 
-    public boolean loadLevel(String level, int player1Score, int player1Lives, float startDelay) {
+    public boolean loadLevel(final String level, final int player1Score, final int player1Lives, final float startDelay) {
         collisionDetection.clear();
         //staticEnvironment.dispose();
 
@@ -171,12 +181,13 @@ public class GameWorld {
 
         engine.addEntityListener(new EntityListener(){
                 @Override
-                public void entityAdded(Entity entity) {
+                public void entityAdded(final Entity entity) {
+
                 }
 
                 @Override
-                public void entityRemoved(Entity entity) {
-                    CollisionComponent collisionComponent = ComponentMappers.collision.get(entity);
+                public void entityRemoved(final Entity entity) {
+                    final CollisionComponent collisionComponent = ComponentMappers.collision.get(entity);
                     if(collisionComponent != null && collisionComponent.entity != null)
                         collisionDetection.remove(collisionComponent.entity);
                 }
@@ -261,13 +272,13 @@ public class GameWorld {
             engine.addSystem(new PickUpEntitySystem(collisionDetection));
             engine.addSystem(new DamageSystem(assetManager));
             engine.addSystem(new ExitSystem(new ILoadNextLevel() {
-                    public void nextLevel(int player1Score, int player1Lives) {
+                    public void nextLevel(final int player1Score, final int player1Lives) {
                         loadNextLevel = true;
                         nextLevelPlayer1Score = player1Score;
                         nextLevelPlayer1Lives = player1Lives;
                     }
 
-                    public void toGameOverScreen(int player1Score) {
+                    public void toGameOverScreen(final int player1Score) {
                     }
             }));
             engine.addSystem(new ExplodeBoxingGloveOnContactSystem(collisionDetection));
@@ -288,7 +299,7 @@ public class GameWorld {
             engine.addSystem(new RenderScoreBoardSystem(assetManager, renderer, camera, staticEnvironment));
             engine.addSystem(new DeleteEntitySystem());
             engine.addSystem(new LastSystem(new IGotoGameOverScreen(){
-                    public void gameOverScreen(int player1Score) {
+                    public void gameOverScreen(final int player1Score) {
                         playersAreDead = true;
                         deadPlayer1Score = player1Score;
                     }
@@ -296,7 +307,7 @@ public class GameWorld {
             //engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
         }
 
-        LayersToRenderModel layersToRenderModel = new LayersToRenderModel(staticEnvironment);
+        final LayersToRenderModel layersToRenderModel = new LayersToRenderModel(staticEnvironment);
         setVisibleLayers(layersToRenderModel.getVisibleLayerIndices());
         return true;
     }
