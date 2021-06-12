@@ -52,7 +52,7 @@ import com.sa.game.systems.render.RenderSpriteInWhiteColorSystem;
 import com.sa.game.systems.render.RenderStarsSystem;
 import com.sa.game.systems.render.RenderSystem;
 
-public class GameWorld {
+public class GameLevel {
     //game entities
     StaticEnvironment staticEnvironment = new StaticEnvironment();
     //////////////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ public class GameWorld {
     Controller controllerB;
     PerformanceCounters performanceCounters;
 
-    public GameWorld(final Controller controllerA, final Controller controllerB, final PerformanceCounters performanceCounters) {
+    public GameLevel(final Controller controllerA, final Controller controllerB, final PerformanceCounters performanceCounters) {
         this.performanceCounters = performanceCounters;
         this.controllerA = controllerA;
         this.controllerB = controllerB;
@@ -272,13 +272,11 @@ public class GameWorld {
             engine.addSystem(new PickUpEntitySystem(collisionDetection));
             engine.addSystem(new DamageSystem(assetManager));
             engine.addSystem(new ExitSystem(new ILoadNextLevel() {
+                    @Override
                     public void nextLevel(final int player1Score, final int player1Lives) {
                         loadNextLevel = true;
                         nextLevelPlayer1Score = player1Score;
                         nextLevelPlayer1Lives = player1Lives;
-                    }
-
-                    public void toGameOverScreen(final int player1Score) {
                     }
             }));
             engine.addSystem(new ExplodeBoxingGloveOnContactSystem(collisionDetection));
@@ -299,6 +297,7 @@ public class GameWorld {
             engine.addSystem(new RenderScoreBoardSystem(assetManager, renderer, camera, staticEnvironment));
             engine.addSystem(new DeleteEntitySystem());
             engine.addSystem(new LastSystem(new IGotoGameOverScreen(){
+                    @Override
                     public void gameOverScreen(final int player1Score) {
                         playersAreDead = true;
                         deadPlayer1Score = player1Score;

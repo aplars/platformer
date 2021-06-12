@@ -13,11 +13,11 @@ import com.badlogic.gdx.utils.PerformanceCounters;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.sa.game.GameWorld;
+import com.sa.game.GameLevel;
 import com.sa.game.models.EditorModel;
 
 public class GameScreen extends ScreenAdapter {
-    private final GameWorld gameWorld;
+    private final GameLevel gameWorld;
     SpriteBatch batch;
     private final BitmapFont font;
     private final BitmapFont bigFont;
@@ -41,7 +41,7 @@ public class GameScreen extends ScreenAdapter {
         this.game = game;
         this.controllerA = controllerA;
         this.controllerB = controllerB;
-        gameWorld = new GameWorld(controllerA, controllerB, performanceCounters);
+        gameWorld = new GameLevel(controllerA, controllerB, performanceCounters);
         gameWorld.loadNextLevel = true;
         batch = new SpriteBatch();
         font = new BitmapFont();
