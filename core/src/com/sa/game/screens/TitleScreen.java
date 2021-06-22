@@ -6,11 +6,22 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -19,6 +30,7 @@ public class TitleScreen extends ScreenAdapter{
     Controller controllerA;
     Controller controllerB;
     private final BitmapFont sourcecodepro64Font;
+    Texture logo;
     SpriteBatch batch;
     Skin skin;
     Stage stage;
@@ -27,6 +39,10 @@ public class TitleScreen extends ScreenAdapter{
         this.game = game;
         this.controllerA = controllerA;
         this.controllerB = controllerB;
+
+        this.logo = new Texture(Gdx.files.internal("mainmenulogo.png"), true);
+        logo.setFilter(TextureFilter.MipMap, TextureFilter.Nearest);
+
         this.sourcecodepro64Font = new BitmapFont(Gdx.files.internal("skins/fonts/sourcecodepro64.fnt"),
                                              Gdx.files.internal("skins/fonts/sourcecodepro64.png"), false);
         batch = new SpriteBatch();
@@ -43,7 +59,8 @@ public class TitleScreen extends ScreenAdapter{
         // A skin can be loaded via JSON or defined programmatically, either is fine. Using a skin is optional but strongly
         // recommended solely for the convenience of getting a texture, region, etc as a drawable, tinted drawable, etc.
         skin = new Skin(Gdx.files.internal("skins/gdx-holo/skin/uiskin.json"));
-
+        BitmapFont font =  new BitmapFont();// skin.getFont("default");
+        font.setColor(Color.BLUE);
 
         // Create a table that fills the screen. Everything else will go inside this table.
         Window window = new Window("preferences", skin) {
@@ -52,8 +69,9 @@ public class TitleScreen extends ScreenAdapter{
         window.setResizable(true);
         window.setResizeBorder(10);
 
-        ImageButton startGameButton = new ImageButton(new TextureRegionDrawable(tRegion));
-        //startGameButton.getLabel().setScale(2);
+        Label startGameButton = new Label("Start Game", skin, "default-font", Color.WHITE);
+        //startGameButton.setScale(1.5f);
+        //startGameButton.
         startGameButton.addListener(new InputListener() {
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -62,23 +80,26 @@ public class TitleScreen extends ScreenAdapter{
             }
         });
         //button1.setSize(500, 500);
-        TextButton button2 = new TextButton("Settings", skin);
+        Label button2 = new Label("Settings", skin, "default-font", Color.WHITE);
+        //button2.setScale(1.5f);
+        Image logoImage = new Image(logo);
 
-        HorizontalGroup horizontalGroup = new HorizontalGroup();
-        horizontalGroup.setFillParent(true);
-        horizontalGroup.center().expand().addActor(startGameButton);
-        horizontalGroup.center().addActor(button2);
+        Table mainTable = new Table();
+        mainTable.debug();
+        mainTable.setFillParent(true);
+        mainTable.top().add(logoImage).row();;
 
-        Table table = new Table();
-        table.debug();
-        table.setFillParent(true);
-        table.add(startGameButton).fill();//width(600).height(600);
-        table.add(button2).fill();//width(600).height(600);
+        Table buttonTable = new Table();
+        //buttonTable.setFillParent(true);
+        buttonTable.add(startGameButton).fill().row();//width(600).height(600);
+        buttonTable.add(button2).fill();//width(600).height(600);
+
+        mainTable.add(buttonTable).fill();
         //horizontalGroup.addActor(button1);
         //horizontalGroup.addActor(button2);
         //table.setFillParent(true);
         //stage.addActor(window);
-        stage.addActor(table);
+        stage.addActor(mainTable);
         window.pack();
         FitViewport fitViewport = new FitViewport(1280f, 720f);
         stage.setViewport(fitViewport);
@@ -86,7 +107,7 @@ public class TitleScreen extends ScreenAdapter{
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
+        Gdx.gl.glClearColor(0.188f, 0.188f, 0.188f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if(this.controllerA != null && this.controllerA.getButton(controllerA.getMapping().buttonStart)) {
@@ -109,6 +130,11 @@ public class TitleScreen extends ScreenAdapter{
         batch.end();
         */
         stage.act(Gdx.graphics.getDeltaTime());
+
+        //batch.begin();
+        //batch.draw(logo, 0, 0);
+        //batch.end();
+
         stage.draw();
 
     }

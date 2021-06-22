@@ -12,6 +12,7 @@ import com.sa.game.components.ControlComponent;
 import com.sa.game.components.HealthComponent;
 import com.sa.game.components.MoveToEntityComponent;
 import com.sa.game.components.PickUpEntityComponent;
+import com.sa.game.components.RenderComponent;
 import com.sa.game.components.SensorComponent;
 
 /**
@@ -22,7 +23,7 @@ import com.sa.game.components.SensorComponent;
 public class PickUpEntitySystem extends IteratingSystem {
     CollisionDetection collisionDetection;
     public PickUpEntitySystem(CollisionDetection collisionDetection) {
-        super(Family.all(PickUpEntityComponent.class, CollisionComponent.class).get());
+        super(Family.all(PickUpEntityComponent.class, CollisionComponent.class, RenderComponent.class).get());
         this.collisionDetection = collisionDetection;
     }
 
@@ -30,7 +31,7 @@ public class PickUpEntitySystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         CollisionComponent collision = ComponentMappers.collision.get(entity);
         PickUpEntityComponent pickUpEntityComponent = ComponentMappers.pickUp.get(entity);
-
+        RenderComponent renderComponent = ComponentMappers.render.get(entity);
         if(pickUpEntityComponent != null && pickUpEntityComponent.entity != null) {
             HealthComponent h = ComponentMappers.health.get(pickUpEntityComponent.entity);
             if(h != null)
@@ -40,12 +41,14 @@ public class PickUpEntitySystem extends IteratingSystem {
         for(CollisionEntity collidee : collision.entity.collidees) {
             Entity collideeEnt = (Entity)collidee.userData;
             HealthComponent health = ComponentMappers.health.get(collideeEnt);
+            RenderComponent collideeRenderComponent = ComponentMappers.render.get(collideeEnt);
 
             if(health != null && health.isStunned() && collidee.groundCollisionData.didCollide) {
                 if(!ComponentMappers.moveToEntity.has(collideeEnt) || !ComponentMappers.moveToEntity.get(collideeEnt).isEnable) {
                     if(pickUpEntityComponent.entity == null) {
                         collideeEnt.add(new MoveToEntityComponent(entity, new Vector2(0, collision.entity.box.height), 130f));
                         ComponentMappers.collision.get(collideeEnt).setIsEnable(false);
+                        collideeRenderComponent.sprite.layer = renderComponent.sprite.layer + 1;
                         pickUpEntityComponent.entity = collideeEnt;
                     }
                 }

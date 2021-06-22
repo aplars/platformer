@@ -303,6 +303,7 @@ public class GameLevel {
                         deadPlayer1Score = player1Score;
                     }
                 }));
+
             //engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
         }
 
