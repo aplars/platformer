@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.sa.game.GameLevel;
+import com.sa.game.MyGdxGame;
 import com.sa.game.models.EditorModel;
 
 public class GameScreen extends ScreenAdapter {
@@ -33,12 +34,12 @@ public class GameScreen extends ScreenAdapter {
 
     float startDelayTime = 4f;
 
-    Game game;
+    MyGdxGame game;
     Controller controllerA;
     Controller controllerB;
 
     public GameScreen(Game game, Controller controllerA, Controller controllerB) {
-        this.game = game;
+        this.game = (MyGdxGame)game;
         this.controllerA = controllerA;
         this.controllerB = controllerB;
         gameWorld = new GameLevel(controllerA, controllerB, performanceCounters);

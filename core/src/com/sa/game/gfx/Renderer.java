@@ -58,15 +58,15 @@ public class Renderer {
             + "  vec4 orig = v_color * texture2D(u_texture, v_texCoords);\n" //
             + "  gl_FragColor = float(white)*vec4(tf.w, tf.w, tf.w, tf.w) + float(1-white)*orig;\n" //
             + "}";
-        final ShaderProgram shader = new ShaderProgram(vertexShader, fragmentShader);
-        if (!shader.isCompiled()) throw new IllegalArgumentException("Error compiling shader: " + shader.getLog());
-        shader.pedantic = false;
-        return shader;
+        final ShaderProgram shaderProg = new ShaderProgram(vertexShader, fragmentShader);
+        if (!shaderProg.isCompiled()) throw new IllegalArgumentException("Error compiling shader: " + shaderProg.getLog());
+        return shaderProg;
     }
 
     ShaderProgram shader;
 
     public Renderer() {
+        ShaderProgram.pedantic = false;
         spriteBatch = new SpriteBatch();
         textBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();

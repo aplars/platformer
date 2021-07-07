@@ -9,6 +9,12 @@ import com.sa.game.screens.GameScreen;
 import com.sa.game.screens.TitleScreen;
 
 public class MyGdxGame extends Game /*implements ApplicationListener*/ {
+    public DeviceType deviceType;
+
+    public MyGdxGame(DeviceType deviceType) {
+        this.deviceType = deviceType;
+    }
+
     @Override
     public void create() {
         Controller controllerA = null;
@@ -26,7 +32,13 @@ public class MyGdxGame extends Game /*implements ApplicationListener*/ {
     }
 
     public static MyGdxGame createDesktop() {
-        final MyGdxGame game = new MyGdxGame();
+        final MyGdxGame game = new MyGdxGame(DeviceType.Desktop);
         return game;
     }
+
+    public static MyGdxGame createMobile() {
+        final MyGdxGame game = new MyGdxGame(DeviceType.Mobile);
+        return game;
+    }
+
 }
