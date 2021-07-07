@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -37,6 +38,8 @@ public class GameScreen extends ScreenAdapter {
     MyGdxGame game;
     Controller controllerA;
     Controller controllerB;
+
+    AssetManager assetManager;
 
     public GameScreen(Game game, Controller controllerA, Controller controllerB) {
         this.game = (MyGdxGame)game;

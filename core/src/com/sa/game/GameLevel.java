@@ -154,17 +154,17 @@ public class GameLevel {
         collisionDetection.clear();
         //staticEnvironment.dispose();
 
-        if(assetManager == null)
+        if (assetManager == null) {
             assetManager = new AssetManager();
-
-        assetManager.clear();
+            assetManager.setLoader(TiledMap.class, new TmxMapLoader());
+        }
+        //assetManager.clear();
         //assetManager.dispose();
-
-        assetManager.setLoader(TiledMap.class, new TmxMapLoader());
+        if(assetManager.contains(level))
+            assetManager.unload(level);
         assetManager.load(level, TiledMap.class);
         assetManager.finishLoading();
         final TiledMap tiledMap = assetManager.get(level, TiledMap.class);
-
         if(staticEnvironment == null)
             staticEnvironment = new StaticEnvironment(tiledMap);
         else

@@ -65,9 +65,7 @@ public class StaticEnvironment {
             this.tiledMap.dispose();
         this.tiledMap = null;
         this.entities.clear();
-        
 
-        this.tiledMap = tiledMap;
         final TiledMapTileLayer inLayer =  (TiledMapTileLayer)tiledMap.getLayers().get("base");
         tileSizeInPixels = (int)inLayer.getTileWidth();
 
