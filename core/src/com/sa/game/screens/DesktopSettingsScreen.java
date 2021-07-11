@@ -4,11 +4,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -17,65 +20,56 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sa.game.MyGdxGame;
+import com.sa.game.systems.control.KeyboardMapping;
 
 public class DesktopSettingsScreen extends ScreenAdapter {
     MyGdxGame game;
     Controller controllerA;
     Controller controllerB;
+    KeyboardMapping keyboardMapping;
     Stage stage;
     SelectionLabels selectionLabels;
 
-    public DesktopSettingsScreen(final MyGdxGame game, final Controller controllerA, final Controller controllerB) {
+    public DesktopSettingsScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final Controller controllerB) {
         this.game = game;
         this.controllerA = controllerA;
         this.controllerB = controllerB;
+        this.keyboardMapping = keyboardMapping;
 
-        final Texture logo = new Texture(Gdx.files.internal("settingslogo.png"), true);
+        assetManager.load("mainmenulogo.png", Pixmap.class);
+        assetManager.finishLoadingAsset("mainmenulogo.png");
+        final Texture logo = new Texture(assetManager.get("mainmenulogo.png", Pixmap.class), true);
+
         final Image logoImage = new Image(logo);
-
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         final Skin skin = new Skin(Gdx.files.internal("skins/myskin/myskin.json"));
 
         final Table mainTable = new Table();
-        mainTable.debug();
         mainTable.setFillParent(true);
         mainTable.top().add(logoImage).row();
 
-        final Table buttonTable = new Table();
-        buttonTable.debug();
-        buttonTable.add().size(10,20).row();
-
-        selectionLabels = new SelectionLabels(skin, new ISelectionEvent(){
-                public void OnSelect(final int selection) {
-                if (selection == 0) {
-                    game.setScreen(new DesktopControlsSettingsScreen(game, controllerA, controllerB));
-
-                }
-                if(selection == 1)
-                    ;
-                if(selection == 2)
-                    game.setScreen(new TitleScreen(game, controllerA, controllerB));
+        selectionLabels = new SelectionLabels(skin, stage, keyboardMapping, new ISelectionEvent(){
+                public void onSelect(final int selection) {
+                    if (selection == 0) {
+                        game.setScreen(new DesktopControlsSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerB));
+                    }
+                    if(selection == 1)
+                        ;
+                    if(selection == 2)
+                        game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerB));
                 }
             });
 
-        selectionLabels.addSelectionLabel(buttonTable, "Controls");
-        selectionLabels.addSelectionLabel(buttonTable, "Sound");
-        selectionLabels.addSelectionLabel(buttonTable, "Back");
 
-        mainTable.add(buttonTable).fill();
+        selectionLabels.addSelectionLabel("Controls");
+        selectionLabels.addSelectionLabel("Sound");
+        selectionLabels.addSelectionLabel("Back");
+
+        mainTable.add(selectionLabels.getTable()).fill();
         stage.addActor(mainTable);
-        /*
-        mainTable.addListener(new EventListener(){
-                @Override
-                public boolean handle(Event event) {
-                    if(event.getStage().keyDown(Input.Keys.W))
-                        System.out.print("");
-                    return false;
-                }
-            });
-        */
-        final FitViewport fitViewport = new FitViewport(1280f, 720f);
+
+        final FitViewport fitViewport = new FitViewport(ScreenConstants.ViewportWidth, ScreenConstants.ViewportHeight);
         stage.setViewport(fitViewport);
 
         selectionLabels.setSelection(0);

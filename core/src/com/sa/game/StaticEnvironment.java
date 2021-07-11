@@ -63,7 +63,7 @@ public class StaticEnvironment {
     public void setTiledLevel(final TiledMap tiledMap) {
         if(this.tiledMap != null)
             this.tiledMap.dispose();
-        this.tiledMap = null;
+        this.tiledMap = tiledMap;
         this.entities.clear();
 
         final TiledMapTileLayer inLayer =  (TiledMapTileLayer)tiledMap.getLayers().get("base");

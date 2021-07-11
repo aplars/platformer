@@ -4,8 +4,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -17,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sa.game.MyGdxGame;
+import com.sa.game.systems.control.KeyboardMapping;
 
 public class DesktopControlsSettingsScreen extends ScreenAdapter {
     MyGdxGame game;
@@ -24,13 +27,18 @@ public class DesktopControlsSettingsScreen extends ScreenAdapter {
     Controller controllerB;
     Stage stage;
     SelectionLabels selectionLabels;
+    KeyboardConfigurationWindow keyboardConfigurationWindow;
+    final KeyboardMapping keyboardMapping;
 
-    public DesktopControlsSettingsScreen(final MyGdxGame game, final Controller controllerA, final Controller controllerB) {
+    public DesktopControlsSettingsScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final Controller controllerB) {
         this.game = game;
         this.controllerA = controllerA;
         this.controllerB = controllerB;
+        this.keyboardMapping = keyboardMapping;
 
-        final Texture logo = new Texture(Gdx.files.internal("settingslogo.png"), true);
+        assetManager.load("mainmenulogo.png", Pixmap.class);
+        assetManager.finishLoadingAsset("mainmenulogo.png");
+        final Texture logo = new Texture(assetManager.get("mainmenulogo.png", Pixmap.class), true);
         final Image logoImage = new Image(logo);
 
         this.stage = new Stage();
@@ -38,45 +46,36 @@ public class DesktopControlsSettingsScreen extends ScreenAdapter {
         final Skin skin = new Skin(Gdx.files.internal("skins/myskin/myskin.json"));
 
         final Table mainTable = new Table();
-        mainTable.debug();
         mainTable.setFillParent(true);
         mainTable.top().add(logoImage).row();
 
-        final Table buttonTable = new Table();
-        buttonTable.debug();
-        buttonTable.add().size(10,20).row();
-
-        selectionLabels = new SelectionLabels(skin, new ISelectionEvent(){
-                public void OnSelect(final int selection) {
+        selectionLabels = new SelectionLabels(skin, stage, keyboardMapping, new ISelectionEvent(){
+                public void onSelect(final int selection) {
                 if (selection == 0) {
-                    //selectionLabels.addSelectionLabel("Controls", buttonTable, "Sub");
-                    //selectionLabels.removeSelectionLabel(buttonTable, "Sound");
-                    //selectionLabels.removeSelectionLabel(buttonTable, "Back");
+                    keyboardConfigurationWindow = new KeyboardConfigurationWindow(skin, stage, new IWindowCloseEvent(){
+                            @Override
+                            public void onWindowClose(KeyboardMapping _keyboardMapping) {
+                                keyboardConfigurationWindow = null;
+                                selectionLabels.setFocus();
+                                keyboardMapping.set(_keyboardMapping);
+                            }
+                        });
                 }
                 if(selection == 1)
                     ;
                 if(selection == 2)
-                    game.setScreen(new DesktopSettingsScreen(game, controllerA, controllerB));
+                    game.setScreen(new DesktopSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerB));
                 }
             });
 
-        selectionLabels.addSelectionLabel(buttonTable, "Keyboard");
-        selectionLabels.addSelectionLabel(buttonTable, "Joystick");
-        selectionLabels.addSelectionLabel(buttonTable, "Back");
+        selectionLabels.addSelectionLabel("Keyboard");
+        selectionLabels.addSelectionLabel("Joystick");
+        selectionLabels.addSelectionLabel("Back");
 
-        mainTable.add(buttonTable).fill();
+        mainTable.add(selectionLabels.getTable()).fill();
         stage.addActor(mainTable);
-        /*
-        mainTable.addListener(new EventListener(){
-                @Override
-                public boolean handle(Event event) {
-                    if(event.getStage().keyDown(Input.Keys.W))
-                        System.out.print("");
-                    return false;
-                }
-            });
-        */
-        final FitViewport fitViewport = new FitViewport(1280f, 720f);
+        final FitViewport fitViewport = new FitViewport(ScreenConstants.ViewportWidth, ScreenConstants.ViewportHeight
+                                                        );
         stage.setViewport(fitViewport);
 
         selectionLabels.setSelection(0);
@@ -89,10 +88,14 @@ public class DesktopControlsSettingsScreen extends ScreenAdapter {
         selectionLabels.update();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
+        if(keyboardConfigurationWindow != null)
+            keyboardConfigurationWindow.render(delta);
     }
 
     @Override
     public void resize (final int width, final int height) {
         stage.getViewport().update(width, height, true);
+        if(keyboardConfigurationWindow != null)
+            keyboardConfigurationWindow.resize(width, height);
     }
 }

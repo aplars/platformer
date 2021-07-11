@@ -37,6 +37,7 @@ import com.sa.game.systems.WrapEntitySystem;
 import com.sa.game.systems.control.ControlMovementSystem;
 import com.sa.game.systems.control.ControlPunchSystem;
 import com.sa.game.systems.control.ControlThrowEntitySystem;
+import com.sa.game.systems.control.KeyboardMapping;
 import com.sa.game.systems.control.PlayerInputSystem;
 import com.sa.game.systems.explode.ExplodeBoxingGloveOnContactSystem;
 import com.sa.game.systems.explode.ExplodeEnemyOnContactSystem;
@@ -53,14 +54,14 @@ import com.sa.game.systems.render.RenderStarsSystem;
 import com.sa.game.systems.render.RenderSystem;
 
 public class GameLevel {
-    //game entities
+    KeyboardMapping keyboardMapping;
     StaticEnvironment staticEnvironment = new StaticEnvironment();
     //////////////////////////////////////////////////////////////
     OrthographicCamera camera = new OrthographicCamera();
     OrthographicCamera fontCamera = new OrthographicCamera();
     Renderer renderer = new Renderer();
     CollisionDetection collisionDetection = new CollisionDetection();
-    AssetManager assetManager = null;//new AssetManager();
+    AssetManager assetManager = null;
     OrthogonalTiledMapRenderer mapRenderer;
     ScalingViewport scalingViewport;
     int visiblelayers[] = {};
@@ -80,7 +81,10 @@ public class GameLevel {
     Controller controllerB;
     PerformanceCounters performanceCounters;
 
-    public GameLevel(final Controller controllerA, final Controller controllerB, final PerformanceCounters performanceCounters) {
+    public GameLevel(final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final Controller controllerB, final PerformanceCounters performanceCounters) {
+        this.assetManager = assetManager;
+        this.keyboardMapping = keyboardMapping;
+        this.assetManager.setLoader(TiledMap.class, new TmxMapLoader());
         this.performanceCounters = performanceCounters;
         this.controllerA = controllerA;
         this.controllerB = controllerB;
@@ -152,23 +156,15 @@ public class GameLevel {
 
     public boolean loadLevel(final String level, final int player1Score, final int player1Lives, final float startDelay) {
         collisionDetection.clear();
-        //staticEnvironment.dispose();
 
-        if (assetManager == null) {
-            assetManager = new AssetManager();
-            assetManager.setLoader(TiledMap.class, new TmxMapLoader());
-        }
-        //assetManager.clear();
-        //assetManager.dispose();
+        //Remove the level-tile-map if its already loaded. This is needed because static environment changes the map.
+        //Yes! It would be better if StaticEnvironment cloned the map and then updated it but the map cannot be cloned
+        //So its not possible without writing the clone function (and i dont know how to do it)
         if(assetManager.contains(level))
             assetManager.unload(level);
         assetManager.load(level, TiledMap.class);
         assetManager.finishLoading();
-        final TiledMap tiledMap = assetManager.get(level, TiledMap.class);
-        if(staticEnvironment == null)
-            staticEnvironment = new StaticEnvironment(tiledMap);
-        else
-            staticEnvironment.setTiledLevel(tiledMap);
+        this.staticEnvironment.setTiledLevel(assetManager.get(level, TiledMap.class));
 
         assetManager.finishLoading();
 
@@ -257,7 +253,7 @@ public class GameLevel {
             assetManager.update();
 
         if (addSystems) {
-            engine.addSystem(new PlayerInputSystem(controllerA));
+            engine.addSystem(new PlayerInputSystem(controllerA, this.keyboardMapping));
             engine.addSystem(new AISystem());
             engine.addSystem(new OpenDoorSystem(collisionDetection));
             engine.addSystem(new ControlMovementSystem(collisionDetection, staticEnvironment));

@@ -105,11 +105,13 @@ public class PlayerInputSystem extends IteratingSystem {
 
     private final ComponentMapper<ControlComponent> controlMap = ComponentMapper.getFor(ControlComponent.class);
     Controller controller;
+    KeyboardMapping keyboardMapping;
     MyGestureListener myGestureListener;
 
-    public PlayerInputSystem(Controller controller) {
+    public PlayerInputSystem(Controller controller, KeyboardMapping keyboardMapping) {
         super(Family.all(ControlComponent.class, Player1Component.class).exclude(DelayControlComponent.class).get());
         this.controller = controller;
+        this.keyboardMapping = keyboardMapping;
         myGestureListener = new MyGestureListener();
         Gdx.input.setInputProcessor(new GestureDetector(myGestureListener));
     }
@@ -133,22 +135,16 @@ public class PlayerInputSystem extends IteratingSystem {
             controlComponent.buttonB = true;
             myGestureListener.buttonB = false;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyPressed(keyboardMapping.Left)) {
             controlComponent.buttonLeft = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyPressed(keyboardMapping.Right)) {
             controlComponent.buttonRight = true;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-            //controlComponent.buttonUp = true;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-            //controlComponent.buttonDown = true;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.J)) {
+        if (Gdx.input.isKeyPressed(keyboardMapping.Jump)) {
             controlComponent.buttonA = true;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.K) /*&& controlComponent.buttonBTime <= 0f*/) {
+        if(Gdx.input.isKeyPressed(keyboardMapping.Fire) /*&& controlComponent.buttonBTime <= 0f*/) {
             controlComponent.buttonB = true;
         }
         if(this.controller != null) {

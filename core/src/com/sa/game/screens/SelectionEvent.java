@@ -1,5 +1,5 @@
 package com.sa.game.screens;
 
 interface ISelectionEvent {
-    void OnSelect(int selection);
+    void onSelect(int selection);
 }

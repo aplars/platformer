@@ -17,8 +17,15 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.sa.game.GameLevel;
 import com.sa.game.MyGdxGame;
 import com.sa.game.models.EditorModel;
+import com.sa.game.systems.control.KeyboardMapping;
 
 public class GameScreen extends ScreenAdapter {
+    MyGdxGame game;
+    AssetManager assetManager;
+    final KeyboardMapping keyboardMapping;
+    Controller controllerA;
+    Controller controllerB;
+
     private final GameLevel gameWorld;
     SpriteBatch batch;
     private final BitmapFont font;
@@ -35,17 +42,13 @@ public class GameScreen extends ScreenAdapter {
 
     float startDelayTime = 4f;
 
-    MyGdxGame game;
-    Controller controllerA;
-    Controller controllerB;
-
-    AssetManager assetManager;
-
-    public GameScreen(Game game, Controller controllerA, Controller controllerB) {
+    public GameScreen(final Game game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final Controller controllerB) {
         this.game = (MyGdxGame)game;
+        this.assetManager = assetManager;
+        this.keyboardMapping = keyboardMapping;
         this.controllerA = controllerA;
         this.controllerB = controllerB;
-        gameWorld = new GameLevel(controllerA, controllerB, performanceCounters);
+        gameWorld = new GameLevel(assetManager, keyboardMapping, controllerA, controllerB, performanceCounters);
         gameWorld.loadNextLevel = true;
         batch = new SpriteBatch();
         font = new BitmapFont();
@@ -53,7 +56,7 @@ public class GameScreen extends ScreenAdapter {
                                  Gdx.files.internal("skins/score-font/score-font.png"), false);
         sourcecodepro64Font = new BitmapFont(Gdx.files.internal("skins/fonts/sourcecodepro64.fnt"),
                                              Gdx.files.internal("skins/fonts/sourcecodepro64.png"), false);
-        ScalingViewport scalingViewport = new ScalingViewport(Scaling.fill, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        final ScalingViewport scalingViewport = new ScalingViewport(Scaling.fill, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         scalingViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
@@ -61,7 +64,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(final float delta) {
         if(gameWorld.playersAreDead) {
-            this.game.setScreen(new TitleScreen(game, controllerA, controllerB));
+            this.game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerB));
         }
         final long startTime = TimeUtils.millis();
 
