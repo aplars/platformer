@@ -20,20 +20,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sa.game.MyGdxGame;
+import com.sa.game.systems.control.ControllerMapping;
 import com.sa.game.systems.control.KeyboardMapping;
 
 public class DesktopSettingsScreen extends ScreenAdapter {
     MyGdxGame game;
     Controller controllerA;
+    ControllerMapping controllerMappingA;
     Controller controllerB;
+    ControllerMapping controllerMappingB;
     KeyboardMapping keyboardMapping;
     Stage stage;
     SelectionLabels selectionLabels;
 
-    public DesktopSettingsScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final Controller controllerB) {
+    public DesktopSettingsScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA, final Controller controllerB, final ControllerMapping controllerMappingB) {
         this.game = game;
         this.controllerA = controllerA;
+        this.controllerMappingA = controllerMappingA;
         this.controllerB = controllerB;
+        this.controllerMappingB = controllerMappingB;
         this.keyboardMapping = keyboardMapping;
 
         assetManager.load("mainmenulogo.png", Pixmap.class);
@@ -49,15 +54,15 @@ public class DesktopSettingsScreen extends ScreenAdapter {
         mainTable.setFillParent(true);
         mainTable.top().add(logoImage).row();
 
-        selectionLabels = new SelectionLabels(skin, stage, keyboardMapping, new ISelectionEvent(){
+        selectionLabels = new SelectionLabels(skin, stage, keyboardMapping, controllerA, controllerMappingA, new ISelectionEvent(){
                 public void onSelect(final int selection) {
                     if (selection == 0) {
-                        game.setScreen(new DesktopControlsSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerB));
+                        game.setScreen(new DesktopControlsSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
                     }
                     if(selection == 1)
                         ;
                     if(selection == 2)
-                        game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerB));
+                        game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
                 }
             });
 

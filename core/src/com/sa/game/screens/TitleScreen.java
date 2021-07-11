@@ -29,12 +29,15 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sa.game.DeviceType;
 import com.sa.game.MyGdxGame;
+import com.sa.game.systems.control.ControllerMapping;
 import com.sa.game.systems.control.KeyboardMapping;
 
 public class TitleScreen extends ScreenAdapter{
     MyGdxGame game;
     Controller controllerA;
+    ControllerMapping controllerMappingA;
     Controller controllerB;
+    ControllerMapping controllerMappingB;
     final KeyboardMapping keyboardMapping;
     ArrayList<Label> selectorLabels = new ArrayList<>();
 
@@ -44,7 +47,7 @@ public class TitleScreen extends ScreenAdapter{
     final AssetManager assetManager;
     SelectionLabels selectionLabels;
 
-    public TitleScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final Controller controllerB) {
+    public TitleScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA,  final Controller controllerB, final ControllerMapping controllerMappingB) {
         this.game = game;
         this.assetManager = assetManager;
         this.controllerA = controllerA;
@@ -71,12 +74,12 @@ public class TitleScreen extends ScreenAdapter{
         mainTable.setFillParent(true);
         mainTable.top().add(logoImage).row();
 
-        selectionLabels = new SelectionLabels(skin, stage, keyboardMapping, new ISelectionEvent() {
+        selectionLabels = new SelectionLabels(skin, stage, keyboardMapping, controllerA, controllerMappingA, new ISelectionEvent() {
                 public void onSelect(int selection) {
                     if(selection == 0)
-                        game.setScreen(new GameScreen(game, assetManager, keyboardMapping, controllerA, controllerB));
+                        game.setScreen(new GameScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
                     if(selection == 1)
-                        game.setScreen(new DesktopSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerB));
+                        game.setScreen(new DesktopSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
                     if(selection == 2)
                         Gdx.app.exit();
                 }
@@ -101,7 +104,7 @@ public class TitleScreen extends ScreenAdapter{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if(this.controllerA != null && this.controllerA.getButton(controllerA.getMapping().buttonStart)) {
-            game.setScreen(new GameScreen(game, assetManager, keyboardMapping, controllerA, controllerB)); //Set game screen
+            game.setScreen(new GameScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB)); //Set game screen
         }
         selectionLabels.update();
         stage.act(Gdx.graphics.getDeltaTime());

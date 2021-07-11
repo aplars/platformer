@@ -1,6 +1,7 @@
 package com.sa.game.screens;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -20,65 +21,66 @@ public class KeyboardConfigurationWindow {
     ArrayList<Label> labels = new ArrayList<>();
     ArrayList<Label> values = new ArrayList<>();
     int current = 0;
+    HashSet<Integer> usedSlots = new HashSet<>();
+
     KeyboardConfigurationWindow(final Skin skin, final Stage stage, final IWindowCloseEvent closeEvent)
     {
         this.stage = stage;
-
         final Table table = new Table();
         table.setFillParent(true);
         final Window window = new Window("Keyboard configuration", skin);
-        //window.setFillParent(true);
         window.addListener(new InputListener() {
-            KeyboardMapping keyboardMapping = new KeyboardMapping();
+                KeyboardMapping keyboardMapping = new KeyboardMapping();
 
-                public boolean keyDown (final InputEvent event, final int keycode) {
-                if (current < values.size()) {
-                    labels.get(current).setStyle(skin.get("default", Label.LabelStyle.class));
-                    values.get(current).setText(Input.Keys.toString(keycode));
-                    switch(current) {
-                    case 0:
-                        keyboardMapping.Left = keycode;
-                        break;
-                    case 1:
-                        keyboardMapping.Right = keycode;
-                        break;
-                    case 2:
-                        keyboardMapping.Jump = keycode;
-                        break;
-                    case 3:
-                        keyboardMapping.Fire = keycode;
-                        break;
-                    case 4:
-                        keyboardMapping.Start = keycode;
-                        break;
-                    case 5:
-                        keyboardMapping.Up = keycode;
-                        break;
-                    case 6:
-                        keyboardMapping.Down = keycode;
-                        break;
+                public boolean keyDown(final InputEvent event, final int keycode) {
+                    if (current < values.size()) {
+                        if(usedSlots.add(keycode)==false)
+                            return true;
+                        labels.get(current).setStyle(skin.get("default", Label.LabelStyle.class));
+                        values.get(current).setText(Input.Keys.toString(keycode));
+                        switch (current) {
+                        case 0:
+                            keyboardMapping.Left = keycode;
+                            break;
+                        case 1:
+                            keyboardMapping.Right = keycode;
+                            break;
+                        case 2:
+                            keyboardMapping.A = keycode;
+                            break;
+                        case 3:
+                            keyboardMapping.B = keycode;
+                            break;
+                        case 4:
+                            keyboardMapping.Start = keycode;
+                            break;
+                        case 5:
+                            keyboardMapping.Up = keycode;
+                            break;
+                        case 6:
+                            keyboardMapping.Down = keycode;
+                            break;
+                        }
+                        current++;
+                        if (current < values.size()) {
+                            labels.get(current).setStyle(skin.get("title", Label.LabelStyle.class));
+                        }
+                    } else {
+                        window.setVisible(false);
+                        if (closeEvent != null) {
+                            table.remove();
+                            Preferences preferences = Gdx.app.getPreferences(ScreenConstants.PreferencesName);
+                            preferences.putInteger("KeyLeft", keyboardMapping.Left);
+                            preferences.putInteger("KeyRight", keyboardMapping.Right);
+                            preferences.putInteger("KeyJump", keyboardMapping.A);
+                            preferences.putInteger("KeyFire", keyboardMapping.B);
+                            preferences.putInteger("KeyStart", keyboardMapping.Start);
+                            preferences.putInteger("KeyUp", keyboardMapping.Up);
+                            preferences.putInteger("KeyDown", keyboardMapping.Down);
+                            preferences.flush();
+                            closeEvent.onWindowClose(keyboardMapping);
+                        }
                     }
-                    current++;
-                    if(current < values.size())
-                        labels.get(current).setStyle(skin.get("title", Label.LabelStyle.class));
-                }
-                else  {
-                    window.setVisible(false);
-                    if (closeEvent != null) {
-                        table.remove();
-                        Preferences preferences = Gdx.app.getPreferences(ScreenConstants.PreferencesName);
-                        preferences.putInteger("KeyLeft", keyboardMapping.Left);
-                        preferences.putInteger("KeyRight", keyboardMapping.Right);
-                        preferences.putInteger("KeyJump", keyboardMapping.Jump);
-                        preferences.putInteger("KeyFire", keyboardMapping.Fire);
-                        preferences.putInteger("KeyStart", keyboardMapping.Start);
-                        preferences.putInteger("KeyUp", keyboardMapping.Up);
-                        preferences.putInteger("KeyDown", keyboardMapping.Down);
-                        preferences.flush();
-                        closeEvent.onWindowClose(keyboardMapping);
-                    }
-                }
-
                     return false;
                 }
             });
@@ -103,7 +105,6 @@ public class KeyboardConfigurationWindow {
         setKeysTable.pack();
         labels.get(current).setStyle(skin.get("title", Label.LabelStyle.class));
         window.add(setKeysTable).left().row();
-        window.add(new Label("pekka", skin));
         table.pack();
         window.pack();
         stage.addActor(table);

@@ -19,21 +19,27 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sa.game.MyGdxGame;
+import com.sa.game.systems.control.ControllerMapping;
 import com.sa.game.systems.control.KeyboardMapping;
 
 public class DesktopControlsSettingsScreen extends ScreenAdapter {
     MyGdxGame game;
     Controller controllerA;
+    ControllerMapping controllerMappingA;
     Controller controllerB;
+    ControllerMapping controllerMappingB;
     Stage stage;
     SelectionLabels selectionLabels;
     KeyboardConfigurationWindow keyboardConfigurationWindow;
+    JoystickConfigurationWindow joystickConfigurationWindow;
     final KeyboardMapping keyboardMapping;
 
-    public DesktopControlsSettingsScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final Controller controllerB) {
+    public DesktopControlsSettingsScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA, final Controller controllerB, final ControllerMapping controllerMappingB) {
         this.game = game;
         this.controllerA = controllerA;
+        this.controllerMappingA = controllerMappingA;
         this.controllerB = controllerB;
+        this.controllerMappingB = controllerMappingB;
         this.keyboardMapping = keyboardMapping;
 
         assetManager.load("mainmenulogo.png", Pixmap.class);
@@ -49,9 +55,10 @@ public class DesktopControlsSettingsScreen extends ScreenAdapter {
         mainTable.setFillParent(true);
         mainTable.top().add(logoImage).row();
 
-        selectionLabels = new SelectionLabels(skin, stage, keyboardMapping, new ISelectionEvent(){
+        selectionLabels = new SelectionLabels(skin, stage, keyboardMapping, controllerA, controllerMappingA, new ISelectionEvent(){
                 public void onSelect(final int selection) {
                 if (selection == 0) {
+                    selectionLabels.unFocus();
                     keyboardConfigurationWindow = new KeyboardConfigurationWindow(skin, stage, new IWindowCloseEvent(){
                             @Override
                             public void onWindowClose(KeyboardMapping _keyboardMapping) {
@@ -59,12 +66,40 @@ public class DesktopControlsSettingsScreen extends ScreenAdapter {
                                 selectionLabels.setFocus();
                                 keyboardMapping.set(_keyboardMapping);
                             }
+
+                            @Override
+                            public void onWindowClose(ControllerMapping _keyboardMapping) {
+                            }
+
+                            @Override
+                            public void onWindowCLose() {
+                                selectionLabels.setFocus();
+                            }
                         });
                 }
-                if(selection == 1)
-                    ;
+                if(selection == 1) {
+                    selectionLabels.unFocus();
+                    joystickConfigurationWindow = new JoystickConfigurationWindow(skin, stage, controllerA, new IWindowCloseEvent(){
+                            @Override
+                            public void onWindowClose(KeyboardMapping _keyboardMapping) {
+                            }
+
+                            @Override
+                            public void onWindowClose(ControllerMapping _controllerMapping) {
+                                joystickConfigurationWindow.dispose();
+                                joystickConfigurationWindow = null;
+                                selectionLabels.setFocus();
+                                controllerMappingA.set(_controllerMapping);
+                            }
+
+                            @Override
+                            public void onWindowCLose() {
+                                selectionLabels.setFocus();
+                            }
+                    });
+                }
                 if(selection == 2)
-                    game.setScreen(new DesktopSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerB));
+                    game.setScreen(new DesktopSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
                 }
             });
 

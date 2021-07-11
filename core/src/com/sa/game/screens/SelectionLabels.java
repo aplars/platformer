@@ -2,47 +2,52 @@ package com.sa.game.screens;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.sa.game.systems.control.ControllerMapping;
 import com.sa.game.systems.control.KeyboardMapping;
 
 public class SelectionLabels {
-    ArrayList<ISelectionEvent> selectionEvents = new ArrayList<>();
-    ArrayList<Label> selectorLabels = new ArrayList<>();
-    ArrayList<Label> labels = new ArrayList<>();
+    final ArrayList<ISelectionEvent> selectionEvents = new ArrayList<>();
+    final ArrayList<Label> selectorLabels = new ArrayList<>();
+    final ArrayList<Label> labels = new ArrayList<>();
     int selection = -1;
-    Table table;
-    Skin skin;
-    Stage stage;
+    final Table table;
+    final Skin skin;
+    final Stage stage;
     final KeyboardMapping keyboardMapping;
+    Controller controller;
+    final ControllerMapping controllerMapping;
+    boolean lastUp = true;
+    boolean lastDown = true;
+    boolean lastJump = true;
 
-    public SelectionLabels(Skin skin, Stage stage, final KeyboardMapping keyboardMapping, ISelectionEvent selectionEvent) {
+    boolean hasFocus = true;
+
+    public SelectionLabels(final Skin skin, final Stage stage, final KeyboardMapping keyboardMapping, final Controller controller, final ControllerMapping controllerMapping, final ISelectionEvent selectionEvent) {
         this.skin = skin;
         this.stage = stage;
         this.keyboardMapping = keyboardMapping;
+        this.controller = controller;
+        this.controllerMapping = controllerMapping;
         this.selectionEvents.add(selectionEvent);
         this.table = new Table();
         this.table.add().size(10,20).row();
 
         this.table.addListener(new InputListener(){
-                public boolean keyDown (InputEvent event, int keycode) {
+                public boolean keyDown (final InputEvent event, final int keycode) {
                     if (keycode == keyboardMapping.Up) {
                         setSelection(getSelection() - 1);
                     }
                     if (keycode == keyboardMapping.Down) {
                         setSelection(getSelection() + 1);
                     }
-                    if (keycode == keyboardMapping.Jump) {
+                    if (keycode == keyboardMapping.A) {
                         setSelection(getSelection());
                     }
                     return false;
@@ -54,14 +59,19 @@ public class SelectionLabels {
 
     public void setFocus() {
         this.stage.setKeyboardFocus(table);
+        hasFocus = true;
+    }
+
+    public void unFocus() {
+        hasFocus = false;
     }
 
     public Table getTable() {
         return this.table;
     }
 
-    public void addSelectionLabel(String text) {
-        Label label = new Label(text, skin, "whitetitle");
+    public void addSelectionLabel(final String text) {
+        final Label label = new Label(text, skin, "whitetitle");
         final int index = selectorLabels.size();
         label.addListener(new InputListener() {
                 @Override
@@ -84,7 +94,7 @@ public class SelectionLabels {
 
     void setSelection(final int s) {
         if (selection == s) {
-            for (ISelectionEvent evt : selectionEvents) {
+            for (final ISelectionEvent evt : selectionEvents) {
                 evt.onSelect(s);
             }
         }
@@ -98,7 +108,7 @@ public class SelectionLabels {
         else
             ss = Math.abs((s) % selectorLabels.size());
 
-        for(Label selectionLabel : selectorLabels) {
+        for(final Label selectionLabel : selectorLabels) {
             selectionLabel.setVisible(false);
         }
         this.selectorLabels.get(ss).setVisible(true);
@@ -106,15 +116,20 @@ public class SelectionLabels {
     }
 
     void update() {
-        /*if(Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            setSelection(getSelection() - 1);
+        if (this.controller != null && hasFocus) {
+            if (this.controller.getButton(controllerMapping.Up) && lastUp == false) {
+                setSelection(selection - 1);
+            }
+            else if (this.controller.getButton(controllerMapping.Down) && lastDown == false) {
+                setSelection(selection + 1);
+            }
+            else if (this.controller.getButton(controllerMapping.A) && lastJump == false) {
+                setSelection(selection);
+            }
+            lastUp = this.controller.getButton(controllerMapping.Up);
+            lastDown = this.controller.getButton(controllerMapping.Down);
+            lastJump = this.controller.getButton(controllerMapping.A);
         }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            setSelection(getSelection() + 1);
-        }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.J)) {
-            setSelection(getSelection());
-            }*/
     }
 
 }

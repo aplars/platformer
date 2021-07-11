@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.sa.game.screens.GameScreen;
 import com.sa.game.screens.ScreenConstants;
 import com.sa.game.screens.TitleScreen;
+import com.sa.game.systems.control.ControllerMapping;
 import com.sa.game.systems.control.KeyboardMapping;
 
 public class MyGdxGame extends Game /*implements ApplicationListener*/ {
@@ -39,10 +40,10 @@ public class MyGdxGame extends Game /*implements ApplicationListener*/ {
             keyboardMapping.Left = preferences.getInteger("KeyLeft");
         if(preferences.contains("KeyRight"))
             keyboardMapping.Right = preferences.getInteger("KeyRight");
-        if(preferences.contains("KeyJump"))
-            keyboardMapping.Jump = preferences.getInteger("KeyJump");
-        if(preferences.contains("KeyFire"))
-            keyboardMapping.Fire = preferences.getInteger("KeyFire");
+        if(preferences.contains("KeyA"))
+            keyboardMapping.A = preferences.getInteger("KeyA");
+        if(preferences.contains("KeyB"))
+            keyboardMapping.B = preferences.getInteger("KeyB");
         if(preferences.contains("KeyStart"))
             keyboardMapping.Start = preferences.getInteger("KeyStart");
         if(preferences.contains("KeyUp"))
@@ -50,7 +51,26 @@ public class MyGdxGame extends Game /*implements ApplicationListener*/ {
         if(preferences.contains("KeyDown"))
             keyboardMapping.Down = preferences.getInteger("KeyDown");
 
-        setScreen(new TitleScreen(this, new AssetManager(), keyboardMapping, controllerA, controllerB));
+        ControllerMapping controllerMappingA = new ControllerMapping(controllerA);
+        if(preferences.contains("ControllerALeft"))
+            controllerMappingA.Left = preferences.getInteger("ControllerALeft");
+        if(preferences.contains("ControllerARight"))
+            controllerMappingA.Right = preferences.getInteger("ControllerARight");
+        if(preferences.contains("ControllerAA"))
+            controllerMappingA.A = preferences.getInteger("ControllerAA");
+        if(preferences.contains("ControllerAB"))
+            controllerMappingA.B = preferences.getInteger("ControllerAB");
+        if(preferences.contains("ControllerAStart"))
+            controllerMappingA.Start = preferences.getInteger("ControllerAStart");
+        if(preferences.contains("ControllerAUp"))
+            controllerMappingA.Up = preferences.getInteger("ControllerAUp");
+        if(preferences.contains("ControllerADown"))
+            controllerMappingA.Down = preferences.getInteger("ControllerADown");
+
+
+        ControllerMapping controllerMappingB = new ControllerMapping(controllerB);
+
+        setScreen(new TitleScreen(this, new AssetManager(), keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
     }
 
     public static MyGdxGame createDesktop() {

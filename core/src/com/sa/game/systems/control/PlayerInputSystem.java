@@ -105,12 +105,14 @@ public class PlayerInputSystem extends IteratingSystem {
 
     private final ComponentMapper<ControlComponent> controlMap = ComponentMapper.getFor(ControlComponent.class);
     Controller controller;
+    ControllerMapping controllerMapping;
     KeyboardMapping keyboardMapping;
     MyGestureListener myGestureListener;
 
-    public PlayerInputSystem(Controller controller, KeyboardMapping keyboardMapping) {
+    public PlayerInputSystem(Controller controller, ControllerMapping controllerMapping, KeyboardMapping keyboardMapping) {
         super(Family.all(ControlComponent.class, Player1Component.class).exclude(DelayControlComponent.class).get());
         this.controller = controller;
+        this.controllerMapping = controllerMapping;
         this.keyboardMapping = keyboardMapping;
         myGestureListener = new MyGestureListener();
         Gdx.input.setInputProcessor(new GestureDetector(myGestureListener));
@@ -141,29 +143,29 @@ public class PlayerInputSystem extends IteratingSystem {
         if (Gdx.input.isKeyPressed(keyboardMapping.Right)) {
             controlComponent.buttonRight = true;
         }
-        if (Gdx.input.isKeyPressed(keyboardMapping.Jump)) {
+        if (Gdx.input.isKeyPressed(keyboardMapping.A)) {
             controlComponent.buttonA = true;
         }
-        if(Gdx.input.isKeyPressed(keyboardMapping.Fire) /*&& controlComponent.buttonBTime <= 0f*/) {
+        if(Gdx.input.isKeyPressed(keyboardMapping.B) /*&& controlComponent.buttonBTime <= 0f*/) {
             controlComponent.buttonB = true;
         }
         if(this.controller != null) {
-            if (this.controller.getButton(controller.getMapping().buttonDpadLeft)) {
+            if (this.controller.getButton(controllerMapping.Left)) {
                 controlComponent.buttonLeft = true;
             }
-            if (this.controller.getButton(controller.getMapping().buttonDpadRight)) {
+            if (this.controller.getButton(controllerMapping.Right)) {
                 controlComponent.buttonRight = true;
             }
-            if (this.controller.getButton(controller.getMapping().buttonA)) {
+            if (this.controller.getButton(controllerMapping.B)) {
+                    controlComponent.buttonB = true;
+            }
+            if (this.controller.getButton(controllerMapping.A)) {
                 controlComponent.buttonA = true;
             }
-            if (this.controller.getButton(controller.getMapping().buttonB) /*&& controlComponent.buttonBTime <= 0f*/) {
-                controlComponent.buttonB = true;
-            }
-            if(this.controller.getButton(controller.getMapping().buttonBack)) {
-                controlComponent.buttonSelect = true;
-            }
-            if(this.controller.getButton(controller.getMapping().buttonStart)) {
+                //if(this.controller.getButton(controller.getMapping().buttonBack)) {
+                //controlComponent.buttonSelect = true;
+                //}
+            if(this.controller.getButton(controllerMapping.Start)) {
                 controlComponent.buttonStart = true;
             }
         }

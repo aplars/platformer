@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.sa.game.GameLevel;
 import com.sa.game.MyGdxGame;
 import com.sa.game.models.EditorModel;
+import com.sa.game.systems.control.ControllerMapping;
 import com.sa.game.systems.control.KeyboardMapping;
 
 public class GameScreen extends ScreenAdapter {
@@ -24,7 +25,9 @@ public class GameScreen extends ScreenAdapter {
     AssetManager assetManager;
     final KeyboardMapping keyboardMapping;
     Controller controllerA;
+    ControllerMapping controllerMappingA;
     Controller controllerB;
+    ControllerMapping controllerMappingB;
 
     private final GameLevel gameWorld;
     SpriteBatch batch;
@@ -42,13 +45,15 @@ public class GameScreen extends ScreenAdapter {
 
     float startDelayTime = 4f;
 
-    public GameScreen(final Game game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final Controller controllerB) {
+    public GameScreen(final Game game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA, final Controller controllerB, final ControllerMapping controllerMappingB) {
         this.game = (MyGdxGame)game;
         this.assetManager = assetManager;
         this.keyboardMapping = keyboardMapping;
         this.controllerA = controllerA;
+        this.controllerMappingA = controllerMappingA;
         this.controllerB = controllerB;
-        gameWorld = new GameLevel(assetManager, keyboardMapping, controllerA, controllerB, performanceCounters);
+        this.controllerMappingB = controllerMappingB;
+        gameWorld = new GameLevel(assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB, performanceCounters);
         gameWorld.loadNextLevel = true;
         batch = new SpriteBatch();
         font = new BitmapFont();
@@ -64,7 +69,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(final float delta) {
         if(gameWorld.playersAreDead) {
-            this.game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerB));
+            this.game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
         }
         final long startTime = TimeUtils.millis();
 

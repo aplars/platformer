@@ -37,6 +37,7 @@ import com.sa.game.systems.WrapEntitySystem;
 import com.sa.game.systems.control.ControlMovementSystem;
 import com.sa.game.systems.control.ControlPunchSystem;
 import com.sa.game.systems.control.ControlThrowEntitySystem;
+import com.sa.game.systems.control.ControllerMapping;
 import com.sa.game.systems.control.KeyboardMapping;
 import com.sa.game.systems.control.PlayerInputSystem;
 import com.sa.game.systems.explode.ExplodeBoxingGloveOnContactSystem;
@@ -78,16 +79,20 @@ public class GameLevel {
     public int player1Score = 0;
 
     Controller controllerA;
+    ControllerMapping controllerMappingA;
     Controller controllerB;
+    ControllerMapping controllerMappingB;
     PerformanceCounters performanceCounters;
 
-    public GameLevel(final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final Controller controllerB, final PerformanceCounters performanceCounters) {
+    public GameLevel(final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA, final Controller controllerB, final ControllerMapping controllerMappingB, final PerformanceCounters performanceCounters) {
         this.assetManager = assetManager;
         this.keyboardMapping = keyboardMapping;
         this.assetManager.setLoader(TiledMap.class, new TmxMapLoader());
         this.performanceCounters = performanceCounters;
         this.controllerA = controllerA;
+        this.controllerMappingA = controllerMappingA;
         this.controllerB = controllerB;
+        this.controllerMappingB = controllerMappingB;
     }
 
     public void setVisibleLayers(final int layers[]) {
@@ -253,7 +258,7 @@ public class GameLevel {
             assetManager.update();
 
         if (addSystems) {
-            engine.addSystem(new PlayerInputSystem(controllerA, this.keyboardMapping));
+            engine.addSystem(new PlayerInputSystem(controllerA, controllerMappingA, this.keyboardMapping));
             engine.addSystem(new AISystem());
             engine.addSystem(new OpenDoorSystem(collisionDetection));
             engine.addSystem(new ControlMovementSystem(collisionDetection, staticEnvironment));
@@ -299,7 +304,6 @@ public class GameLevel {
                         deadPlayer1Score = player1Score;
                     }
                 }));
-
             //engine.addSystem(new RenderDebugInfoSystem(renderer, staticEnvironment));
         }
 
