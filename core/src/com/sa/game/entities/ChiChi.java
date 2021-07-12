@@ -42,6 +42,7 @@ public class ChiChi {
 
         final WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
         worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
+        worldConstantsComponent.width = staticEnvironment.getWorldBoundX();
 
         final Rectangle collisionRectangle = new Rectangle();
         collisionRectangle.setSize(size*0.9f, size*0.8f);

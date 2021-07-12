@@ -3,13 +3,13 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "/home/tobias/source/platformer/android/assets/level_1.tmx",
+    "activeFile": "/home/tobias/source/platformer/android/assets/level_2.tmx",
     "expandedProjectPaths": [
         "/home/tobias/source/platformer/android/assets/enteties",
-        ".",
+        "/home/tobias/source/platformer/android/assets",
         "/home/tobias/source/platformer/android/assets/templates",
         "/home/tobias/source/platformer/android/assets/skins/gdx-holo",
-        "/home/tobias/source/platformer/android/assets"
+        "."
     ],
     "file.lastUsedOpenFilter": "Alla filer (*)",
     "fileStates": {
@@ -37,10 +37,10 @@
         },
         "/home/tobias/source/platformer/android/assets/level_1.tmx": {
             "scale": 3,
-            "selectedLayer": 3,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 144.5,
-                "y": 137
+                "x": 127.83333333333333,
+                "y": 127.83333333333333
             }
         },
         "/home/tobias/source/platformer/android/assets/level_1.tmx#Pekka": {
@@ -83,8 +83,8 @@
             "scale": 3.1468749999999996,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 127.90466732869913,
-                "y": 127.90466732869913
+                "x": 128.54021847070507,
+                "y": 128.3813306852036
             }
         },
         "/home/tobias/source/platformer/android/assets/level_2.tmx#apple32x32": {
@@ -166,8 +166,8 @@
     "project": "project.tiled-project",
     "property.type": "int",
     "recentFiles": [
-        "/home/tobias/source/platformer/android/assets/level_2.tmx",
         "/home/tobias/source/platformer/android/assets/level_1.tmx",
+        "/home/tobias/source/platformer/android/assets/level_2.tmx",
         "/home/tobias/source/platformer/android/assets/base.tsx",
         "/home/tobias/source/platformer/android/assets/templates/devodevil.tsx",
         "/home/tobias/source/platformer/android/assets/enteties/entities.tsx",

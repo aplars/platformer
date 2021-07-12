@@ -33,6 +33,12 @@ public class KeyboardConfigurationWindow {
                 KeyboardMapping keyboardMapping = new KeyboardMapping();
 
                 public boolean keyDown(final InputEvent event, final int keycode) {
+                    if(keycode == Input.Keys.ESCAPE) {
+                        window.setVisible(false);
+                        table.remove();
+                        closeEvent.onWindowCLose();
+                    }
+
                     if (current < values.size()) {
                         if(usedSlots.add(keycode)==false)
                             return true;

@@ -31,7 +31,7 @@ public class ControlThrowEntitySystem extends IteratingSystem {
               pickUpEntityComponent.entity.add(new ThrownComponent(physicsComponent.walkDirection, entity));
               pickUpEntityComponent.entity = null;
               DelayControlComponent delayControlComponent =  new DelayControlComponent(0.5f);
-              delayControlComponent.mask |= DelayControlComponent.BUTTONB;
+              delayControlComponent.mask = DelayControlComponent.BUTTONB;
               entity.add(delayControlComponent);
               controlComponent.buttonB = false;
           }

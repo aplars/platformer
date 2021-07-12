@@ -17,7 +17,7 @@ public class DelayControlSystem extends IteratingSystem{
 	protected void processEntity(Entity entity, float deltaTime) {
         DelayControlComponent delayAIComponent = ComponentMappers.delayAi.get(entity);
         ControlComponent controlComponent = ComponentMappers.control.get(entity);
-
+        
         if(delayAIComponent.haveChanged) {
             if((delayAIComponent.mask & DelayControlComponent.BUTTONA) != 0)
                 delayAIComponent.buttonA = controlComponent.buttonA;
@@ -37,7 +37,7 @@ public class DelayControlSystem extends IteratingSystem{
                 delayAIComponent.buttonStart = controlComponent.buttonStart;
             delayAIComponent.haveChanged = false;
         }
-
+        
         if (delayAIComponent.delay <= 0f) {
             entity.remove(DelayControlComponent.class);
             if((delayAIComponent.mask & DelayControlComponent.BUTTONA) != 0)
@@ -55,7 +55,7 @@ public class DelayControlSystem extends IteratingSystem{
             if((delayAIComponent.mask & DelayControlComponent.BUTTONSELECT) != 0)
                 controlComponent.buttonSelect = delayAIComponent.buttonSelect;
             if((delayAIComponent.mask & DelayControlComponent.BUTTONSTART) != 0)
-                controlComponent.buttonStart = delayAIComponent.buttonStart;
+            controlComponent.buttonStart = delayAIComponent.buttonStart;
         }
         else {
             delayAIComponent.delay -= deltaTime;

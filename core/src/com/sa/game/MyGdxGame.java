@@ -6,17 +6,15 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.sa.game.screens.GameScreen;
 import com.sa.game.screens.ScreenConstants;
 import com.sa.game.screens.TitleScreen;
 import com.sa.game.systems.control.ControllerMapping;
 import com.sa.game.systems.control.KeyboardMapping;
 
-public class MyGdxGame extends Game /*implements ApplicationListener*/ {
+public class MyGdxGame extends Game {
     public DeviceType deviceType;
 
-    public MyGdxGame(DeviceType deviceType) {
+    public MyGdxGame(final DeviceType deviceType) {
         this.deviceType = deviceType;
     }
 
@@ -25,7 +23,7 @@ public class MyGdxGame extends Game /*implements ApplicationListener*/ {
         Controller controllerA = null;
         Controller controllerB = null;
 
-        for (Controller controller : Controllers.getControllers()) {
+        for (final Controller controller : Controllers.getControllers()) {
             Gdx.app.log("TAG", controller.getName());
             if(controllerA == null)
                 controllerA = controller;
@@ -33,9 +31,9 @@ public class MyGdxGame extends Game /*implements ApplicationListener*/ {
                 controllerB = controller;
 
         }
-        KeyboardMapping keyboardMapping = new KeyboardMapping();
+        final KeyboardMapping keyboardMapping = new KeyboardMapping();
 
-        Preferences preferences = Gdx.app.getPreferences(ScreenConstants.PreferencesName);
+        final Preferences preferences = Gdx.app.getPreferences(ScreenConstants.PreferencesName);
         if(preferences.contains("KeyLeft"))
             keyboardMapping.Left = preferences.getInteger("KeyLeft");
         if(preferences.contains("KeyRight"))
@@ -51,7 +49,7 @@ public class MyGdxGame extends Game /*implements ApplicationListener*/ {
         if(preferences.contains("KeyDown"))
             keyboardMapping.Down = preferences.getInteger("KeyDown");
 
-        ControllerMapping controllerMappingA = new ControllerMapping(controllerA);
+        final ControllerMapping controllerMappingA = new ControllerMapping(controllerA);
         if(preferences.contains("ControllerALeft"))
             controllerMappingA.Left = preferences.getInteger("ControllerALeft");
         if(preferences.contains("ControllerARight"))
@@ -68,7 +66,7 @@ public class MyGdxGame extends Game /*implements ApplicationListener*/ {
             controllerMappingA.Down = preferences.getInteger("ControllerADown");
 
 
-        ControllerMapping controllerMappingB = new ControllerMapping(controllerB);
+        final ControllerMapping controllerMappingB = new ControllerMapping(controllerB);
 
         setScreen(new TitleScreen(this, new AssetManager(), keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
     }

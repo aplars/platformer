@@ -18,5 +18,9 @@ public class WrapEntitySystem extends IteratingSystem {
         final PositionComponent positionComponent = ComponentMappers.position.get(entity);
         if(worldConstantsComponent != null && positionComponent.position.y < 0)
             positionComponent.position.y = worldConstantsComponent.height;
+        if(worldConstantsComponent != null && positionComponent.position.x < 0)
+            positionComponent.position.x = worldConstantsComponent.width;
+        if(worldConstantsComponent != null && positionComponent.position.x > worldConstantsComponent.width)
+            positionComponent.position.x = 0f;
     }
 }

@@ -28,6 +28,7 @@ public class Apple {
 
         WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
         worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
+        worldConstantsComponent.width = staticEnvironment.getWorldBoundX();
 
         Rectangle collisionRectangle = new Rectangle();
         collisionRectangle.setSize(size, size);

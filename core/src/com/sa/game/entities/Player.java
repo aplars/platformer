@@ -43,6 +43,7 @@ public class Player {
 
         WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
         worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
+        worldConstantsComponent.width = staticEnvironment.getWorldBoundX();
 
         Rectangle colbBox = new Rectangle(0, 0, size.x/2, size.y/2);
         colbBox.setCenter(pos.x, pos.y);

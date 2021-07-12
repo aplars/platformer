@@ -29,6 +29,7 @@ public class BoxingGlove {
 
         WorldConstantsComponent worldConstantsComponent = new WorldConstantsComponent();
         worldConstantsComponent.height = staticEnvironment.getWorldBoundY();
+        worldConstantsComponent.width = staticEnvironment.getWorldBoundX();
 
         Rectangle collisionRectangle = new Rectangle();
         collisionRectangle.setSize(size/2.0f, size/2.0f);
