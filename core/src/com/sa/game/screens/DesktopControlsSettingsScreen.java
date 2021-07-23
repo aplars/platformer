@@ -56,10 +56,10 @@ public class DesktopControlsSettingsScreen extends ScreenAdapter {
         mainTable.top().add(logoImage).row();
 
         selectionLabels = new SelectionLabels(skin, stage, keyboardMapping, controllerA, controllerMappingA, new ISelectionEvent(){
-                public void onSelect(final int selection) {
-                if (selection == 0) {
+                public void onSelect(final String selection) {
+                if (selection.equals("Keyboard")) {
                     selectionLabels.unFocus();
-                    keyboardConfigurationWindow = new KeyboardConfigurationWindow(skin, stage, new IWindowCloseEvent(){
+                    keyboardConfigurationWindow = new KeyboardConfigurationWindow(skin, stage, new IKeyboardConfigurationWindowCloseEvent(){
                             @Override
                             public void onWindowClose(KeyboardMapping _keyboardMapping) {
                                 keyboardConfigurationWindow = null;
@@ -68,22 +68,14 @@ public class DesktopControlsSettingsScreen extends ScreenAdapter {
                             }
 
                             @Override
-                            public void onWindowClose(ControllerMapping _keyboardMapping) {
-                            }
-
-                            @Override
                             public void onWindowCLose() {
                                 selectionLabels.setFocus();
                             }
                         });
                 }
-                if(selection == 1) {
+                if(selection.equals("Joystick")) {
                     selectionLabels.unFocus();
-                    joystickConfigurationWindow = new JoystickConfigurationWindow(skin, stage, controllerA, new IWindowCloseEvent(){
-                            @Override
-                            public void onWindowClose(KeyboardMapping _keyboardMapping) {
-                            }
-
+                    joystickConfigurationWindow = new JoystickConfigurationWindow(skin, stage, controllerA, new IJoystickConfigurationWindowCloseEvent(){
                             @Override
                             public void onWindowClose(ControllerMapping _controllerMapping) {
                                 joystickConfigurationWindow.dispose();
@@ -98,19 +90,19 @@ public class DesktopControlsSettingsScreen extends ScreenAdapter {
                             }
                     });
                 }
-                if(selection == 2)
+                if(selection.equals("Back"))
                     game.setScreen(new DesktopSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
                 }
             });
 
         selectionLabels.addSelectionLabel("Keyboard");
-        selectionLabels.addSelectionLabel("Joystick");
+        if(controllerA != null && controllerA.isConnected())
+            selectionLabels.addSelectionLabel("Joystick");
         selectionLabels.addSelectionLabel("Back");
 
         mainTable.add(selectionLabels.getTable()).fill();
         stage.addActor(mainTable);
-        final FitViewport fitViewport = new FitViewport(ScreenConstants.ViewportWidth, ScreenConstants.ViewportHeight
-                                                        );
+        final FitViewport fitViewport = new FitViewport(ScreenConstants.ViewportWidth, ScreenConstants.ViewportHeight);
         stage.setViewport(fitViewport);
 
         selectionLabels.setSelection(0);

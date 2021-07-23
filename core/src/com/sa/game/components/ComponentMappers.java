@@ -3,6 +3,7 @@ package com.sa.game.components;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.sa.game.components.groups.EnemyGroupComponent;
 import com.sa.game.components.groups.KeyGroupComponent;
+import com.sa.game.components.groups.BoxingGloveGroupComponent;
 import com.sa.game.components.groups.CoinGroupComponent;
 import com.sa.game.components.groups.DoorGroupComponent;
 
@@ -31,6 +32,7 @@ public class ComponentMappers {
     public static ComponentMapper<ExplodeOnContactComponent> explodeOnContact = ComponentMapper.getFor(ExplodeOnContactComponent.class);
     public static ComponentMapper<CoinGroupComponent> coinGroup = ComponentMapper.getFor(CoinGroupComponent.class);
     public static ComponentMapper<EnemyGroupComponent> enemyGroup = ComponentMapper.getFor(EnemyGroupComponent.class);
+    public static ComponentMapper<BoxingGloveGroupComponent> boxingGloveGroup = ComponentMapper.getFor(BoxingGloveGroupComponent.class);
     public static ComponentMapper<KeyGroupComponent> keyGroup = ComponentMapper.getFor(KeyGroupComponent.class);
     public static ComponentMapper<DoorGroupComponent> doorGroup = ComponentMapper.getFor(DoorGroupComponent.class);
 }

@@ -23,7 +23,7 @@ public class KeyboardConfigurationWindow {
     int current = 0;
     HashSet<Integer> usedSlots = new HashSet<>();
 
-    KeyboardConfigurationWindow(final Skin skin, final Stage stage, final IWindowCloseEvent closeEvent)
+    KeyboardConfigurationWindow(final Skin skin, final Stage stage, final IKeyboardConfigurationWindowCloseEvent closeEvent)
     {
         this.stage = stage;
         final Table table = new Table();

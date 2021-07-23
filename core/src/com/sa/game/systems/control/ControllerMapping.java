@@ -11,14 +11,16 @@ public class ControllerMapping {
     public int Up;
     public int Down;
 
-    public ControllerMapping(Controller controller) {
-        Left = controller.getMapping().buttonDpadLeft;
-        Right = controller.getMapping().buttonDpadRight;
-        A = controller.getMapping().buttonA;
-        B = controller.getMapping().buttonB;
-        Start = controller.getMapping().buttonStart;
-        Up = controller.getMapping().buttonDpadUp;
-        Down = controller.getMapping().buttonDpadDown;;
+    public ControllerMapping(final Controller controller) {
+        if(controller.isConnected()) {
+            Left = controller.getMapping().buttonDpadLeft;
+            Right = controller.getMapping().buttonDpadRight;
+            A = controller.getMapping().buttonA;
+            B = controller.getMapping().buttonB;
+            Start = controller.getMapping().buttonStart;
+            Up = controller.getMapping().buttonDpadUp;
+            Down = controller.getMapping().buttonDpadDown;;
+        }
     }
 
     public void set(ControllerMapping other) {

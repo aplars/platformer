@@ -1,92 +1,74 @@
 package com.sa.game.screens;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.sa.game.DeviceType;
 import com.sa.game.MyGdxGame;
 import com.sa.game.systems.control.ControllerMapping;
 import com.sa.game.systems.control.KeyboardMapping;
 
-public class TitleScreen extends ScreenAdapter{
+public class GameOverScreen extends ScreenAdapter {
     MyGdxGame game;
     final AssetManager assetManager;
     Controller controllerA;
     ControllerMapping controllerMappingA;
     Controller controllerB;
-    ControllerMapping controllerMappingB;
+    final ControllerMapping controllerMappingB;
     final KeyboardMapping keyboardMapping;
-    ArrayList<Label> selectorLabels = new ArrayList<>();
 
-    SpriteBatch batch;
     Skin skin;
     Stage stage;
     SelectionLabels selectionLabels;
 
-    public TitleScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA,  final Controller controllerB, final ControllerMapping controllerMappingB) {
+    public GameOverScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA,  final Controller controllerB, final ControllerMapping controllerMappingB) {
         this.game = game;
         this.assetManager = assetManager;
-        this.controllerA = controllerA;
-        this.controllerB = controllerB;
-
         this.keyboardMapping = keyboardMapping;
+        this.controllerA = controllerA;
+        this.controllerMappingA = controllerMappingA;
+        this.controllerB = controllerB;
+        this.controllerMappingB = controllerMappingB;
 
-        assetManager.load("mainmenulogo.png", Pixmap.class);
-        assetManager.finishLoadingAsset("mainmenulogo.png");
-        final Texture logo = new Texture(assetManager.get("mainmenulogo.png", Pixmap.class), true);
+        assetManager.load("gameover.png", Pixmap.class);
+        assetManager.finishLoadingAsset("gameover.png");
+        final Texture logo = new Texture(assetManager.get("gameover.png", Pixmap.class), true);
         logo.setFilter(TextureFilter.MipMap, TextureFilter.Nearest);
-        batch = new SpriteBatch();
-        stage = new Stage();
+        this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        // A skin can be loaded via JSON or defined programmatically, either is fine. Using a skin is optional but strongly
-        // recommended solely for the convenience of getting a texture, region, etc as a drawable, tinted drawable, etc.
         skin = new Skin(Gdx.files.internal("skins/myskin/myskin.json"));
         final BitmapFont font =  new BitmapFont();// skin.getFont("default");
-        font.setColor(Color.BLUE);
 
         final Image logoImage = new Image(logo);
         final Table mainTable = new Table();
         mainTable.setFillParent(true);
         mainTable.top().add(logoImage).row();
-
         selectionLabels = new SelectionLabels(skin, stage, keyboardMapping, controllerA, controllerMappingA, new ISelectionEvent() {
                 public void onSelect(final String selection) {
-                    if(selection.equals("Play"))
+                    if(selection.equals("Continue"))
                         game.setScreen(new GameScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
-                    if(selection.equals("Settings"))
-                        game.setScreen(new DesktopSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
-                    if(selection.equals("Exit"))
-                        Gdx.app.exit();
+                    if(selection.equals("End")) {
+                        game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
+                    }
                 }
-            });
-
-        selectionLabels.addSelectionLabel("Play");
-        selectionLabels.addSelectionLabel("Settings");
-        if(game.deviceType == DeviceType.Develop) {
-            selectionLabels.addSelectionLabel("Sprites");
-        }
-        selectionLabels.addSelectionLabel("Exit");
+        });
+        selectionLabels.addSelectionLabel("Continue");
+        selectionLabels.addSelectionLabel("End");
 
         mainTable.add(selectionLabels.getTable()).fill();
         stage.addActor(mainTable);
-        //window.pack();
+
         final FitViewport fitViewport = new FitViewport(ScreenConstants.ViewportWidth, ScreenConstants.ViewportHeight);
         stage.setViewport(fitViewport);
 

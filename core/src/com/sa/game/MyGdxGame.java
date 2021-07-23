@@ -21,16 +21,22 @@ public class MyGdxGame extends Game {
     @Override
     public void create() {
         Controller controllerA = null;
+        ControllerMapping controllerMappingA = null;
         Controller controllerB = null;
+        ControllerMapping controllerMappingB = null;
 
         for (final Controller controller : Controllers.getControllers()) {
             Gdx.app.log("TAG", controller.getName());
-            if(controllerA == null)
+            if (controllerA == null) {
                 controllerA = controller;
-            if(controllerB == null)
+                controllerMappingA = new ControllerMapping(controllerA);
+            }
+            if (controllerB == null) {
                 controllerB = controller;
-
+                controllerMappingB = new ControllerMapping(controllerB);
+            }
         }
+
         final KeyboardMapping keyboardMapping = new KeyboardMapping();
 
         final Preferences preferences = Gdx.app.getPreferences(ScreenConstants.PreferencesName);
@@ -49,30 +55,33 @@ public class MyGdxGame extends Game {
         if(preferences.contains("KeyDown"))
             keyboardMapping.Down = preferences.getInteger("KeyDown");
 
-        final ControllerMapping controllerMappingA = new ControllerMapping(controllerA);
-        if(preferences.contains("ControllerALeft"))
-            controllerMappingA.Left = preferences.getInteger("ControllerALeft");
-        if(preferences.contains("ControllerARight"))
-            controllerMappingA.Right = preferences.getInteger("ControllerARight");
-        if(preferences.contains("ControllerAA"))
-            controllerMappingA.A = preferences.getInteger("ControllerAA");
-        if(preferences.contains("ControllerAB"))
-            controllerMappingA.B = preferences.getInteger("ControllerAB");
-        if(preferences.contains("ControllerAStart"))
-            controllerMappingA.Start = preferences.getInteger("ControllerAStart");
-        if(preferences.contains("ControllerAUp"))
-            controllerMappingA.Up = preferences.getInteger("ControllerAUp");
-        if(preferences.contains("ControllerADown"))
-            controllerMappingA.Down = preferences.getInteger("ControllerADown");
-
-
-        final ControllerMapping controllerMappingB = new ControllerMapping(controllerB);
+        if (controllerMappingA != null) {
+            if (preferences.contains("ControllerALeft"))
+                controllerMappingA.Left = preferences.getInteger("ControllerALeft");
+            if (preferences.contains("ControllerARight"))
+                controllerMappingA.Right = preferences.getInteger("ControllerARight");
+            if (preferences.contains("ControllerAA"))
+                controllerMappingA.A = preferences.getInteger("ControllerAA");
+            if (preferences.contains("ControllerAB"))
+                controllerMappingA.B = preferences.getInteger("ControllerAB");
+            if (preferences.contains("ControllerAStart"))
+                controllerMappingA.Start = preferences.getInteger("ControllerAStart");
+            if (preferences.contains("ControllerAUp"))
+                controllerMappingA.Up = preferences.getInteger("ControllerAUp");
+            if (preferences.contains("ControllerADown"))
+                controllerMappingA.Down = preferences.getInteger("ControllerADown");
+        }
 
         setScreen(new TitleScreen(this, new AssetManager(), keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
     }
 
     public static MyGdxGame createDesktop() {
         final MyGdxGame game = new MyGdxGame(DeviceType.Desktop);
+        return game;
+    }
+
+    public static MyGdxGame createDevelop() {
+        final MyGdxGame game = new MyGdxGame(DeviceType.Develop);
         return game;
     }
 
