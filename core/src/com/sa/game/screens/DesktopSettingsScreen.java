@@ -55,13 +55,13 @@ public class DesktopSettingsScreen extends ScreenAdapter {
         mainTable.top().add(logoImage).row();
 
         selectionLabels = new SelectionLabels(skin, stage, keyboardMapping, controllerA, controllerMappingA, new ISelectionEvent(){
-                public void onSelect(final int selection) {
-                    if (selection == 0) {
+                public void onSelect(final String selection) {
+                    if (selection.equals("Controls")) {
                         game.setScreen(new DesktopControlsSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
                     }
-                    if(selection == 1)
+                    if(selection.equals("Sound"))
                         ;
-                    if(selection == 2)
+                    if(selection.equals("Back"))
                         game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
                 }
             });

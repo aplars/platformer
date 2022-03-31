@@ -15,25 +15,11 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.sa.game.collision.CollisionDetection;
 import com.sa.game.components.CollisionComponent;
 import com.sa.game.components.ComponentMappers;
+import com.sa.game.components.RenderSpriteInFlickeringColorsComponent;
 import com.sa.game.entities.CreateEnteties;
 import com.sa.game.gfx.Renderer;
 import com.sa.game.models.LayersToRenderModel;
-import com.sa.game.systems.AISystem;
-import com.sa.game.systems.AnimationSystem;
-import com.sa.game.systems.CollisionSystem;
-import com.sa.game.systems.DamageSystem;
-import com.sa.game.systems.DelayControlSystem;
-import com.sa.game.systems.DeleteEntitySystem;
-import com.sa.game.systems.DroppedSystem;
-import com.sa.game.systems.ExitSystem;
-import com.sa.game.systems.LastSystem;
-import com.sa.game.systems.OpenDoorSystem;
-import com.sa.game.systems.PickUpCoinSystem;
-import com.sa.game.systems.PickUpEntitySystem;
-import com.sa.game.systems.RespawnPlayer1System;
-import com.sa.game.systems.SensorSystem;
-import com.sa.game.systems.ThrownSystem;
-import com.sa.game.systems.WrapEntitySystem;
+import com.sa.game.systems.*;
 import com.sa.game.systems.control.ControlMovementSystem;
 import com.sa.game.systems.control.ControlPunchSystem;
 import com.sa.game.systems.control.ControlThrowEntitySystem;
@@ -50,6 +36,7 @@ import com.sa.game.systems.movement.ResolveCollisionSystem;
 import com.sa.game.systems.render.RenderParticleSystem;
 import com.sa.game.systems.render.RenderScoreBoardSystem;
 import com.sa.game.systems.render.RenderScoreSystem;
+import com.sa.game.systems.render.RenderSpriteInFlickeringColorsSystem;
 import com.sa.game.systems.render.RenderSpriteInWhiteColorSystem;
 import com.sa.game.systems.render.RenderStarsSystem;
 import com.sa.game.systems.render.RenderSystem;
@@ -243,6 +230,7 @@ public class GameLevel {
                                                        startDelay,
                                                        player1Score,
                                                        player1Lives,
+                                                       0.0f,
                                                        entity.position,
                                                        entity.size,
                                                        entity.isFlipped,
@@ -290,6 +278,8 @@ public class GameLevel {
             engine.addSystem(new DampingSystem());
             engine.addSystem(new AnimationSystem<>());
             engine.addSystem(new DelayControlSystem());
+            engine.addSystem(new HealthSystem());
+            engine.addSystem(new RenderSpriteInFlickeringColorsSystem());
             engine.addSystem(new RenderSpriteInWhiteColorSystem());
             engine.addSystem(new RenderSystem(performanceCounters.add("render"), renderer));
             engine.addSystem(new RenderParticleSystem(camera));

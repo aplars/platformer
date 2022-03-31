@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
+import com.sa.game.gfx.Sprite.ColorMode;
 
 public class Renderer {
     private static int NUM_LAYERS = 10;
@@ -48,7 +50,7 @@ public class Renderer {
             + "#else\n" //
             + "#define LOWP \n" //
             + "#endif\n" //
-            + "uniform int white;\n" //
+            + "uniform vec3 u_addativeColor;\n" //
             + "varying LOWP vec4 v_color;\n" //
             + "varying vec2 v_texCoords;\n" //
             + "uniform sampler2D u_texture;\n" //
@@ -56,7 +58,7 @@ public class Renderer {
             + "{\n" //
             + "  vec4 tf = texture2D(u_texture, v_texCoords);\n" //
             + "  vec4 orig = v_color * texture2D(u_texture, v_texCoords);\n" //
-            + "  gl_FragColor = float(white)*vec4(tf.w, tf.w, tf.w, tf.w) + float(1-white)*orig;\n" //
+            + "  gl_FragColor = orig+vec4(u_addativeColor, 0.0f);/*float(white)*vec4(tf.w, tf.w, tf.w, tf.w) + float(1-white)*orig;*/\n" //
             + "}";
         final ShaderProgram shaderProg = new ShaderProgram(vertexShader, fragmentShader);
         if (!shaderProg.isCompiled()) throw new IllegalArgumentException("Error compiling shader: " + shaderProg.getLog());
@@ -104,11 +106,11 @@ public class Renderer {
         spriteBatch.setProjectionMatrix(camera.projection);
         spriteBatch.setTransformMatrix(camera.view);
         spriteBatch.setShader(shader);
-        spriteBatch.begin();
+        /*spriteBatch.begin();
         for (int i = 0; i < NUM_LAYERS; ++i) {
             for (final Sprite sprite : sprites[i]) {
                 if (sprite.white == false) {
-                    shader.setUniformi("white", 0);
+                    shader.setUniformf("u_addativeColor", new Vector3(0, 0, 0));
                     final float xPos = (sprite.mirrorX) ? sprite.position.x + sprite.size.x + sprite.offset.x : sprite.position.x + sprite.offset.x;
                     final float yPos = sprite.position.y + sprite.offset.y;
                     final float xSize = (sprite.mirrorX) ? -sprite.size.x : sprite.size.x;
@@ -125,33 +127,33 @@ public class Renderer {
                                      sprite.rotationDeg); // Draw current frame at (50, 50)
                 }
             }
-        }
-        spriteBatch.end();
-        spriteBatch.begin();
-        for (int i = 0; i < NUM_LAYERS; ++i) {
-            for (final Sprite sprite : sprites[i]) {
-                if (sprite.white == true) {
-                    shader.setUniformi("white", 1);
+            }
+            spriteBatch.end();*/
+
+        for (Sprite.ColorMode colorMode : Sprite.ColorMode.values()) {
+            spriteBatch.begin();
+            if(colorMode == ColorMode.Normal)
+                shader.setUniformf("u_addativeColor", 0, 0, 0);
+            if(colorMode == ColorMode.White)
+                shader.setUniformf("u_addativeColor", 1, 1, 1);
+
+            for (int i = 0; i < NUM_LAYERS; ++i) {
+                for (final Sprite sprite : sprites[i]) {
+                    if (colorMode != sprite.colorMode)
+                        continue;
                     final float xPos = (sprite.mirrorX) ? sprite.position.x + sprite.size.x + sprite.offset.x
-                        : sprite.position.x + sprite.offset.x;
+                            : sprite.position.x + sprite.offset.x;
                     final float yPos = sprite.position.y + sprite.offset.y;
                     final float xSize = (sprite.mirrorX) ? -sprite.size.x : sprite.size.x;
                     final float ySize = sprite.size.y;
 
-                    spriteBatch.draw(sprite.textureRegion,
-                                     xPos,
-                                     yPos,
-                                     xSize/2f,
-                                     ySize/2f,
-                                     xSize,
-                                     ySize,
-                                     1f, 1f,
-                                     sprite.rotationDeg); // Draw current frame at (50, 50)
+                    spriteBatch.draw(sprite.textureRegion, xPos, yPos, xSize / 2f, ySize / 2f, xSize, ySize, 1f, 1f,
+                            sprite.rotationDeg); // Draw current frame at (50, 50)
+                    //}
                 }
             }
+            spriteBatch.end();
         }
-        spriteBatch.end();
-
         for (int i = 0; i < NUM_LAYERS; ++i) {
             sprites[i].clear();
         }

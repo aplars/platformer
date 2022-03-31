@@ -23,14 +23,6 @@ public class MyGdxGame extends Game {
         Controller controllerA = null;
         Controller controllerB = null;
 
-
-        for (final Controller controller : Controllers.getControllers()) {
-            Gdx.app.log("TAG", controller.getName());
-            if(controllerA == null)
-                controllerA = controller;
-            if(controllerB == null)
-                controllerB = controller;
-        }
         final KeyboardMapping keyboardMapping = new KeyboardMapping();
 
         final Preferences preferences = Gdx.app.getPreferences(ScreenConstants.PreferencesName);
@@ -77,6 +69,11 @@ public class MyGdxGame extends Game {
 
     public static MyGdxGame createDesktop() {
         final MyGdxGame game = new MyGdxGame(DeviceType.Desktop);
+        return game;
+    }
+
+    public static MyGdxGame createDevelop() {
+        final MyGdxGame game = new MyGdxGame(DeviceType.Develop);
         return game;
     }
 

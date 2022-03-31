@@ -22,7 +22,7 @@ public class JoystickConfigurationWindow extends ControllerAdapter {
     final Stage stage;
     final Skin skin;
     final Controller controller;
-    final IWindowCloseEvent closeEvent;
+    final IJoystickConfigurationWindowCloseEvent closeEvent;
     final Table table;
     ArrayList<Label> labels = new ArrayList<>();
     ArrayList<Label> values = new ArrayList<>();
@@ -32,7 +32,7 @@ public class JoystickConfigurationWindow extends ControllerAdapter {
     HashSet<Integer> usedSlots = new HashSet<>();
 
     public JoystickConfigurationWindow(final Skin skin, final Stage stage, final Controller controller,
-                                       final IWindowCloseEvent closeEvent) {
+                                       final IJoystickConfigurationWindowCloseEvent closeEvent) {
         this.stage = stage;
         this.skin = skin;
         this.controller = controller;

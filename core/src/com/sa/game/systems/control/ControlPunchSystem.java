@@ -37,13 +37,13 @@ public class ControlPunchSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(final Entity entity, final float deltaTime) {
-        final PunchComponent punchComponent = ComponentMappers.punch.get(entity);
+        //final PunchComponent punchComponent = ComponentMappers.punch.get(entity);
         final ControlComponent controlComponent = ComponentMappers.control.get(entity);
         final PositionComponent positionComponent = ComponentMappers.position.get(entity);
         final PhysicsComponent physicsComponent = ComponentMappers.physics.get(entity);
         final PickUpEntityComponent pickUpEntityComponent = ComponentMappers.pickUp.get(entity);
 
-        ImmutableArray<Entity> ents = this.getEngine().getEntitiesFor(Family.all(BoxingGloveGroupComponent.class).get());
+        final ImmutableArray<Entity> ents = this.getEngine().getEntitiesFor(Family.all(BoxingGloveGroupComponent.class).get());
         if (ents.size() > 0)
             return;
 

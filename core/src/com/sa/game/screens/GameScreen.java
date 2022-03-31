@@ -69,7 +69,8 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(final float delta) {
         if(gameWorld.playersAreDead) {
-            this.game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
+            this.game.setScreen(new GameOverScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
+            //this.game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
         }
         final long startTime = TimeUtils.millis();
 

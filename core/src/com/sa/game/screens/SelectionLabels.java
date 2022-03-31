@@ -16,7 +16,7 @@ public class SelectionLabels {
     final ArrayList<ISelectionEvent> selectionEvents = new ArrayList<>();
     final ArrayList<Label> selectorLabels = new ArrayList<>();
     final ArrayList<Label> labels = new ArrayList<>();
-    int selection = -1;
+    private int selection = -1;
     final Table table;
     final Skin skin;
     final Stage stage;
@@ -42,13 +42,13 @@ public class SelectionLabels {
         this.table.addListener(new InputListener(){
                 public boolean keyDown (final InputEvent event, final int keycode) {
                     if (keycode == keyboardMapping.Up) {
-                        setSelection(getSelection() - 1);
+                        setSelection(selection - 1);
                     }
                     if (keycode == keyboardMapping.Down) {
-                        setSelection(getSelection() + 1);
+                        setSelection(selection + 1);
                     }
                     if (keycode == keyboardMapping.A) {
-                        setSelection(getSelection());
+                        setSelection(selection);
                     }
                     return false;
                 }
@@ -88,14 +88,14 @@ public class SelectionLabels {
         this.table.pack();
     }
 
-    int getSelection() {
-        return this.selection;
+    String getSelection() {
+        return labels.get(this.selection).getText().toString();
     }
 
     void setSelection(final int s) {
         if (selection == s) {
             for (final ISelectionEvent evt : selectionEvents) {
-                evt.onSelect(s);
+                evt.onSelect(getSelection());
             }
         }
 

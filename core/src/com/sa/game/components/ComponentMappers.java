@@ -3,6 +3,7 @@ package com.sa.game.components;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.sa.game.components.groups.EnemyGroupComponent;
 import com.sa.game.components.groups.KeyGroupComponent;
+import com.sa.game.components.groups.BoxingGloveGroupComponent;
 import com.sa.game.components.groups.CoinGroupComponent;
 import com.sa.game.components.groups.DoorGroupComponent;
 
@@ -22,6 +23,7 @@ public class ComponentMappers {
     public static ComponentMapper<RenderDebugInfoComponent> renderDebugInfo = ComponentMapper.getFor(RenderDebugInfoComponent.class);
     public static ComponentMapper<RenderComponent> render = ComponentMapper.getFor(RenderComponent.class);
     public static ComponentMapper<RenderSpriteInWhiteColorComponent> renderSpriteInWhiteColor = ComponentMapper.getFor(RenderSpriteInWhiteColorComponent.class);
+    public static ComponentMapper<RenderSpriteInFlickeringColorsComponent> renderSpriteInFlickeringColors = ComponentMapper.getFor(RenderSpriteInFlickeringColorsComponent.class);
     public static ComponentMapper<SensorComponent> sensor = ComponentMapper.getFor(SensorComponent.class);
     public static ComponentMapper<WorldConstantsComponent> worldConstats = ComponentMapper.getFor(WorldConstantsComponent.class);
     public static ComponentMapper<RenderStarsComponent> renderStars = ComponentMapper.getFor(RenderStarsComponent.class);
@@ -31,6 +33,7 @@ public class ComponentMappers {
     public static ComponentMapper<ExplodeOnContactComponent> explodeOnContact = ComponentMapper.getFor(ExplodeOnContactComponent.class);
     public static ComponentMapper<CoinGroupComponent> coinGroup = ComponentMapper.getFor(CoinGroupComponent.class);
     public static ComponentMapper<EnemyGroupComponent> enemyGroup = ComponentMapper.getFor(EnemyGroupComponent.class);
+    public static ComponentMapper<BoxingGloveGroupComponent> boxingGloveGroup = ComponentMapper.getFor(BoxingGloveGroupComponent.class);
     public static ComponentMapper<KeyGroupComponent> keyGroup = ComponentMapper.getFor(KeyGroupComponent.class);
     public static ComponentMapper<DoorGroupComponent> doorGroup = ComponentMapper.getFor(DoorGroupComponent.class);
 }

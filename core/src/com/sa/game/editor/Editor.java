@@ -80,8 +80,6 @@ public class Editor {
         window.pack();
     }
 
-    
-
     public void resize (final int width, final int height) {
         stage.getViewport().update(width, height, true);
     }
