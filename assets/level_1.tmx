@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="8" tileheight="8" infinite="0" nextlayerid="10" nextobjectid="107">
+ <tileset firstgid="1" source="base.tsx"/>
+ <tileset firstgid="2305" name="devodevil" tilewidth="16" tileheight="16" tilecount="1" columns="1">
+  <image source="devodevilstanding.png" width="16" height="16"/>
+ </tileset>
+ <tileset firstgid="2306" name="door" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="door_closed.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="2307" name="apple32x32" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="apple32x32.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="2308" name="key" tilewidth="16" tileheight="16" tilecount="1" columns="1">
+  <image source="key.png" width="16" height="16"/>
+ </tileset>
+ <tileset firstgid="2309" name="mrmochi" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="mrmochiidle_1.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="2310" name="chichi" tilewidth="16" tileheight="16" tilecount="1" columns="1">
+  <image source="chichi.png" width="16" height="16"/>
+ </tileset>
+ <objectgroup id="5" name="enemies">
+  <object id="92" name="devodevil" type="devodevil" gid="2305" x="122.333" y="102.333" width="16" height="16">
+   <properties>
+    <property name="Layer" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="94" name="devodevil" type="devodevil" gid="2305" x="20" y="167.333" width="16" height="16">
+   <properties>
+    <property name="Layer" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="100" name="chichi" type="chichi" gid="2310" x="119" y="181.334" width="16" height="16">
+   <properties>
+    <property name="Layer" type="int" value="0"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="9" name="test"/>
+ <objectgroup id="8" name="objects">
+  <object id="95" name="door" type="door" gid="2306" x="114" y="135.333" width="32" height="32">
+   <properties>
+    <property name="Layer" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="96" name="apple" type="apple" gid="2307" x="199" y="167" width="14" height="14">
+   <properties>
+    <property name="Layer" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="97" name="apple" type="apple" gid="2307" x="222.333" y="167.333" width="14" height="14">
+   <properties>
+    <property name="Layer" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="98" name="key" type="key" gid="2308" x="53.6667" y="167" width="8" height="8">
+   <properties>
+    <property name="Layer" type="int" value="0"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="players">
+  <object id="99" name="player" type="player" gid="2147485957" x="178.333" y="247.667" width="25" height="25">
+   <properties>
+    <property name="Layer" type="int" value="0"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer id="4" name="base" width="32" height="32">
+  <data encoding="csv">
+21,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,
+69,70,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,69,70,
+117,118,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,117,118,
+21,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,165,166,
+69,70,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,
+21,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,69,70,
+69,70,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,117,118,
+117,118,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,
+165,166,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,69,70,
+21,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,117,118,
+69,70,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,165,166,
+117,118,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,213,214,
+21,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,
+69,70,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,69,70,
+117,118,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,117,118,
+165,166,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,
+213,214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,69,70,
+21,22,0,0,0,0,0,0,0,0,0,0,583,584,585,586,587,588,589,590,0,0,0,0,0,0,0,0,0,0,117,118,
+69,70,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,
+117,118,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,69,70,
+21,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,117,118,
+69,70,583,584,585,586,587,588,589,590,0,0,0,0,0,0,0,0,0,0,0,0,583,584,585,586,587,588,589,590,165,166,
+21,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,213,214,
+69,70,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,
+117,118,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,69,70,
+165,166,0,0,0,0,0,0,0,0,0,0,583,584,585,586,587,588,589,590,0,0,0,0,0,0,0,0,0,0,117,118,
+213,214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,
+21,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,69,70,
+69,70,583,584,585,586,587,588,589,590,0,0,0,0,0,0,0,0,0,0,0,0,583,584,585,586,587,588,589,590,21,22,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+213,214,583,584,585,586,587,583,584,585,586,587,585,586,0,0,0,0,0,583,584,585,583,584,585,586,587,588,589,590,165,166
+</data>
+ </layer>
+</map>
