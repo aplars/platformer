@@ -11,6 +11,7 @@ import com.sa.game.components.ComponentMappers;
 import com.sa.game.components.HealthComponent;
 import com.sa.game.components.Player1Component;
 import com.sa.game.components.RenderComponent;
+import com.sa.game.components.RenderSpriteInFlickeringColorsComponent;
 import com.sa.game.entities.CreateEnteties;
 import com.sa.game.statemachines.PlayerStates;
 
@@ -34,15 +35,18 @@ public class RespawnPlayer1System extends IteratingSystem {
         final RenderComponent renderComponent = ComponentMappers.render.get(entity);
 
         if (aiComponent.stateMachine.getCurrentState() == PlayerStates.RESPAWN) {
-            this.getEngine().addEntity(CreateEnteties.player(assetManager,
-                                                             0,
-                                                             player1Component.score,
-                                                             healthComponent.lives,
-                                                             player1Component.initialPosition,
-                                                             renderComponent.sprite.size,
-                                                             renderComponent.sprite.mirrorX,
-                                                             staticEnvironment,
-                                                             collisionDetection));
+            Entity newEntity =  CreateEnteties.player(assetManager,
+                                                      0,
+                                                      player1Component.score,
+                                                      healthComponent.lives,
+                                                      3.0f,
+                                                      player1Component.initialPosition,
+                                                      renderComponent.sprite.size,
+                                                      renderComponent.sprite.mirrorX,
+                                                      staticEnvironment,
+                                                      collisionDetection);
+            newEntity.add(new RenderSpriteInFlickeringColorsComponent(3));
+            this.getEngine().addEntity(newEntity);
             this.getEngine().removeEntity(entity);
       }
   }

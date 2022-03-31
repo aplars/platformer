@@ -45,7 +45,7 @@ public class CreateEnteties {
                 collisionDetection);
     }
 
-    public static Entity player(AssetManager assetManager, float startDelay, int playerScore, int lives, Vector2 pos, Vector2 siz, boolean isFlipped, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
+    public static Entity player(AssetManager assetManager, float startDelay, int playerScore, int lives, float immortal, Vector2 pos, Vector2 siz, boolean isFlipped, StaticEnvironment staticEnvironment, CollisionDetection collisionDetection) {
         assetManager.load("enteties/game.atlas", TextureAtlas.class);
         assetManager.finishLoadingAsset("enteties/game.atlas");
         TextureAtlas atlas = assetManager.get("enteties/game.atlas", TextureAtlas.class);
@@ -53,6 +53,7 @@ public class CreateEnteties {
                              startDelay,
                              playerScore,
                              lives,
+                             immortal,
                              pos,
                              new Vector2(),
                              siz,

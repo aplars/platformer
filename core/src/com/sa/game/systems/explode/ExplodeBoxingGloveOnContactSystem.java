@@ -50,6 +50,5 @@ public class ExplodeBoxingGloveOnContactSystem extends IteratingSystem {
             this.getEngine().addEntity(CreateEnteties.explosion(positionComponent.position));
         }
         boxingGloveGroupComponent.distanceMoved += Math.abs(physicsComponent.velocity.x)*deltaTime;
-        System.out.println(boxingGloveGroupComponent.distanceMoved);
     }
 }

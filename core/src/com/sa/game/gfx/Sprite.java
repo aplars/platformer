@@ -4,6 +4,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class Sprite {
+    public enum ColorMode {
+        Normal,
+        White,
+        Grayed
+    }
+
     public TextureRegion textureRegion = new TextureRegion();
     public Vector2 position = new Vector2();
     public Vector2 size = new Vector2();
@@ -14,8 +20,8 @@ public class Sprite {
 
     public int layer = 0;
 
-    public boolean white = false;
-    
+    public ColorMode colorMode = ColorMode.Normal;
+
     public void setCenter(float x, float y) {
         position.x = x - size.x / 2f;
         position.y = y - size.y / 2f;

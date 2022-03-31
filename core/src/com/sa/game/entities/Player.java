@@ -31,7 +31,7 @@ import com.sa.game.statemachines.PlayerStates;
 public class Player {
     public static Entity create(float startDelay,
                                 int initialScore,
-                                int lives,
+                                int lives, float immortal,
                                 Vector2 pos, Vector2 vel, Vector2 size, boolean isFlipped,
                                 final Animation<TextureRegion> idleAnimation,
                                 final Animation<TextureRegion> walkAnimation,
@@ -83,6 +83,7 @@ public class Player {
         healthComponent.stun = 1;
         healthComponent.health = 1;
         healthComponent.lives = lives;
+        healthComponent.immortal = immortal;
 
         PickUpEntityComponent pickUpEntityComponent = new PickUpEntityComponent();
 

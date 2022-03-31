@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.sa.game.components.ComponentMappers;
 import com.sa.game.components.RenderComponent;
 import com.sa.game.components.RenderSpriteInWhiteColorComponent;
+import com.sa.game.gfx.Sprite.ColorMode;
 
 public class RenderSpriteInWhiteColorSystem extends IteratingSystem {
 
@@ -18,11 +19,11 @@ public class RenderSpriteInWhiteColorSystem extends IteratingSystem {
         RenderComponent renderComponent = ComponentMappers.render.get(entity);
         RenderSpriteInWhiteColorComponent renderSpriteInWhiteColorComponent = ComponentMappers.renderSpriteInWhiteColor.get(entity); 
         if(renderSpriteInWhiteColorComponent.time > 0) {
-            renderComponent.sprite.white = true;
+            renderComponent.sprite.colorMode = ColorMode.White;
             renderSpriteInWhiteColorComponent.time-=deltaTime;
         }
         else {
-            renderComponent.sprite.white = false;
+            renderComponent.sprite.colorMode = ColorMode.Normal;
             entity.remove(RenderSpriteInWhiteColorComponent.class);
         }
     }
