@@ -40,6 +40,8 @@ import com.sa.game.systems.render.RenderSpriteInFlickeringColorsSystem;
 import com.sa.game.systems.render.RenderSpriteInWhiteColorSystem;
 import com.sa.game.systems.render.RenderStarsSystem;
 import com.sa.game.systems.render.RenderSystem;
+import com.sa.game.systems.sound.CoinSoundSystem;
+import com.sa.game.systems.sound.PlayerSoundSystem;
 
 public class GameLevel {
     KeyboardMapping keyboardMapping;
@@ -196,12 +198,12 @@ public class GameLevel {
             }
             if (entity.name.equals("chichi")) {
                 engine.addEntity(CreateEnteties.chiChi(assetManager,
-                                                          startDelay,
-                                                          entity.position,
-                                                          entity.size.y,
-                                                          entity.isFlipped,
-                                                          staticEnvironment,
-                                                          collisionDetection));
+                                                       startDelay,
+                                                       entity.position,
+                                                       entity.size.y,
+                                                       entity.isFlipped,
+                                                       staticEnvironment,
+                                                       collisionDetection));
 
             }
             if (entity.name.equals("key")) {
@@ -256,6 +258,7 @@ public class GameLevel {
             engine.addSystem(new DroppedSystem());
             engine.addSystem(new MoveToEntitySystem());
             engine.addSystem(new PhysicsSystem());
+            engine.addSystem(new PlayerSoundSystem(assetManager));
             engine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
             engine.addSystem(new SensorSystem(staticEnvironment));
             engine.addSystem(new PickUpEntitySystem(collisionDetection));
@@ -271,6 +274,9 @@ public class GameLevel {
             engine.addSystem(new ExplodeBoxingGloveOnContactSystem(collisionDetection));
             engine.addSystem(new ExplodeEnemyOnContactSystem(collisionDetection));
             engine.addSystem(new PickUpCoinSystem(collisionDetection));
+
+            engine.addSystem(new CoinSoundSystem(assetManager));
+
             engine.addSystem(new ResolveCollisionSystem(performanceCounters.add("resolvecollision")));
             engine.addSystem(new RespawnPlayer1System(assetManager, collisionDetection, staticEnvironment));
             engine.addSystem(new WrapEntitySystem());

@@ -1,6 +1,7 @@
 package com.sa.game.systems.control;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
@@ -22,6 +23,7 @@ public class ControlPunchSystem extends IteratingSystem {
     CollisionDetection collisionDetection;
     StaticEnvironment staticEnvironment;
     //float currentTime = 0f;
+    boolean canFire = true;
 
     public ControlPunchSystem(final AssetManager assetManager, final CollisionDetection collisionDetection, final StaticEnvironment staticEnvironment) {
         super(Family.all(PunchComponent.class,
@@ -37,23 +39,34 @@ public class ControlPunchSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(final Entity entity, final float deltaTime) {
-        //final PunchComponent punchComponent = ComponentMappers.punch.get(entity);
+        final PunchComponent punchComponent = ComponentMappers.punch.get(entity);
         final ControlComponent controlComponent = ComponentMappers.control.get(entity);
         final PositionComponent positionComponent = ComponentMappers.position.get(entity);
         final PhysicsComponent physicsComponent = ComponentMappers.physics.get(entity);
         final PickUpEntityComponent pickUpEntityComponent = ComponentMappers.pickUp.get(entity);
 
-        final ImmutableArray<Entity> ents = this.getEngine().getEntitiesFor(Family.all(BoxingGloveGroupComponent.class).get());
-        if (ents.size() > 0)
-            return;
-
-        if (controlComponent.buttonB && pickUpEntityComponent.entity == null) {
+        //final ImmutableArray<Entity> ents = this.getEngine().getEntitiesFor(Family.all(BoxingGloveGroupComponent.class).get());
+        //if (ents.size() > 0)
+        //    return;
+        punchComponent.didFire = false;
+        if (punchComponent.canFire && controlComponent.buttonB && pickUpEntityComponent.entity == null) {
             final Vector2 vel = new Vector2(200f * (float) physicsComponent.GetWalkDirectionScalar(), 0f);
             final Entity boxingGlove = CreateEnteties.boxingGlove(assetManager, positionComponent.position, vel,
                                                                   staticEnvironment.tileSizeInPixels * 3, entity, staticEnvironment, collisionDetection);
 
-            this.getEngine().addEntity(boxingGlove);
+            this.getEngine().addEntityListener(Family.all(BoxingGloveGroupComponent.class).get(), new EntityListener() {
+                    @Override
+                    public void entityAdded(Entity entity) {
+                        punchComponent.canFire = false;
+                    }
 
+                    @Override
+                    public void entityRemoved(Entity entity) {
+                        punchComponent.canFire = true;
+                    }s
+                });
+            this.getEngine().addEntity(boxingGlove);
+            punchComponent.didFire = true;
         }
     }
 
