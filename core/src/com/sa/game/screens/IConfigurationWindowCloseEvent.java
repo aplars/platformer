@@ -16,3 +16,8 @@ interface IKeyboardConfigurationWindowCloseEvent {
 
     void onWindowCLose();
 }
+
+interface ISoundConfigurationCloseEvent {
+    void onWindowClose(int volume);
+
+}

@@ -59,13 +59,20 @@ public class DesktopSettingsScreen extends ScreenAdapter {
                     if (selection.equals("Controls")) {
                         game.setScreen(new DesktopControlsSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
                     }
-                    if(selection.equals("Sound"))
-                        ;
+                    if (selection.equals("Sound")) {
+                        selectionLabels.unFocus();
+                        new SoundSettingsScreen(skin, stage, new ISoundConfigurationCloseEvent() {
+
+                                @Override
+                                public void onWindowClose(int volume) {
+                                    selectionLabels.setFocus();
+                                }
+                            });
+                    }
                     if(selection.equals("Back"))
                         game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
                 }
             });
-
 
         selectionLabels.addSelectionLabel("Controls");
         selectionLabels.addSelectionLabel("Sound");

@@ -63,7 +63,7 @@ public class ControlPunchSystem extends IteratingSystem {
                     @Override
                     public void entityRemoved(Entity entity) {
                         punchComponent.canFire = true;
-                    }s
+                    }
                 });
             this.getEngine().addEntity(boxingGlove);
             punchComponent.didFire = true;
