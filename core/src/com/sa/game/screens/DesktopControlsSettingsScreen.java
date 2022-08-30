@@ -1,24 +1,21 @@
 package com.sa.game.screens;
 
-import com.badlogic.gdx.Game;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sa.game.MyGdxGame;
+import com.sa.game.models.SoundSettingsModel;
 import com.sa.game.systems.control.ControllerMapping;
 import com.sa.game.systems.control.KeyboardMapping;
 
@@ -28,20 +25,21 @@ public class DesktopControlsSettingsScreen extends ScreenAdapter {
     ControllerMapping controllerMappingA;
     Controller controllerB;
     ControllerMapping controllerMappingB;
+    SoundSettingsModel soundSettingsModel;
     Stage stage;
     SelectionLabels selectionLabels;
     KeyboardConfigurationWindow keyboardConfigurationWindow;
     JoystickConfigurationWindow joystickConfigurationWindow;
     final KeyboardMapping keyboardMapping;
 
-    public DesktopControlsSettingsScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA, final Controller controllerB, final ControllerMapping controllerMappingB) {
+    public DesktopControlsSettingsScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA, final Controller controllerB, final ControllerMapping controllerMappingB, final SoundSettingsModel soundSettingsModel) {
         this.game = game;
         this.controllerA = controllerA;
         this.controllerMappingA = controllerMappingA;
         this.controllerB = controllerB;
         this.controllerMappingB = controllerMappingB;
         this.keyboardMapping = keyboardMapping;
-
+        this.soundSettingsModel = soundSettingsModel;
         assetManager.load("mainmenulogo.png", Pixmap.class);
         assetManager.finishLoadingAsset("mainmenulogo.png");
         final Texture logo = new Texture(assetManager.get("mainmenulogo.png", Pixmap.class), true);
@@ -62,6 +60,17 @@ public class DesktopControlsSettingsScreen extends ScreenAdapter {
                     keyboardConfigurationWindow = new KeyboardConfigurationWindow(skin, stage, new IKeyboardConfigurationWindowCloseEvent(){
                             @Override
                             public void onWindowClose(KeyboardMapping _keyboardMapping) {
+                                Preferences preferences = Gdx.app.getPreferences(ScreenConstants.PreferencesName);
+                                preferences.putInteger("KeyLeft", _keyboardMapping.Left);
+                                preferences.putInteger("KeyRight", _keyboardMapping.Right);
+                                preferences.putInteger("KeyJump", _keyboardMapping.A);
+                                preferences.putInteger("KeyFire", _keyboardMapping.B);
+                                preferences.putInteger("KeyStart", _keyboardMapping.Start);
+                                preferences.putInteger("KeyUp", _keyboardMapping.Up);
+                                preferences.putInteger("KeyDown", _keyboardMapping.Down);
+                                preferences.flush();
+
+
                                 keyboardConfigurationWindow = null;
                                 selectionLabels.setFocus();
                                 keyboardMapping.set(_keyboardMapping);
@@ -91,7 +100,7 @@ public class DesktopControlsSettingsScreen extends ScreenAdapter {
                     });
                 }
                 if(selection.equals("Back"))
-                    game.setScreen(new DesktopSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
+                    game.setScreen(new DesktopSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB, soundSettingsModel));
                 }
             });
 

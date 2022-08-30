@@ -19,6 +19,7 @@ import com.sa.game.components.RenderSpriteInFlickeringColorsComponent;
 import com.sa.game.entities.CreateEnteties;
 import com.sa.game.gfx.Renderer;
 import com.sa.game.models.LayersToRenderModel;
+import com.sa.game.models.SoundSettingsModel;
 import com.sa.game.systems.*;
 import com.sa.game.systems.control.ControlMovementSystem;
 import com.sa.game.systems.control.ControlPunchSystem;
@@ -71,9 +72,12 @@ public class GameLevel {
     ControllerMapping controllerMappingA;
     Controller controllerB;
     ControllerMapping controllerMappingB;
+
+    SoundSettingsModel soundSettingsModel;
+
     PerformanceCounters performanceCounters;
 
-    public GameLevel(final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA, final Controller controllerB, final ControllerMapping controllerMappingB, final PerformanceCounters performanceCounters) {
+    public GameLevel(final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA, final Controller controllerB, final ControllerMapping controllerMappingB, final PerformanceCounters performanceCounters, final SoundSettingsModel soundSettingsModel) {
         this.assetManager = assetManager;
         this.keyboardMapping = keyboardMapping;
         this.assetManager.setLoader(TiledMap.class, new TmxMapLoader());
@@ -82,6 +86,7 @@ public class GameLevel {
         this.controllerMappingA = controllerMappingA;
         this.controllerB = controllerB;
         this.controllerMappingB = controllerMappingB;
+        this.soundSettingsModel = soundSettingsModel;
     }
 
     public void setVisibleLayers(final int layers[]) {
@@ -258,7 +263,7 @@ public class GameLevel {
             engine.addSystem(new DroppedSystem());
             engine.addSystem(new MoveToEntitySystem());
             engine.addSystem(new PhysicsSystem());
-            engine.addSystem(new PlayerSoundSystem(assetManager));
+            engine.addSystem(new PlayerSoundSystem(assetManager, soundSettingsModel));
             engine.addSystem(new CollisionSystem(performanceCounters.add("collision"), collisionDetection, staticEnvironment));
             engine.addSystem(new SensorSystem(staticEnvironment));
             engine.addSystem(new PickUpEntitySystem(collisionDetection));
@@ -275,7 +280,7 @@ public class GameLevel {
             engine.addSystem(new ExplodeEnemyOnContactSystem(collisionDetection));
             engine.addSystem(new PickUpCoinSystem(collisionDetection));
 
-            engine.addSystem(new CoinSoundSystem(assetManager));
+            engine.addSystem(new CoinSoundSystem(soundSettingsModel));
 
             engine.addSystem(new ResolveCollisionSystem(performanceCounters.add("resolvecollision")));
             engine.addSystem(new RespawnPlayer1System(assetManager, collisionDetection, staticEnvironment));

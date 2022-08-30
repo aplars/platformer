@@ -3,6 +3,7 @@ package com.sa.game.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sa.game.MyGdxGame;
+import com.sa.game.models.SoundSettingsModel;
 import com.sa.game.systems.control.ControllerMapping;
 import com.sa.game.systems.control.KeyboardMapping;
 
@@ -33,7 +35,8 @@ public class DesktopSettingsScreen extends ScreenAdapter {
     Stage stage;
     SelectionLabels selectionLabels;
 
-    public DesktopSettingsScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA, final Controller controllerB, final ControllerMapping controllerMappingB) {
+    SoundSettingsWindow soundSettingsWindow;
+    public DesktopSettingsScreen(final MyGdxGame game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA, final Controller controllerB, final ControllerMapping controllerMappingB, final SoundSettingsModel soundSettingsModel) {
         this.game = game;
         this.controllerA = controllerA;
         this.controllerMappingA = controllerMappingA;
@@ -57,20 +60,24 @@ public class DesktopSettingsScreen extends ScreenAdapter {
         selectionLabels = new SelectionLabels(skin, stage, keyboardMapping, controllerA, controllerMappingA, new ISelectionEvent(){
                 public void onSelect(final String selection) {
                     if (selection.equals("Controls")) {
-                        game.setScreen(new DesktopControlsSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
+                        game.setScreen(new DesktopControlsSettingsScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB, soundSettingsModel));
                     }
                     if (selection.equals("Sound")) {
                         selectionLabels.unFocus();
-                        new SoundSettingsScreen(skin, stage, new ISoundConfigurationCloseEvent() {
+                        soundSettingsWindow = new SoundSettingsWindow(skin, stage, keyboardMapping, new ISoundConfigurationCloseEvent() {
 
                                 @Override
                                 public void onWindowClose(int volume) {
+                                    Preferences preferences = Gdx.app.getPreferences(ScreenConstants.PreferencesName);
+                                    preferences.putInteger("SoundVolume", volume);
+                                    preferences.flush();
+                                    soundSettingsModel.soundVolume = volume;
                                     selectionLabels.setFocus();
                                 }
-                            });
+                            }, soundSettingsModel);
                     }
                     if(selection.equals("Back"))
-                        game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
+                        game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB, soundSettingsModel));
                 }
             });
 
@@ -92,6 +99,8 @@ public class DesktopSettingsScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         selectionLabels.update();
+        if(soundSettingsWindow != null)
+            soundSettingsWindow.update(delta);
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }

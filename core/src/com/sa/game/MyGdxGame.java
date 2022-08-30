@@ -6,6 +6,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
+import com.sa.game.models.SoundSettingsModel;
 import com.sa.game.screens.ScreenConstants;
 import com.sa.game.screens.TitleScreen;
 import com.sa.game.systems.control.ControllerMapping;
@@ -64,7 +65,11 @@ public class MyGdxGame extends Game {
         if(controllerB != null)
             controllerMappingB = new ControllerMapping(controllerB);
 
-        setScreen(new TitleScreen(this, new AssetManager(), keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
+        SoundSettingsModel soundSettings = new SoundSettingsModel();
+        if (preferences.contains("SoundVolume"))
+            soundSettings.soundVolume = preferences.getInteger("SoundVolume");
+
+        setScreen(new TitleScreen(this, new AssetManager(), keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB, soundSettings));
     }
 
     public static MyGdxGame createDesktop() {

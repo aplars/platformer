@@ -15,6 +15,7 @@ import com.sa.game.components.PhysicsComponent;
 import com.sa.game.components.PickUpEntityComponent;
 import com.sa.game.components.Player1Component;
 import com.sa.game.components.PunchComponent;
+import com.sa.game.models.SoundSettingsModel;
 
 public class PlayerSoundSystem extends IteratingSystem {
     private final ComponentMapper<ControlComponent> controlMap = ComponentMapper.getFor(ControlComponent.class);
@@ -22,8 +23,9 @@ public class PlayerSoundSystem extends IteratingSystem {
 
     Sound jumpSound;
     Sound fireSound;
+    SoundSettingsModel soundSettingsModel;
 
-    public  PlayerSoundSystem(AssetManager assetManager) {
+    public  PlayerSoundSystem(AssetManager assetManager, SoundSettingsModel soundSettingsModel) {
         super(Family.all(Player1Component.class,
                          ControlComponent.class,
                          PhysicsComponent.class,
@@ -32,7 +34,7 @@ public class PlayerSoundSystem extends IteratingSystem {
 
         //assetManager.load("sounds/jump.wav", Sound.class);
         //assetManager.finishLoadingAsset("sounds/jump.wav");
-
+        this.soundSettingsModel = soundSettingsModel;
         jumpSound = Gdx.audio.newSound(Gdx.files.internal("sounds/jump.mp3"));
         fireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laserShoot.mp3"));
     }
@@ -45,10 +47,10 @@ public class PlayerSoundSystem extends IteratingSystem {
         final PunchComponent punchComponent = ComponentMappers.punch.get(entity);
 
         if(control.buttonA && collision.entity.groundCollisionData.didCollide) {
-            jumpSound.play();
+            jumpSound.play(soundSettingsModel.soundVolume/100.0f);
         }
         if(punchComponent.didFire && control.buttonB && pickUpEntityComponent.entity == null) {
-            fireSound.play();
+            fireSound.play(soundSettingsModel.soundVolume/100.0f);
         }
 
     }

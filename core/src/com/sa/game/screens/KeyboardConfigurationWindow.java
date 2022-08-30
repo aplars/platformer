@@ -75,15 +75,6 @@ public class KeyboardConfigurationWindow {
                         window.setVisible(false);
                         if (closeEvent != null) {
                             table.remove();
-                            Preferences preferences = Gdx.app.getPreferences(ScreenConstants.PreferencesName);
-                            preferences.putInteger("KeyLeft", keyboardMapping.Left);
-                            preferences.putInteger("KeyRight", keyboardMapping.Right);
-                            preferences.putInteger("KeyJump", keyboardMapping.A);
-                            preferences.putInteger("KeyFire", keyboardMapping.B);
-                            preferences.putInteger("KeyStart", keyboardMapping.Start);
-                            preferences.putInteger("KeyUp", keyboardMapping.Up);
-                            preferences.putInteger("KeyDown", keyboardMapping.Down);
-                            preferences.flush();
                             closeEvent.onWindowClose(keyboardMapping);
                         }
                     }

@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.sa.game.GameLevel;
 import com.sa.game.MyGdxGame;
 import com.sa.game.models.EditorModel;
+import com.sa.game.models.SoundSettingsModel;
 import com.sa.game.systems.control.ControllerMapping;
 import com.sa.game.systems.control.KeyboardMapping;
 
@@ -28,6 +29,7 @@ public class GameScreen extends ScreenAdapter {
     ControllerMapping controllerMappingA;
     Controller controllerB;
     ControllerMapping controllerMappingB;
+    SoundSettingsModel soundSettingsModel;
 
     private final GameLevel gameWorld;
     SpriteBatch batch;
@@ -45,7 +47,7 @@ public class GameScreen extends ScreenAdapter {
 
     float startDelayTime = 4f;
 
-    public GameScreen(final Game game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA, final Controller controllerB, final ControllerMapping controllerMappingB) {
+    public GameScreen(final Game game, final AssetManager assetManager, final KeyboardMapping keyboardMapping, final Controller controllerA, final ControllerMapping controllerMappingA, final Controller controllerB, final ControllerMapping controllerMappingB, final SoundSettingsModel soundSettingsModel) {
         this.game = (MyGdxGame)game;
         this.assetManager = assetManager;
         this.keyboardMapping = keyboardMapping;
@@ -53,7 +55,8 @@ public class GameScreen extends ScreenAdapter {
         this.controllerMappingA = controllerMappingA;
         this.controllerB = controllerB;
         this.controllerMappingB = controllerMappingB;
-        gameWorld = new GameLevel(assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB, performanceCounters);
+        this.soundSettingsModel = soundSettingsModel;
+        gameWorld = new GameLevel(assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB, performanceCounters, soundSettingsModel);
         gameWorld.loadNextLevel = true;
         batch = new SpriteBatch();
         font = new BitmapFont();
@@ -69,7 +72,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(final float delta) {
         if(gameWorld.playersAreDead) {
-            this.game.setScreen(new GameOverScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
+            this.game.setScreen(new GameOverScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB, soundSettingsModel));
             //this.game.setScreen(new TitleScreen(game, assetManager, keyboardMapping, controllerA, controllerMappingA, controllerB, controllerMappingB));
         }
         final long startTime = TimeUtils.millis();

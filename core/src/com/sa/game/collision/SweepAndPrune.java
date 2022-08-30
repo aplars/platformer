@@ -40,18 +40,15 @@ public class SweepAndPrune {
     void update(final float dt) {
         iii = 0;
         //Sort the list on min
-        axisList.sort(new Comparator<CollisionEntity>(){
-                @Override
-                public int compare(final CollisionEntity o1, final CollisionEntity o2) {
-                    float o1Ext = 0;
-                    float o2Ext = 0;
-                    if(o1.velocity.x < 0.0f)
-                        o1Ext = o1.velocity.x * dt;
-                    if(o2.velocity.x < 0.0f)
-                        o2Ext = o2.velocity.x * dt;
-                    return Float.compare(o1.box.x+o1Ext, o2.box.x + o2Ext);
-                }
-            });
+        axisList.sort((o1, o2) -> {
+            float o1Ext = 0;
+            float o2Ext = 0;
+            if(o1.velocity.x < 0.0f)
+                o1Ext = o1.velocity.x * dt;
+            if(o2.velocity.x < 0.0f)
+                o2Ext = o2.velocity.x * dt;
+            return Float.compare(o1.box.x+o1Ext, o2.box.x + o2Ext);
+        });
 
         final ArrayList<CollisionEntity> activeList = new ArrayList<>();
         final Iterator<CollisionEntity> axisListIterator = axisList.iterator();

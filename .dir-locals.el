@@ -11,7 +11,7 @@
                                                     :request "launch"
                                                     ;:mainClass "com.sa.game.desktop.DesktopLauncher"
                                                     :projectName "my-gdx-game-desktop"
-                                                    :cwd "/home/tobbe/source/platformer/assets/"
+                                                    :cwd "/home/tobias/source/platformer/assets/"
                                                     )))
                )))
 
